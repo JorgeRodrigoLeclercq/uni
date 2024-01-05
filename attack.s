@@ -13,16 +13,16 @@ attack:
   addi sp sp -4
 
   while_a: beq t0 x0 end_a
-  	# FIRST LETTER OF THE PASSWORD
+    # FIRST LETTER OF THE PASSWORD
     sb t0 0(sp)
     sb x0 1(sp)
-  	mv a0 sp
+    mv a0 sp
     
     # MOVE SP FOR SAVING THE FOLLOWING ra
     addi sp sp -4
 
     # CALL THE FUNCTION study_energy, THAT WILL RETURN THE CORRECT LETTER
-  	jal ra study_energy
+    jal ra study_energy
     
     # SAVE THE CORRECT LETTER IN DUMMY
     sb a0 0(a3)
@@ -36,12 +36,12 @@ attack:
     # NEW LETTER OF THE PASSWORD
     lbu t0 0(a2)
 
-  	# LOOP
+    # LOOP
     j while_a
     
   end_a:
-  	# ADD THE 0 TO DUMMY
-  	sb x0 0(a3)
+    # ADD THE 0 TO DUMMY
+    sb x0 0(a3)
 
     # RETURN TO THE FIRST POSITION OF DUMMY
     sub a3 a3 a4
@@ -50,9 +50,9 @@ attack:
     mv a1 a3
 
     # GETS THE FIRST VALUE STORED ON SP: ra before the function
-  	addi sp sp 4
-  	lbu ra 0(sp)
-  	jr ra
+    addi sp sp 4
+    lbu ra 0(sp)
+    jr ra
 	
 
 study_energy:
@@ -68,41 +68,41 @@ study_energy:
   # SET THE LIMIT OF THE ALPHABET
   li t1 122
   
-  while_s: bgt t0 t1 end_s # IF THE ALPHABET IS FINISHED GOES TO END
+  while_s: bgt t0 t1 end_s # IF THE ALPHABET IS FINISHED GO TO END
 	
     # LOAD THE LETTER IN a0 FOR THE FUNCTION string_compare
     addi sp, sp -4 # SPACE TO STORE: LETTER + /0
     sb t0, 0(sp) # LETTER
     sb x0, 1(sp) # ZERO
-	  mv a0 sp # COPY sp INTO a0 FOR THE FUNCTION
+    mv a0 sp # COPY sp INTO a0 FOR THE FUNCTION
     
     # START THE COUNT OF CYCLES
     rdcycle t2
 
-   	# COMPARE THE LETTER AND THE PASSWORD
+    # COMPARE THE LETTER AND THE PASSWORD
     jal ra string_compare
 
     # FINISH THE COUNT OF CYCLES
     rdcycle t3
     
-    # ACTUAL NUMBER OF CYCLES
+    # NUMBER OF CYCLES
     sub t2 t3 t2
 	
     if_s:
     	li t3 97
     	bne t0 t3 else_s 
-        	# IF IT IS THE FIRST LETTER: a, IT SAVES THE FIRST NUMBER OF CYCLES ON A GLOBAL VARIABLE
-            mv a5 t2
+        # IF IT IS THE FIRST LETTER: a, IT SAVES THE FIRST NUMBER OF CYCLES ON A GLOBAL VARIABLE
+        mv a5 t2
 
     else_s:
       # IF THE SAVED CYCLES ARE GREATER THAN THE NEW ONES THAT MEANS THAT THE PREVIOUS LETTER WAS THE CORRECT
-    	bgt a5 t2 end_s
+      bgt a5 t2 end_s
 
       # IF THE FOLLOWING CYCLES ARE BIGGER SAVES IT ON a5
       mv a5 t2
     
 
-    # LOADS THE NEXT BYTE; THE NEXT LETTER
+    # LOAD THE NEXT BYTE; THE NEXT LETTER
     addi sp, sp 4
     addi t0 t0 1
 	
@@ -110,17 +110,17 @@ study_energy:
     j while_s
     
   end_s:
-  	# TAKES THE PREVIOUS LETTER
-  	addi t0 t0 -1
+    # TAKE THE PREVIOUS LETTER
+    addi t0 t0 -1
 
-    # RETURNS THE LETTER
-  	mv a0 t0
+    # RETURN THE LETTER
+    mv a0 t0
 
-  	# GOES TO THE LAST POSITION OF sp TO GET THE ra, TO RETURN
+    # GO TO THE LAST POSITION OF sp TO GET THE ra, TO RETURN
     addi sp sp 4
 
     lbu ra 0(sp) # ra = ra at the beggining of the function
-  	jr ra
+    jr ra
 
 string_compare:
     # LOAD WORD 1

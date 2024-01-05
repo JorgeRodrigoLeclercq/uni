@@ -12,7 +12,7 @@ study_energy:
   # SET THE LIMIT OF THE ALPHABET
   li t1 122
   
-  while_s: bgt t0 t1 end_s # IF THE ALPHABET IS FINISHED GOES TO END
+  while_s: bgt t0 t1 end_s # IF THE ALPHABET IS FINISHED GO TO END
     # PRINT LETTER
     li a7 11
     mv a0 t0
@@ -27,16 +27,18 @@ study_energy:
     addi sp, sp -4 # SPACE TO STORE: LETTER + /0
     sb t0, 0(sp) # LETTER
     sb x0, 1(sp) # ZERO
-	mv a0 sp # COPY sp INTO a0 FOR THE FUNCTION
+    mv a0 sp # COPY sp INTO a0 FOR THE FUNCTION
     
     # START THE COUNT OF CYCLES
     rdcycle t2
-   	# COMPARE THE LETTER AND THE PASSWORD
+    
+    # COMPARE THE LETTER AND THE PASSWORD
     jal ra string_compare
+    
     # FINISH THE COUNT OF CYCLES
     rdcycle t3
     
-    # ACTUAL NUMBER OF CYCLES
+    # NUMBER OF CYCLES
     sub t2 t3 t2
 
     # PRINT CYCLES
@@ -57,15 +59,16 @@ study_energy:
     j while_s
     
   end_s:
-  	# GO TO THE LAST POSITION OF sp TO GET THE ra, TO RETURN
+    # GO TO THE LAST POSITION OF sp TO GET THE ra, TO RETURN
     lbu ra 0(sp) # ra = ra at the beggining of the function
-  	jr ra
+    jr ra
 
 
 
 string_compare:
     # LOAD WORD 1
     mv t3 a0
+    
     # LOAD WORD 2
     mv t4 a1 
 

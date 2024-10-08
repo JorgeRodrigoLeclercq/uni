@@ -1,3 +1,0 @@
-/home/jorge/CLionProjects/imtool/cmake-build-debug/CMakeFiles/imtool.dir
-/home/jorge/CLionProjects/imtool/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/jorge/CLionProjects/imtool/cmake-build-debug/CMakeFiles/rebuild_cache.dir

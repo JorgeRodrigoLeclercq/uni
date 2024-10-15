@@ -27,4 +27,3 @@ HeaderFileExtensions: [ 'h', 'hpp' ]
 ImplementationFileExtensions: [ 'cpp']
 
 FormatStyle: file
-

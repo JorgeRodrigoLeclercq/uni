@@ -14,6 +14,8 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    std::ofstream outfile(argv[2], std::ios::binary);
+
     // Variables del header
     std::string magic_number;
     int width, height, max_color;
@@ -36,6 +38,16 @@ int main(int argc, char *argv[]) {
     // // RELLENAR LOS ARRAYS DE LA ESTRUCTURA CON LOS PIXELES
     get_pixels(infile, pixel_data, pixel_count, is_16_bit);
 
+    // Escribir en outfile, INFO COMMAND
+    write_info(outfile, magic_number, width, height, max_color, pixel_data, is_16_bit);
+
+    std::ofstream cppm_outfile(argv[3], std::ios::binary);
+
+    // COMPRESS COMMAND
+    write_cppm(cppm_outfile, pixel_data, width, height, max_color);
+
     infile.close();
+    outfile.close();
+    cppm_outfile.close();
     return 0;
 }

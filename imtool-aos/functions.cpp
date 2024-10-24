@@ -1,4 +1,6 @@
 #include "functions.hpp"
+#include <cmath>
+
 
 // Guardar la información del header de la imagen ppm en magic_number, width, height y max_color
 void get_header(std::ifstream &infile, std::string &magic_number, int &width, int &height, int &max_color) {
@@ -131,11 +133,15 @@ void write_cppm(std::ofstream &cppm_outfile, const std::vector<Pixel> &pixel_dat
         }
     }
 }
-void scale_intensity(std::vector<Pixel> &pixel_data, float scale_factor) {
+void maxlevel(std::vector<Pixel> &pixel_data, int new_maxlevel, int max_color) {
+    if (new_maxlevel <=0) {
+        std::cerr << "Error: new_maxlevel debe ser mayor que 0" << std::endl;
+        exit(1);
+    }
     for (auto& pixel : pixel_data) {
         // Escalar cada componente y asegurarse de que esté dentro del rango
-        pixel.r = clamp(static_cast<int>(pixel.r * scale_factor), 0, 255);
-        pixel.g = clamp(static_cast<int>(pixel.g * scale_factor), 0, 255);
-        pixel.b = clamp(static_cast<int>(pixel.b * scale_factor), 0, 255);
+        pixel.r = clamp(static_cast<int>(std::floor(pixel.r * new_maxlevel / static_cast<float>(max_color))), 0, new_maxlevel);
+        pixel.g = clamp(static_cast<int>(std::floor(pixel.g * new_maxlevel / static_cast<float>(max_color))), 0, new_maxlevel);
+        pixel.b = clamp(static_cast<int>(std::floor(pixel.b * new_maxlevel / static_cast<float>(max_color))), 0, new_maxlevel);
     }
 }

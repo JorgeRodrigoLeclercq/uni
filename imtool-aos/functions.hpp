@@ -33,5 +33,5 @@ template<typename T>
 T clamp(const T& value, const T& low, const T& high) {
     return (value < low) ? low : (value > high) ? high : value;
 }
-void scale_intensity(std::vector<Pixel> &pixel_data, float scale_factor);
+void maxlevel(std::vector<Pixel> &pixel_data, int new_maxlevel, int max_color);
 #endif //FUNCTIONS_HPP

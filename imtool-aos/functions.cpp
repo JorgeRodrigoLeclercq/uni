@@ -86,3 +86,48 @@ void write_info(std::ofstream &outfile, const std::string &magic_number, int wid
         }
     }
 }
+
+void write_cppm(std::ofstream &cppm_outfile, const std::vector<Pixel> &pixel_data, int width, int height, int max_color) {
+    // Mapear cada índice a su color
+    std::map<Pixel, int> color_table;
+    std::vector<Pixel> color_list;
+
+    int color_index = 0;
+    for (const auto &pixel : pixel_data) {
+        if (color_table.find(pixel) == color_table.end()) {
+            color_table[pixel] = color_index++;
+            color_list.push_back(pixel);
+        }
+    }
+
+    // CPPM header
+    cppm_outfile << "C6 " << width << " " << height << " " << max_color << " " << color_list.size() << "\n";
+
+    bool is_16_bit = max_color > 255;
+    for (const auto &color : color_list) {
+        if (is_16_bit) {
+            cppm_outfile.write(reinterpret_cast<const char*>(&color.r), 2);
+            cppm_outfile.write(reinterpret_cast<const char*>(&color.g), 2);
+            cppm_outfile.write(reinterpret_cast<const char*>(&color.b), 2);
+        } else {
+            cppm_outfile.write(reinterpret_cast<const char*>(&color.r), 1);
+            cppm_outfile.write(reinterpret_cast<const char*>(&color.g), 1);
+            cppm_outfile.write(reinterpret_cast<const char*>(&color.b), 1);
+        }
+    }
+
+    int table_size = color_list.size();
+    for (const auto &pixel : pixel_data) {
+        int index = color_table[pixel];
+        if (table_size <= 28) {
+            cppm_outfile.write(reinterpret_cast<const char*>(&index), 1);  // 1 byte <= 28 colors
+        } else if (table_size <= 216) {
+            cppm_outfile.write(reinterpret_cast<const char*>(&index), 2);  // 2 bytes <= 216 colors
+        } else if (table_size <= 65536) {
+            cppm_outfile.write(reinterpret_cast<const char*>(&index), 4);  // 4 bytes <= 232 colors
+        } else {
+            std::cerr << "Error: Color table too large." << std::endl;
+            exit(1);
+        }
+    }
+}

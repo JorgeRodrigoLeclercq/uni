@@ -18,4 +18,6 @@ void get_header(std::ifstream &infile, std::string &magic_number, int &width, in
 // Guardar los pixeles de la imagen ppm en una estructura AoS
 void get_pixels(std::ifstream &infile, std::vector<Pixel> &pixel_data, int pixel_count, bool is_16_bit);
 
+// Ecribir la información de la imagen en el archivo de salida
+void write_info(std::ofstream &outfile, const std::string &magic_number, int width, int height, int max_color, const std::vector<Pixel> &pixel_data, bool is_16_bit);
 #endif //FUNCTIONS_HPP

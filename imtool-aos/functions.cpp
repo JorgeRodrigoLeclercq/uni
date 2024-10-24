@@ -56,3 +56,33 @@ void get_pixels(std::ifstream &infile, std::vector<Pixel> &pixel_data, int pixel
                   << "B = " << static_cast<int>(pixel_data[i].b) << std::endl;
     }
 }
+
+// Ecribir la información de la imagen en el archivo de salida
+void write_info(std::ofstream &outfile, const std::string &magic_number, int width, int height, int max_color, const std::vector<Pixel> &pixel_data, bool is_16_bit) {
+    outfile << magic_number << "\n";
+    outfile << width << " " << height << "\n";
+    outfile << max_color << "\n";
+
+    if (is_16_bit) {
+        for (const auto &pixel : pixel_data) {
+            uint8_t r1 = pixel.r & 0xFF;
+            uint8_t r2 = (pixel.r >> 8) & 0xFF;
+            uint8_t g1 = pixel.g & 0xFF;
+            uint8_t g2 = (pixel.g >> 8) & 0xFF;
+            uint8_t b1 = pixel.b & 0xFF;
+            uint8_t b2 = (pixel.b >> 8) & 0xFF;
+            outfile.write(reinterpret_cast<const char*>(&r1), 1);
+            outfile.write(reinterpret_cast<const char*>(&r2), 1);
+            outfile.write(reinterpret_cast<const char*>(&g1), 1);
+            outfile.write(reinterpret_cast<const char*>(&g2), 1);
+            outfile.write(reinterpret_cast<const char*>(&b1), 1);
+            outfile.write(reinterpret_cast<const char*>(&b2), 1);
+        }
+    } else {
+        for (const auto &pixel : pixel_data) {
+            outfile.write(reinterpret_cast<const char*>(&pixel.r), 1);
+            outfile.write(reinterpret_cast<const char*>(&pixel.g), 1);
+            outfile.write(reinterpret_cast<const char*>(&pixel.b), 1);
+        }
+    }
+}

@@ -29,4 +29,9 @@ void write_info(std::ofstream &outfile, const std::string &magic_number, int wid
 // Comprimir la imagen
 void write_cppm(std::ofstream &cppm_outfile, const std::vector<Pixel> &pixel_data, int width, int height, int max_color);
 
+template<typename T>
+T clamp(const T& value, const T& low, const T& high) {
+    return (value < low) ? low : (value > high) ? high : value;
+}
+void scale_intensity(std::vector<Pixel> &pixel_data, float scale_factor);
 #endif //FUNCTIONS_HPP

@@ -140,8 +140,8 @@ void maxlevel(std::vector<Pixel> &pixel_data, int new_maxlevel, int max_color) {
     }
     for (auto& pixel : pixel_data) {
         // Escalar cada componente y asegurarse de que esté dentro del rango
-        pixel.r = clamp(static_cast<int>(std::floor(pixel.r * new_maxlevel / static_cast<float>(max_color))), 0, new_maxlevel);
-        pixel.g = clamp(static_cast<int>(std::floor(pixel.g * new_maxlevel / static_cast<float>(max_color))), 0, new_maxlevel);
-        pixel.b = clamp(static_cast<int>(std::floor(pixel.b * new_maxlevel / static_cast<float>(max_color))), 0, new_maxlevel);
+        pixel.r = clamp(static_cast<int>(std::round(pixel.r * new_maxlevel / static_cast<float>(max_color))), 0, new_maxlevel);
+        pixel.g = clamp(static_cast<int>(std::round(pixel.g * new_maxlevel / static_cast<float>(max_color))), 0, new_maxlevel);
+        pixel.b = clamp(static_cast<int>(std::round(pixel.b * new_maxlevel / static_cast<float>(max_color))), 0, new_maxlevel);
     }
 }

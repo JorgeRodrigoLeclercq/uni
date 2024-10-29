@@ -6,26 +6,30 @@
 #include <cstdlib>
 #include "functions.hpp"
 
+const uint16_t MIN_COLOR_VALUE = 0;
+const uint16_t MAX_COLOR_VALUE8 = 255;
+const uint16_t MAX_COLOR_VALUE16 = 65535;
+
 int main(int argc, const char *argv[]) {
     if (argc <4) {
         std::cerr << "Error: Missing arguments\n";
         return -1;
     }
     std::string command = argv[3];
+    int new_maxlevel= 0;
     if (command =="maxlevel") {
         if (argc !=5) {
             std::cerr << "Error: Invalid number of arguments for maxlevel: " << (argc - 4) << "\n";
         return -1;
         }
     }
-    int new_maxlevel;
     try {
         new_maxlevel = std::stoi(argv[4]);
     } catch (const std::invalid_argument &){
         std::cerr << "Error: Invalid argument for maxlevel: " << argv[4] << "\n";
         return -1;
     }
-    if (new_maxlevel < 0 || new_maxlevel > 65535){
+    if (new_maxlevel < MIN_COLOR_VALUE || new_maxlevel > MAX_COLOR_VALUE16){
         std::cerr << "Error: Invalid maxlevel value: " << new_maxlevel << "\n";
         return -1;
     }
@@ -69,7 +73,6 @@ int main(int argc, const char *argv[]) {
 
     if (command == "maxlevel") {
         maxlevel(pixel_data, new_maxlevel, max_color);
-        max_color = new_maxlevel;
     }
     // Escribir en outfile, INFO COMMAND
     write_info(outfile, magic_number, width, height, max_color, pixel_data, is_16_bit);

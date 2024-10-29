@@ -7,11 +7,17 @@
 #include <string>
 #include <cstdint>
 #include <map>
+#include <variant>
+#include <cstdint>
 
-// Array of Structures (AoS)
-struct Pixel{
-    uint8_t r, g, b;
+struct Pixel {
+    uint16_t r;  
+    uint16_t g; 
+    uint16_t b;
 
+    Pixel(uint16_t red = 0, uint16_t green = 0, uint16_t blue = 0)
+        : r(red), g(green), b(blue) {}
+    
     bool operator<(const Pixel &other) const {
         return std::tie(r, g, b) < std::tie(other.r, other.g, other.b);
     }
@@ -29,9 +35,6 @@ void write_info(std::ofstream &outfile, const std::string &magic_number, int wid
 // Comprimir la imagen
 void write_cppm(std::ofstream &cppm_outfile, const std::vector<Pixel> &pixel_data, int width, int height, int max_color);
 
-template<typename T>
-T clamp(const T& value, const T& low, const T& high) {
-    return (value < low) ? low : (value > high) ? high : value;
-}
 void maxlevel(std::vector<Pixel> &pixel_data, int new_maxlevel, int max_color);
 #endif //FUNCTIONS_HPP
+

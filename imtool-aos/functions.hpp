@@ -45,5 +45,11 @@ void write_info(std::ofstream &outfile, const std::string &magic_number, int wid
 void write_cppm(std::ofstream &cppm_outfile, const std::vector<Pixel> &pixel_data, int width, int height, int max_color);
 
 void maxlevel(std::vector<Pixel> &pixel_data, int new_maxlevel, int max_color);
+
+double interpolacion(std::vector<double>  &first_point , std::vector<double> & second_point , int y_value);
+
+Pixel interpolacion_colores ( std::vector<Pixel> &pixel_Data, std::vector<double> &coordenadas , int width_counter , Dimension &original_dimension );
+
+void DimensionChange(Dimension& original_dimension, std::vector<Pixel> &pixel_Data , Dimension& new_dimension);
 #endif //FUNCTIONS_HPP
 

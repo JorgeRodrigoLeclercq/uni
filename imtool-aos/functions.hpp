@@ -23,6 +23,15 @@ struct Pixel {
     }
 };
 
+struct Dimension {
+    int height;
+    int width;
+
+    Dimension(int height = 0, int width = 0)
+        : height(height), width(width) {}
+
+};
+
 // Guardar la información del header de la imagen ppm en magic_number, width, height y max_color
 void get_header(std::ifstream &infile, std::string &magic_number, int &width, int &height, int &max_color);
 

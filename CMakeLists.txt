@@ -23,6 +23,8 @@ FetchContent_Declare(GSL
         GIT_SHALLOW ON
 )
 FetchContent_MakeAvailable(GSL)
+# Include GSL headers
+include_directories(${GSL_INCLUDE_DIRS})
 # Run clang-tidy on the whole source tree
 # Note this will slow down compilation.
 # You may temporarily disable but do not forget to enable again.
@@ -36,7 +38,7 @@ add_subdirectory(common)
 add_subdirectory(imgaos)
 add_subdirectory(imgsoa)
 add_subdirectory(imtool-aos)
-##add_subdirectory(imtool-soa)
+add_subdirectory(imtool-soa)
 # Unit tests and functional tests
 enable_testing()
 ##add_subdirectory(utest-common)

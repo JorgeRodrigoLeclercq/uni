@@ -1,13 +1,12 @@
 #include <iostream>
 #include <fstream>
-//#include <gsl/gsl>
+#include <gsl/gsl>
 #include <vector>
 #include <string>
 #include <cstdlib>
 #include "functions.hpp"
 
 const uint16_t MIN_COLOR_VALUE = 0;
-const uint16_t MAX_COLOR_VALUE8 = 255;
 const uint16_t MAX_COLOR_VALUE16 = 65535;
 
 int main(int argc, const char *argv[]) {

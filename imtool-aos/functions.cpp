@@ -139,22 +139,45 @@ T clamp(const T& value, const T& low, const T& high) {
     return (value < low) ? low : (value > high) ? high : value;
 }
 
-void maxlevel(std::vector<Pixel> &pixel_data, int new_maxlevel, int max_color) {
-    for (auto& pixel : pixel_data) {
-        // Escalar cada componente y asegurarse de que esté dentro del rango
-        pixel.r = clamp(static_cast<uint16_t>(std::round(static_cast<float>(pixel.r * new_maxlevel) / static_cast<float>(max_color))),
-                             static_cast<uint16_t>(0), 
-                             static_cast<uint16_t>(new_maxlevel));
-                             
-        pixel.g = clamp(static_cast<uint16_t>(std::round(static_cast<float>(pixel.g * new_maxlevel) / static_cast<float>(max_color))),
-                             static_cast<uint16_t>(0), 
-                             static_cast<uint16_t>(new_maxlevel));
-                             
-        pixel.b = clamp(static_cast<uint16_t>(std::round(static_cast<float>(pixel.b * new_maxlevel) / static_cast<float>(max_color))),
-                             static_cast<uint16_t>(0), 
-                             static_cast<uint16_t>(new_maxlevel));
+void maxlevel(gsl::span<Pixel> pixel_data, int new_maxlevel, int& max_color, bool is_16_bit) {
+  std::cout << "Previous max_color: " << max_color << ", New maxlevel: " << new_maxlevel << std::endl;
+
+  // Factor de escala para la conversión de max_color a new_maxlevel
+  float scale_factor = static_cast<float>(new_maxlevel) / static_cast<float>(max_color);
+
+  for (auto& pixel : pixel_data) {
+    // Escalar cada componente de color
+    uint16_t scaled_r = static_cast<uint16_t>(pixel.r * scale_factor);
+    uint16_t scaled_g = static_cast<uint16_t>(pixel.g * scale_factor);
+    uint16_t scaled_b = static_cast<uint16_t>(pixel.b * scale_factor);
+
+    if (is_16_bit) {
+      // Dividir cada componente en dos bytes
+      uint8_t r1 = scaled_r & 0xFF;         // Byte menor
+      uint8_t r2 = (scaled_r >> 8) & 0xFF;  // Byte mayor
+      uint8_t g1 = scaled_g & 0xFF;         // Byte menor
+      uint8_t g2 = (scaled_g >> 8) & 0xFF;  // Byte mayor
+      uint8_t b1 = scaled_b & 0xFF;         // Byte menor
+      uint8_t b2 = (scaled_b >> 8) & 0xFF;  // Byte mayor
+
+      // Asignar de nuevo a pixel
+      pixel.r = r1; // Solo se guarda el primer byte en pixel.r
+      pixel.g = g1; // Solo se guarda el primer byte en pixel.g
+      pixel.b = b1; // Solo se guarda el primer byte en pixel.b
+    } else {
+      // Para 8 bits, simplemente asigna el valor escalado asegurándote de que esté dentro del rango
+      pixel.r = static_cast<uint8_t>(
+          clamp(scaled_r, static_cast<uint16_t>(0), static_cast<uint16_t>(new_maxlevel)));
+      pixel.g = static_cast<uint8_t>(
+          clamp(scaled_g, static_cast<uint16_t>(0), static_cast<uint16_t>(new_maxlevel)));
+      pixel.b = static_cast<uint8_t>(
+          clamp(scaled_b, static_cast<uint16_t>(0), static_cast<uint16_t>(new_maxlevel)));
     }
+  }
+
+  max_color = new_maxlevel;
 }
+
 
  /* double interpolacion(std::vector<double>  &first_point , std::vector<double> & second_point , int y_value) {
    //Formula for getting the z ( color) value of the interpolation of two thredimensional points

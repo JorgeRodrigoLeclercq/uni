@@ -9,13 +9,14 @@
 #include <map>
 #include <variant>
 #include <cstdint>
+#include <gsl/span>
 
 struct Pixel {
-    uint16_t r;  
-    uint16_t g; 
-    uint16_t b;
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
 
-    Pixel(uint16_t red = 0, uint16_t green = 0, uint16_t blue = 0)
+    Pixel(uint8_t red = 0, uint8_t green = 0, uint8_t blue = 0)
         : r(red), g(green), b(blue) {}
     
     bool operator<(const Pixel &other) const {
@@ -44,7 +45,7 @@ void write_info(std::ofstream &outfile, const std::string &magic_number, int wid
 // Comprimir la imagen
 void write_cppm(std::ofstream &cppm_outfile, const std::vector<Pixel> &pixel_data, int width, int height, int max_color);
 
-void maxlevel(std::vector<Pixel> &pixel_data, int new_maxlevel, int max_color);
+void maxlevel(gsl::span<Pixel> pixel_data, int new_maxlevel, int &max_color, bool is_16_bit);
 
 double interpolacion(std::vector<double>  &first_point , std::vector<double> & second_point , int y_value);
 

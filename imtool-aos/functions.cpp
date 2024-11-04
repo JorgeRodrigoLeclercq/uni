@@ -142,21 +142,21 @@ T clamp(const T& value, const T& low, const T& high) {
 void maxlevel(std::vector<Pixel> &pixel_data, int new_maxlevel, int max_color) {
     for (auto& pixel : pixel_data) {
         // Escalar cada componente y asegurarse de que esté dentro del rango
-        pixel.r = clamp(static_cast<uint16_t>(std::round(static_cast<float>(pixel.r * new_maxlevel) / static_cast<float>(max_color))),
+        pixel.r = clamp(static_cast<uint16_t>(std::round(pixel.r * new_maxlevel / static_cast<float>(max_color))), 
                              static_cast<uint16_t>(0), 
                              static_cast<uint16_t>(new_maxlevel));
                              
-        pixel.g = clamp(static_cast<uint16_t>(std::round(static_cast<float>(pixel.g * new_maxlevel) / static_cast<float>(max_color))),
+        pixel.g = clamp(static_cast<uint16_t>(std::round(pixel.g * new_maxlevel / static_cast<float>(max_color))), 
                              static_cast<uint16_t>(0), 
                              static_cast<uint16_t>(new_maxlevel));
                              
-        pixel.b = clamp(static_cast<uint16_t>(std::round(static_cast<float>(pixel.b * new_maxlevel) / static_cast<float>(max_color))),
+        pixel.b = clamp(static_cast<uint16_t>(std::round(pixel.b * new_maxlevel / static_cast<float>(max_color))), 
                              static_cast<uint16_t>(0), 
                              static_cast<uint16_t>(new_maxlevel));
     }
 }
 
- /* double interpolacion(std::vector<double>  &first_point , std::vector<double> & second_point , int y_value) {
+  double interpolacion(std::vector<double>  &first_point , std::vector<double> & second_point , int y_value) {
    //Formula for getting the z ( color) value of the interpolation of two thredimensional points
       return ( first_point[2] + (( second_point[2] - first_point[2]) * ((y_value - first_point[1]) / ( second_point[1] - first_point[0]))));
 
@@ -228,4 +228,4 @@ Pixel interpolacion_colores ( std::vector<Pixel> &pixel_Data, std::vector<double
 
       }
 
-} */
+}

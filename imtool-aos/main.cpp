@@ -81,7 +81,8 @@ int main(int argc, const char *argv[]) {
     // COMPRESS COMMAND
     write_cppm(cppm_outfile, pixel_data, width, height, max_color);
 
-    maxlevel(pixel_data, new_maxlevel, max_color);
+    //int new_maxlevel = std::stoi(argv[4]);
+    //maxlevel(pixel_data, new_maxlevel, max_color);
 
     infile.close();
     outfile.close();

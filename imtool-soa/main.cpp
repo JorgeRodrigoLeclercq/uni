@@ -1,20 +1,18 @@
 #include "functions.hpp"
+#include "common/progargs.hpp"
+#include "common/binaryio.hpp"
 
 #include <gsl/gsl>
 #include <fstream>
 #include <iostream>
-#include <span>
 
 int main(int argc, char *argv[]) {
 
-  gsl::span const args{argv, gsl::narrow<std::size_t>(argc)};
+  checkNumberArgs(argc); // Comprobar que el número de argumentos es correcto
 
-  if (argc < 2) {
-      std::cerr << "Usage: " << argv[0] << " <filename>" << std::endl;
-      return 1;
-  }
+  gsl::span const args{argv, gsl::narrow<std::size_t>(argc)}; // Creamos la vista
 
-  std::ifstream infile(argv[1], std::ios::binary);  // abrir en modo binario
+  std::ifstream infile(args[1], std::ios::binary);  // abrir en modo binario
   if (!infile) {
       std::cerr << "Error: Could not open file " << argv[1] << std::endl;
       return 1;
@@ -57,7 +55,4 @@ int main(int argc, char *argv[]) {
   outfile.close();
   cppm_outfile.close();
   return 0;
-
-
-  return 0;
 }

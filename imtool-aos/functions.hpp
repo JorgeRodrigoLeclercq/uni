@@ -18,7 +18,7 @@ struct Pixel {
 
     Pixel(uint8_t red = 0, uint8_t green = 0, uint8_t blue = 0)
         : r(red), g(green), b(blue) {}
-    
+
     bool operator<(const Pixel &other) const {
         return std::tie(r, g, b) < std::tie(other.r, other.g, other.b);
     }
@@ -45,7 +45,7 @@ void write_info(std::ofstream &outfile, const std::string &magic_number, int wid
 // Comprimir la imagen
 void write_cppm(std::ofstream &cppm_outfile, const std::vector<Pixel> &pixel_data, int width, int height, int max_color);
 
-void maxlevel(gsl::span<Pixel> pixel_data, int new_maxlevel, int &max_color, bool is_16_bit);
+void maxlevel(gsl::span<Pixel> pixel_data, int new_maxlevel, int &max_color, bool& is_16_bit);
 
 double interpolacion(std::vector<double>  &first_point , std::vector<double> & second_point , int y_value);
 

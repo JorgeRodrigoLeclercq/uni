@@ -1,3 +1,4 @@
 add_executable(imtool-soa main.cpp
-        functions.cpp)
-target_link_libraries (imtool-soa imgsoa common)
+        functions.cpp
+        ../common/binaryio.hpp)
+target_link_libraries (imtool-soa PRIVATE imgsoa common  Microsoft.GSL::GSL)

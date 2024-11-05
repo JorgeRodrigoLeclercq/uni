@@ -4,6 +4,7 @@ add_library(common
         binaryio.cpp
         ../imtool-aos/functions.cpp
         ../imtool-soa/functions.cpp
+        binaryio.hpp
 )
 # Use this line only if you have dependencies from this library to GSL
 target_link_libraries (common PRIVATE Microsoft.GSL::GSL)

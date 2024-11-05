@@ -1,57 +1,63 @@
-#include <iostream>
-#include <fstream>
 #include "functions.hpp"
 
+#include <gsl/gsl>
+#include <fstream>
+#include <iostream>
+#include <span>
+
 int main(int argc, char *argv[]) {
-    if (argc < 2) {
-        std::cerr << "Usage: " << argv[0] << " <filename>" << std::endl;
-        return 1;
-    }
 
-    std::ifstream infile(argv[1], std::ios::binary);  // abrir en modo binario
-    if (!infile) {
-        std::cerr << "Error: Could not open file " << argv[1] << std::endl;
-        return 1;
-    }
+  gsl::span const args{argv, gsl::narrow<std::size_t>(argc)};
 
-    std::ofstream outfile(argv[2], std::ios::binary);
+  if (argc < 2) {
+      std::cerr << "Usage: " << argv[0] << " <filename>" << std::endl;
+      return 1;
+  }
 
-    // Variables del header
-    std::string magic_number;
-    int width, height, max_color;
+  std::ifstream infile(argv[1], std::ios::binary);  // abrir en modo binario
+  if (!infile) {
+      std::cerr << "Error: Could not open file " << argv[1] << std::endl;
+      return 1;
+  }
 
-    // INFO COMMAND
-    get_header(infile, magic_number, width, height, max_color);
+  std::ofstream outfile(argv[2], std::ios::binary);
 
-    // Tamaño en pixeles de la imagen
-    int pixel_count = width * height;
+  // Variables del header
+  std::string magic_number;
+  int width, height, max_color;
 
-    // Structure of Arrays
-    SoA pixel_data;
-    pixel_data.r.resize(pixel_count);
-    pixel_data.g.resize(pixel_count);
-    pixel_data.b.resize(pixel_count);
+  // INFO COMMAND
+  get_header(infile, magic_number, width, height, max_color);
 
-    // Determinar la longitud de cada pixel (2 bytes si max_color > 256; else: 1)
-    bool is_16_bit = max_color > 255;
+  // Tamaño en pixeles de la imagen
+  int pixel_count = width * height;
 
-    // // RELLENAR LOS ARRAYS DE LA ESTRUCTURA CON LOS PIXELES
-    get_pixels(infile, pixel_data, pixel_count, is_16_bit);
+  // Structure of Arrays
+  SoA pixel_data;
+  pixel_data.r.resize(pixel_count);
+  pixel_data.g.resize(pixel_count);
+  pixel_data.b.resize(pixel_count);
 
-    // Escribir en outfile, INFO COMMAND
-    write_info(outfile, magic_number, width, height, max_color, pixel_data, is_16_bit);
+  // Determinar la longitud de cada pixel (2 bytes si max_color > 256; else: 1)
+  bool is_16_bit = max_color > 255;
 
-    std::ofstream cppm_outfile(argv[3], std::ios::binary);
+  // // RELLENAR LOS ARRAYS DE LA ESTRUCTURA CON LOS PIXELES
+  get_pixels(infile, pixel_data, pixel_count, is_16_bit);
 
-    // COMPRESS COMMAND
-    write_cppm(cppm_outfile, pixel_data, width, height, max_color);
+  // Escribir en outfile, INFO COMMAND
+  write_info(outfile, magic_number, width, height, max_color, pixel_data, is_16_bit);
 
-    scale_intensity(pixel_data, 1.2f);
-    infile.close();
-    outfile.close();
-    cppm_outfile.close();
-    return 0;
+  std::ofstream cppm_outfile(argv[3], std::ios::binary);
+
+  // COMPRESS COMMAND
+  write_cppm(cppm_outfile, pixel_data, width, height, max_color);
+
+  scale_intensity(pixel_data, 1.2f);
+  infile.close();
+  outfile.close();
+  cppm_outfile.close();
+  return 0;
 
 
-    return 0;
+  return 0;
 }

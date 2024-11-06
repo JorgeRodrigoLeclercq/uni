@@ -28,7 +28,12 @@ void get_pixels(std::ifstream &infile, std::vector<Pixel> &pixel_data, int pixel
     if (is_16_bit) {
         // max_color > 255 t por ende, bits en pixel == 2, en little-endian
         for (int i = 0; i < pixel_count; ++i) {
-            uint8_t r1, r2, g1, g2, b1, b2;
+            uint8_t r1;
+            uint8_t r2;
+            uint8_t g1;
+            uint8_t g2;
+            uint8_t b1;
+            uint8_t b2;
             // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             infile.read(reinterpret_cast<char*>(&r1), 1);
             // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
@@ -60,12 +65,12 @@ void get_pixels(std::ifstream &infile, std::vector<Pixel> &pixel_data, int pixel
     }
 
     // Log pixels
-    std::cout << "First few pixels (RGB values):" << std::endl;
+    std::cout << "First few pixels (RGB values):" << '\n';
     for (int i = 0; i < std::min(10, pixel_count); ++i) {
         std::cout << "Pixel " << i << ": "
                   << "R = " << static_cast<int>(pixel_data[i].r) << ", "
                   << "G = " << static_cast<int>(pixel_data[i].g) << ", "
-                  << "B = " << static_cast<int>(pixel_data[i].b) << std::endl;
+                  << "B = " << static_cast<int>(pixel_data[i].b) << '\n';
     }
 }
 
@@ -166,7 +171,7 @@ T clamp(const T& value, const T& low, const T& high) {
     return (value < low) ? low : (value > high) ? high : value;
 }
 constexpr int MAX_COLOR_8BIT = 255;
-void maxlevel(gsl::span<Pixel> pixel_data, int new_maxlevel, int& max_color, bool& is_16_bit) {
+void maxlevel(gsl::span<Pixel> pixel_data, int new_maxlevel, int & max_color, bool& is_16_bit) {
   std::cout << "Previous max_color: " << max_color << ", New maxlevel: " << new_maxlevel << '\n';
 
   // Determinar si la salida será de 8 o 16 bits

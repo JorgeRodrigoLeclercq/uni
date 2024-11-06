@@ -6,8 +6,7 @@
 #include <cstdlib>
 #include "functions.hpp"
 
-const uint8_t MIN_COLOR_VALUE = 0;
-//const uint8_t MAX_COLOR_VALUE16 = 65535;
+const uint16_t MAX_COLOR_VALUE16 = 65535;
 
 int main(int argc, const char *argv[]) {
     if (argc <4) {
@@ -30,7 +29,7 @@ int main(int argc, const char *argv[]) {
         std::cerr << "Error: Invalid argument for maxlevel: " << args_view[4] << "\n";
         return -1;
     }
-    if (new_maxlevel < MIN_COLOR_VALUE || new_maxlevel > 65535){
+    if (new_maxlevel < 0 || new_maxlevel > MAX_COLOR_VALUE16){
         std::cerr << "Error: Invalid maxlevel value: " << new_maxlevel << "\n";
         return -1;
     }

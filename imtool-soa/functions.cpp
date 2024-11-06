@@ -143,12 +143,4 @@ void write_cppm(std::ofstream &cppm_outfile, SoA &pixel_data, int width, int hei
     }
 }
 
-void scale_intensity(std::vector<Pixel> &pixel_data, float scale_factor) {
-    for (auto& pixel : pixel_data) {
-        // Escalar cada componente y asegurarse de que esté dentro del rango
-        pixel.r = clamp(static_cast<int>(pixel.r * scale_factor), 0, 255);
-        pixel.g = clamp(static_cast<int>(pixel.g * scale_factor), 0, 255);
-        pixel.b = clamp(static_cast<int>(pixel.b * scale_factor), 0, 255);
-}
-}
 

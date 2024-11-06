@@ -18,7 +18,6 @@ template<typename T>
 T clamp(const T& value, const T& low, const T& high) {
     return (value < low) ? low : (value > high) ? high : value;
 }
-void scale_intensity(std::vector<Pixel> &pixel_data, float scale_factor);
 void get_header(std::ifstream &infile, std::string &magic_number, int &width, int &height, int &max_color);
 void get_pixels(std::ifstream &infile, SoA &pixel_data, int pixel_count, bool is_16_bit);
 void write_info(std::ofstream &outfile, const std::string &magic_number, int width, int height, int max_color, SoA &pixel_data, bool is_16_bit);

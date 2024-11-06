@@ -166,7 +166,7 @@ T clamp(const T& value, const T& low, const T& high) {
     return (value < low) ? low : (value > high) ? high : value;
 }
 constexpr int MAX_COLOR_8BIT = 255;
-void maxlevel(gsl::span<Pixel> pixel_data, int new_maxlevel, bool& is_16_bit, int& max_color) {
+void maxlevel(gsl::span<Pixel> pixel_data, int new_maxlevel, int& max_color, bool& is_16_bit) {
   std::cout << "Previous max_color: " << max_color << ", New maxlevel: " << new_maxlevel << '\n';
 
   // Determinar si la salida será de 8 o 16 bits

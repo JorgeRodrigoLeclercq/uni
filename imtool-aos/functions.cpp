@@ -9,7 +9,7 @@ void get_header(std::ifstream &infile, std::string &magic_number, int &width, in
     infile >> magic_number >> width >> height >> max_color;
 
     if (magic_number != "P6") {
-        std::cerr << "Error: This program only supports P6 (binary) format" << std::endl;
+        std::cerr << "Error: This program only supports P6 (binary) format" << '\n';
         exit(1);
     }
 
@@ -17,10 +17,10 @@ void get_header(std::ifstream &infile, std::string &magic_number, int &width, in
     infile.ignore(256, '\n');
 
     // Log el header
-    std::cout << "Magic Number: " << magic_number << std::endl;
-    std::cout << "Width: " << width << std::endl;
-    std::cout << "Height: " << height << std::endl;
-    std::cout << "Max Color: " << max_color << std::endl;
+    std::cout << "Magic Number: " << magic_number << '\n';
+    std::cout << "Width: " << width << '\n';
+    std::cout << "Height: " << height << '\n';
+    std::cout << "Max Color: " << max_color << '\n';
 }
 
 // Guardar los pixeles de la imagen ppm en una estructura AoS
@@ -29,11 +29,17 @@ void get_pixels(std::ifstream &infile, std::vector<Pixel> &pixel_data, int pixel
         // max_color > 255 t por ende, bits en pixel == 2, en little-endian
         for (int i = 0; i < pixel_count; ++i) {
             uint8_t r1, r2, g1, g2, b1, b2;
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             infile.read(reinterpret_cast<char*>(&r1), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             infile.read(reinterpret_cast<char*>(&r2), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             infile.read(reinterpret_cast<char*>(&g1), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             infile.read(reinterpret_cast<char*>(&g2), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             infile.read(reinterpret_cast<char*>(&b1), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             infile.read(reinterpret_cast<char*>(&b2), 1);
 
             // Little-endian
@@ -44,8 +50,11 @@ void get_pixels(std::ifstream &infile, std::vector<Pixel> &pixel_data, int pixel
     } else {
         // max_color < 255 y por ende, bits en pixel == 1
         for (int i = 0; i < pixel_count; ++i) {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             infile.read(reinterpret_cast<char*>(&pixel_data[i].r), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             infile.read(reinterpret_cast<char*>(&pixel_data[i].g), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             infile.read(reinterpret_cast<char*>(&pixel_data[i].b), 1);
         }
     }
@@ -74,17 +83,26 @@ void write_info(std::ofstream &outfile, const std::string &magic_number, int wid
             uint8_t g2 = (pixel.g >> 8) & 0xFF;
             uint8_t b1 = pixel.b & 0xFF;
             uint8_t b2 = (pixel.b >> 8) & 0xFF;
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             outfile.write(reinterpret_cast<const char*>(&r1), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             outfile.write(reinterpret_cast<const char*>(&r2), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             outfile.write(reinterpret_cast<const char*>(&g1), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             outfile.write(reinterpret_cast<const char*>(&g2), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             outfile.write(reinterpret_cast<const char*>(&b1), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             outfile.write(reinterpret_cast<const char*>(&b2), 1);
         }
     } else {
         for (const auto &pixel : pixel_data) {
+          // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             outfile.write(reinterpret_cast<const char*>(&pixel.r), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             outfile.write(reinterpret_cast<const char*>(&pixel.g), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             outfile.write(reinterpret_cast<const char*>(&pixel.b), 1);
         }
     }
@@ -109,12 +127,18 @@ void write_cppm(std::ofstream &cppm_outfile, const std::vector<Pixel> &pixel_dat
     bool is_16_bit = max_color > 255;
     for (const auto &color : color_list) {
         if (is_16_bit) {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             cppm_outfile.write(reinterpret_cast<const char*>(&color.r), 2);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             cppm_outfile.write(reinterpret_cast<const char*>(&color.g), 2);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             cppm_outfile.write(reinterpret_cast<const char*>(&color.b), 2);
         } else {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             cppm_outfile.write(reinterpret_cast<const char*>(&color.r), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             cppm_outfile.write(reinterpret_cast<const char*>(&color.g), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             cppm_outfile.write(reinterpret_cast<const char*>(&color.b), 1);
         }
     }
@@ -123,13 +147,16 @@ void write_cppm(std::ofstream &cppm_outfile, const std::vector<Pixel> &pixel_dat
     for (const auto &pixel : pixel_data) {
         int index = color_table[pixel];
         if (table_size <= 28) {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             cppm_outfile.write(reinterpret_cast<const char*>(&index), 1);  // 1 byte <= 28 colors
         } else if (table_size <= 216) {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             cppm_outfile.write(reinterpret_cast<const char*>(&index), 2);  // 2 bytes <= 216 colors
         } else if (table_size <= 65536) {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             cppm_outfile.write(reinterpret_cast<const char*>(&index), 4);  // 4 bytes <= 232 colors
         } else {
-            std::cerr << "Error: Color table too large." << std::endl;
+            std::cerr << "Error: Color table too large." << '\n';
             exit(1);
         }
     }
@@ -138,26 +165,39 @@ template<typename T>
 T clamp(const T& value, const T& low, const T& high) {
     return (value < low) ? low : (value > high) ? high : value;
 }
-
-void maxlevel(gsl::span<Pixel> pixel_data, int new_maxlevel, int& max_color, bool& is_16_bit) {
+constexpr int MAX_COLOR_8BIT = 255;
+void maxlevel(gsl::span<Pixel> pixel_data, int new_maxlevel, bool& is_16_bit, int& max_color) {
   std::cout << "Previous max_color: " << max_color << ", New maxlevel: " << new_maxlevel << '\n';
-    is_16_bit = new_maxlevel > 255;
+
+  // Determinar si la salida será de 8 o 16 bits
+  is_16_bit = new_maxlevel > MAX_COLOR_8BIT;
+
   for (auto& pixel : pixel_data) {
-    // Escalar cada componente y asegurarse de que esté dentro del rango
-    pixel.r = static_cast<uint8_t>(
-        clamp(static_cast<int>(static_cast<float>(pixel.r * new_maxlevel) / static_cast<float>(max_color)),
+    // Escalar cada componente sin redondeo
+    uint16_t r_scaled = static_cast<uint16_t>(
+        clamp(static_cast<int>(static_cast<float>(pixel.r) * static_cast<float>(new_maxlevel) / static_cast<float>(max_color)),
               0, new_maxlevel));
-    pixel.g = static_cast<uint8_t>(
-        clamp(static_cast<int>(static_cast<float>(pixel.g * new_maxlevel) / static_cast<float>(max_color)),
+    uint16_t g_scaled = static_cast<uint16_t>(
+        clamp(static_cast<int>(static_cast<float>(pixel.g) * static_cast<float>(new_maxlevel) / static_cast<float>(max_color)),
               0, new_maxlevel));
-    pixel.b = static_cast<uint8_t>(
-        clamp(static_cast<int>(static_cast<float>(pixel.b * new_maxlevel) / static_cast<float>(max_color)),
+    uint16_t b_scaled = static_cast<uint16_t>(
+        clamp(static_cast<int>(static_cast<float>(pixel.b) * static_cast<float>(new_maxlevel) / static_cast<float>(max_color)),
               0, new_maxlevel));
+
+    // Asignar valores escalados
+    pixel.r = is_16_bit ? r_scaled : static_cast<uint8_t>(r_scaled);
+    pixel.g = is_16_bit ? g_scaled : static_cast<uint8_t>(g_scaled);
+    pixel.b = is_16_bit ? b_scaled : static_cast<uint8_t>(b_scaled);
   }
 
-  // Actualizamos el valor de max_color al nuevo nivel máximo
+  // Actualizar max_color al nuevo nivel máximo
   max_color = new_maxlevel;
 }
+
+
+
+
+
 
 
 

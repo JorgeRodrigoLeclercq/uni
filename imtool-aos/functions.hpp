@@ -12,11 +12,11 @@
 #include <gsl/span>
 
 struct Pixel {
-    uint8_t r;
-    uint8_t g;
-    uint8_t b;
+    uint16_t r;
+    uint16_t g;
+    uint16_t b;
 
-    Pixel(uint8_t red = 0, uint8_t green = 0, uint8_t blue = 0)
+    Pixel(uint16_t red = 0, uint16_t green = 0, uint16_t blue = 0)
         : r(red), g(green), b(blue) {}
 
     bool operator<(const Pixel &other) const {

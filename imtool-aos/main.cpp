@@ -55,7 +55,9 @@ int main(int argc, const char *argv[]) {
 
     // Variables del header
     std::string magic_number;
-    int width, height, max_color;
+    int width = 0;
+    int height = 0;
+    int max_color = 0;
 
     // INFO COMMAND
     get_header(infile, magic_number, width, height, max_color);

@@ -12,17 +12,14 @@ int main(int argc, char *argv[]) {
 
   gsl::span const args{argv, gsl::narrow<std::size_t>(argc)}; // Creamos la vista
 
-  std::ifstream infile(args[1], std::ios::binary);  // abrir en modo binario
-  if (!infile) {
-      std::cerr << "Error: Could not open file " << argv[1] << std::endl;
-      return 1;
-  }
-
-  std::ofstream outfile(argv[2], std::ios::binary);
+  std::ifstream infile(args[1], std::ios::binary);
+  std::ofstream outfile(args[2], std::ios::binary);
 
   // Variables del header
   std::string magic_number;
-  int width, height, max_color;
+  int width;
+  int height;
+  int max_color;
 
   // INFO COMMAND
   get_header(infile, magic_number, width, height, max_color);
@@ -45,7 +42,7 @@ int main(int argc, char *argv[]) {
   // Escribir en outfile, INFO COMMAND
   write_info(outfile, magic_number, width, height, max_color, pixel_data, is_16_bit);
 
-  std::ofstream cppm_outfile(argv[3], std::ios::binary);
+  std::ofstream cppm_outfile(args[3], std::ios::binary);
 
   // COMPRESS COMMAND
   write_cppm(cppm_outfile, pixel_data, width, height, max_color);

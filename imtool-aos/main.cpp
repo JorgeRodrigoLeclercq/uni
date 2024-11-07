@@ -1,21 +1,22 @@
-#include <iostream>
-#include <fstream>
-#include <gsl/gsl>
-#include <vector>
-#include <string>
-#include <cstdlib>
+#include "common/progargs.hpp"
 #include "functions.hpp"
 
-const uint16_t MAX_COLOR_VALUE16 = 65535;
+#include <cstdlib>
+#include <fstream>
+#include <gsl/gsl>
+#include <iostream>
+#include <string>
+#include <vector>
+
+uint16_t MAX_COLOR_VALUE16 = 65535;
 
 int main(int argc, const char *argv[]) {
-    if (argc <4) {
-        std::cerr << "Error: Missing arguments\n";
-        return -1;
-    }
-    gsl::span<const char*> args_view{argv, gsl::narrow<std::size_t>(argc)};
 
-    std::string command = args_view[3];
+    checkNumberArgs(argc); // Comprobar que el número de argumentos es correcto
+
+    gsl::span const args{argv, gsl::narrow<std::size_t>(argc)}; // Creamos la vista
+
+    std::string command = args[3];
     int new_maxlevel= 0;
     if (command =="maxlevel") {
         if (argc !=5) {
@@ -24,9 +25,9 @@ int main(int argc, const char *argv[]) {
         }
     }
     try {
-        new_maxlevel = std::stoi(args_view[4]);
+        new_maxlevel = std::stoi(args[4]);
     } catch (const std::invalid_argument &){
-        std::cerr << "Error: Invalid argument for maxlevel: " << args_view[4] << "\n";
+        std::cerr << "Error: Invalid argument for maxlevel: " << args[4] << "\n";
         return -1;
     }
     if (new_maxlevel < 0 || new_maxlevel > MAX_COLOR_VALUE16){

@@ -8,7 +8,7 @@ void get_header(std::ifstream &infile, std::string &magic_number, int &width, in
     infile >> magic_number >> width >> height >> max_color;
 
     if (magic_number != "P6") {
-        std::cerr << "Error: This program only supports P6 (binary) format" << std::endl;
+        std::cerr << "Error: This program only supports P6 (binary) format" << '\n';
         exit(1);
     }
 
@@ -16,10 +16,10 @@ void get_header(std::ifstream &infile, std::string &magic_number, int &width, in
     infile.ignore(256, '\n');
 
     // Log el header
-    std::cout << "Magic Number: " << magic_number << std::endl;
-    std::cout << "Width: " << width << std::endl;
-    std::cout << "Height: " << height << std::endl;
-    std::cout << "Max Color: " << max_color << std::endl;
+    std::cout << "Magic Number: " << magic_number << '\n';
+    std::cout << "Width: " << width << '\n';
+    std::cout << "Height: " << height << '\n';
+    std::cout << "Max Color: " << max_color << '\n';
 }
 
 // Guardar los pixeles de la imagen ppm en una estructura SoA
@@ -27,12 +27,23 @@ void get_pixels(std::ifstream &infile, SoA &pixel_data, int pixel_count, bool is
     if (is_16_bit) {
         // max_color > 255 t por ende, bits en pixel == 2, en little-endian
         for (int i = 0; i < pixel_count; ++i) {
-            uint8_t r1, r2, g1, g2, b1, b2;
+            uint8_t r1;
+            uint8_t r2;
+            uint8_t g1;
+            uint8_t g2;
+            uint8_t b1;
+            uint8_t b2;
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             infile.read(reinterpret_cast<char*>(&r1), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             infile.read(reinterpret_cast<char*>(&r2), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             infile.read(reinterpret_cast<char*>(&g1), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             infile.read(reinterpret_cast<char*>(&g2), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             infile.read(reinterpret_cast<char*>(&b1), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             infile.read(reinterpret_cast<char*>(&b2), 1);
 
             // Little-endian
@@ -43,19 +54,22 @@ void get_pixels(std::ifstream &infile, SoA &pixel_data, int pixel_count, bool is
     } else {
         // max_color > 255 y por ende, bits en pixel == 1
         for (int i = 0; i < pixel_count; ++i) {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             infile.read(reinterpret_cast<char*>(&pixel_data.r[i]), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             infile.read(reinterpret_cast<char*>(&pixel_data.g[i]), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             infile.read(reinterpret_cast<char*>(&pixel_data.b[i]), 1);
         }
     }
 
     // Log pixels
-    std::cout << "First few pixels (RGB values):" << std::endl;
+    std::cout << "First few pixels (RGB values):" << '\n';
     for (int i = 0; i < std::min(10, pixel_count); ++i) {
         std::cout << "Pixel " << i << ": "
                   << "R = " << static_cast<int>(pixel_data.r[i]) << ", "
                   << "G = " << static_cast<int>(pixel_data.g[i]) << ", "
-                  << "B = " << static_cast<int>(pixel_data.b[i]) << std::endl;
+                  << "B = " << static_cast<int>(pixel_data.b[i]) << '\n';
     }
 }
 
@@ -72,17 +86,26 @@ void write_info(std::ofstream &outfile, const std::string &magic_number, int wid
             uint8_t g2 = (pixel_data.g[i] >> 8) & 0xFF;
             uint8_t b1 = pixel_data.b[i] & 0xFF;
             uint8_t b2 = (pixel_data.b[i] >> 8) & 0xFF;
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             outfile.write(reinterpret_cast<const char*>(&r1), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             outfile.write(reinterpret_cast<const char*>(&r2), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             outfile.write(reinterpret_cast<const char*>(&g1), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             outfile.write(reinterpret_cast<const char*>(&g2), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             outfile.write(reinterpret_cast<const char*>(&b1), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             outfile.write(reinterpret_cast<const char*>(&b2), 1);
         }
     } else {
         for (std::size_t i = 0; i < pixel_data.r.size(); ++i) {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             outfile.write(reinterpret_cast<const char*>(&pixel_data.r[i]), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             outfile.write(reinterpret_cast<const char*>(&pixel_data.g[i]), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             outfile.write(reinterpret_cast<const char*>(&pixel_data.b[i]), 1);
         }
     }
@@ -115,12 +138,18 @@ void write_cppm(std::ofstream &cppm_outfile, SoA &pixel_data, int width, int hei
         uint8_t b = std::get<2>(color_tuple);
 
         if (is_16_bit) {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             cppm_outfile.write(reinterpret_cast<const char*>(&r), 2);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             cppm_outfile.write(reinterpret_cast<const char*>(&g), 2);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             cppm_outfile.write(reinterpret_cast<const char*>(&b), 2);
         } else {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             cppm_outfile.write(reinterpret_cast<const char*>(&r), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             cppm_outfile.write(reinterpret_cast<const char*>(&g), 1);
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             cppm_outfile.write(reinterpret_cast<const char*>(&b), 1);
         }
     }
@@ -131,13 +160,16 @@ void write_cppm(std::ofstream &cppm_outfile, SoA &pixel_data, int width, int hei
         int index = color_table[color_tuple];
 
         if (table_size <= 28) {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             cppm_outfile.write(reinterpret_cast<const char*>(&index), 1);  // 1 byte <= 28 colors
         } else if (table_size <= 216) {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             cppm_outfile.write(reinterpret_cast<const char*>(&index), 2);  // 2 bytes <= 216 colors
         } else if (table_size <= 65536) {
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
             cppm_outfile.write(reinterpret_cast<const char*>(&index), 4);  // 4 bytes <= 232 colors
         } else {
-            std::cerr << "Error: Color table too large." << std::endl;
+            std::cerr << "Error: Color table too large." << '\n';
             exit(1);
         }
     }

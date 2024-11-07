@@ -3,54 +3,73 @@
 
 #include <iostream>
 #include <fstream>
+#include <utility>
 #include <vector>
 #include <string>
 #include <cstdint>
 #include <map>
 #include <variant>
-#include <cstdint>
 #include <gsl/span>
 
+const int DEFAULT_MAX_COLOR = 255; // Constante para el valor por defecto de max_color
+
+// Estructura para representar los canales de color de un píxel
+struct ColorChannels {
+    uint16_t red;
+    uint16_t green;
+    uint16_t blue;
+};
+
+// Definición de Pixel utilizando ColorChannels
 struct Pixel {
-    uint16_t r;
-    uint16_t g;
-    uint16_t b;
+    ColorChannels channels;
 
     Pixel(uint16_t red = 0, uint16_t green = 0, uint16_t blue = 0)
-        : r(red), g(green), b(blue) {}
+      : channels{red, green, blue} {}
 
     bool operator<(const Pixel &other) const {
-        return std::tie(r, g, b) < std::tie(other.r, other.g, other.b);
+      return std::tie(channels.red, channels.green, channels.blue) <
+             std::tie(other.channels.red, other.channels.green, other.channels.blue);
     }
 };
 
-struct Dimension {
-    int height;
+// Estructura para agrupar dimensiones de la imagen
+struct ImageDimensions {
     int width;
-
-    Dimension(int height = 0, int width = 0)
-        : height(height), width(width) {}
-
+    int height;
 };
 
-// Guardar la información del header de la imagen ppm en magic_number, width, height y max_color
-void get_header(std::ifstream &infile, std::string &magic_number, int &width, int &height, int &max_color);
+// Definición de ImageHeader utilizando ImageDimensions
+struct ImageHeader {
+    std::string magic_number;
+    ImageDimensions dimensions;
+    int max_color;
 
-// Guardar los pixeles de la imagen ppm en una estructura AoS
-void get_pixels(std::ifstream &infile, std::vector<Pixel> &pixel_data, int pixel_count, bool is_16_bit);
+    ImageHeader(std::string magic = "", ImageDimensions dims = {0, 0}, int max_c = DEFAULT_MAX_COLOR)
+      : magic_number(std::move(magic)), dimensions(dims), max_color(max_c) {}
+};
 
-// Ecribir la información de la imagen en el archivo de salida
-void write_info(std::ofstream &outfile, const std::string &magic_number, int width, int height, int max_color, const std::vector<Pixel> &pixel_data, bool is_16_bit);
+// Funciones para manipular imágenes
 
-// Comprimir la imagen
-void write_cppm(std::ofstream &cppm_outfile, const std::vector<Pixel> &pixel_data, int width, int height, int max_color);
+void get_header(std::ifstream & infile, ImageHeader & header);
 
-void maxlevel(gsl::span<Pixel> pixel_data, int new_maxlevel, int &max_color, bool& is_16_bit);
+void get_pixels(std::ifstream &infile, std::vector<Pixel> &pixel_data, unsigned long long pixel_count, bool is_16_bit);
 
-double interpolacion(std::vector<double>  &first_point , std::vector<double> & second_point , int y_value);
+void write_info(std::ofstream &outfile, const ImageHeader &header, const std::vector<Pixel> &pixel_data, bool is_16_bit);
 
-Pixel interpolacion_colores ( std::vector<Pixel> &pixel_Data, std::vector<double> &coordenadas , int width_counter , Dimension &original_dimension );
+void write_cppm(std::ofstream &cppm_outfile, const ImageHeader &header, const std::vector<Pixel> &pixel_data);
 
-void DimensionChange(Dimension& original_dimension, std::vector<Pixel> &pixel_Data , Dimension& new_dimension);
-#endif //FUNCTIONS_HPP
+void maxlevel(int new_maxlevel, bool& is_16_bit, gsl::span<Pixel> &pixel_data, ImageHeader &header);
+
+double interpolacion(const std::vector<double> &first_point, const std::vector<double> &second_point, int y_value);
+
+Pixel interpolacion_colores(const std::vector<Pixel> &pixel_data, const std::vector<double> &coordinates, int width_count, const ImageHeader &original_header);
+
+void DimensionChange(const ImageHeader &original_header, std::vector<Pixel> &pixel_data, ImageHeader &new_header);
+
+#endif // FUNCTIONS_HPP
+
+
+
+
 

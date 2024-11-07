@@ -1,4 +1,4 @@
-#include "common/progargs.hpp"
+//#include "progargs.hpp"
 #include "functions.hpp"
 
 #include <cstdlib>
@@ -8,36 +8,36 @@
 #include <string>
 #include <vector>
 
-uint16_t MAX_COLOR_VALUE16 = 65535;
+const uint8_t MAX_COLOR_VALUE8 = 255;
+const uint16_t MAX_COLOR_VALUE16 = 65535;
 
 int main(int argc, const char *argv[]) {
 
-  checkNumberArgs(argc); // Comprobar que el número de argumentos es correcto
+  //checkNumberArgs(argc); // Comprobar que el número de argumentos es correcto
 
   gsl::span const args{argv, gsl::narrow<std::size_t>(argc)}; // Creamos la vista
 
-  switch (args[3]) {
-    case "info":
-      break;
-
-    case "maxlevel":
-      break;
-
-    case "resize":
-      break;
-
-    case "cutfreq":
-      break;
-
-    case "compress":
-      break;
-
-    default:
-      std::cerr << "Error: Invalid command: " << args[3] << "\n";
-      exit(-1);
+  /*if (std::string(args[3]) == "info") {
+    // Código para "info"
   }
+  else if (std::string(args[3]) == "maxlevel") {
+    // Código para "maxlevel"
+  }
+  else if (std::string(args[3]) == "resize") {
+    // Código para "resize"
+  }
+  else if (std::string(args[3]) == "cutfreq") {
+    // Código para "cutfreq"
+  }
+  else if (std::string(args[3]) == "compress") {
+    // Código para "compress"
+  }
+  else {
+    std::cerr << "Error: Invalid command: " << args[3] << "\n";
+    exit(-1);
+  }*/
 
-  if (args[3] =="maxlevel") {
+  if (std::string(args[3]) == "maxlevel") {
       if (argc !=5) {
           std::cerr << "Error: Invalid number of arguments for maxlevel: " << (argc - 4) << "\n";
       exit(-1);
@@ -69,36 +69,35 @@ int main(int argc, const char *argv[]) {
   }
 
   // Variables del header
-  std::string magic_number;
-  int width = 0;
-  int height = 0;
-  int max_color = 0;
+  ImageHeader header;
 
   // INFO COMMAND
-  get_header(infile, magic_number, width, height, max_color);
+  get_header(infile, header);
 
   // Tamaño en pixeles de la imagen
-  int pixel_count = width * height;
+  auto pixel_count =
+      static_cast<unsigned long long int>(header.dimensions.width * header.dimensions.height);
 
   // Array of Structures
   std::vector<Pixel> pixel_data(static_cast<std::size_t>(pixel_count));
 
+  gsl::span<Pixel> pixel_span{pixel_data};
   // Determinar la longitud de cada pixel (2 bytes si max_color > 256; else: 1)
-  bool is_16_bit = max_color > 255;
+  bool is_16_bit = header.max_color > MAX_COLOR_VALUE8;
 
   // RELLENAR EL ARRAY OF STRUCTURES CON LOS PIXELES
   get_pixels(infile, pixel_data, pixel_count, is_16_bit);
 
-  if (args[3] == "maxlevel") {
-      maxlevel(pixel_data, new_maxlevel, max_color, is_16_bit);
+  if (std::string(args[3]) == "maxlevel") {
+      maxlevel(new_maxlevel, is_16_bit, pixel_span, header);
   }
   // Escribir en outfile, INFO COMMAND
-  write_info(outfile, magic_number, width, height, max_color, pixel_data, is_16_bit);
+  write_info(outfile, header, pixel_data, is_16_bit);
 
   std::ofstream cppm_outfile(args[3], std::ios::binary);
 
   // COMPRESS COMMAND
-  write_cppm(cppm_outfile, pixel_data, width, height, max_color);
+  write_cppm(cppm_outfile, header, pixel_data);
 
   infile.close();
   outfile.close();

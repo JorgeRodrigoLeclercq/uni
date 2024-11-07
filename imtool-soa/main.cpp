@@ -12,6 +12,27 @@ int main(int argc, char *argv[]) {
 
   gsl::span const args{argv, gsl::narrow<std::size_t>(argc)}; // Creamos la vista
 
+  switch (args[3]) {
+    case "info":
+      break;
+
+    case "maxlevel":
+      break;
+
+    case "resize":
+      break;
+
+    case "cutfreq":
+      break;
+
+    case "compress":
+      break;
+
+    default:
+      std::cerr << "Error: Invalid command: " << args[3] << "\n";
+    exit(-1);
+  }
+
   std::ifstream infile(args[1], std::ios::binary);
   std::ofstream outfile(args[2], std::ios::binary);
 

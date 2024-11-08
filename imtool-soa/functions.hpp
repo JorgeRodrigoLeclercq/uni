@@ -1,15 +1,18 @@
 #ifndef FUNCTIONS_HPP
 #define FUNCTIONS_HPP
 
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <string>
-#include <cstdint>
-#include <map>
 #include <algorithm>
+#include <cstdint>
+#include <fstream>
+#include <gsl/span>
+#include <iostream>
+#include <map>
+#include <string>
 #include <tuple>
+#include <utility>
+#include <vector>
 
+constexpr int DEFAULT_MAX_COLOR = 255;
 struct ImageDimensions {
     int width;
     int height;
@@ -19,14 +22,26 @@ struct ImageDimensions {
 struct SoA {
     std::vector<uint8_t> r, g, b;  // arrays distintos para el rojo, el verde y el azul
 };
-template<typename T>
-T clamp(const T& value, const T& low, const T& high) {
-    return (value < low) ? low : (value > high) ? high : value;
-}
-void get_header(std::ifstream &infile, std::string &magic_number, int &width, int &height, int &max_color);
-void get_pixels(std::ifstream &infile, SoA &pixel_data, int pixel_count, bool is_16_bit);
-void write_info(std::ofstream &outfile, const std::string &magic_number, int width, int height, int max_color, SoA &pixel_data, bool is_16_bit);
-void write_cppm(std::ofstream &cppm_outfile, SoA &pixel_data, int width, int height, int max_color);
+
+struct ImageHeader {
+    std::string magic_number;
+    ImageDimensions dimensions;
+    int max_color;
+
+    ImageHeader(std::string magic = "", ImageDimensions dims = {0, 0}, int max_c = DEFAULT_MAX_COLOR)
+      : magic_number(std::move(magic)), dimensions(dims), max_color(max_c) {}
+};
+
+void get_header(std::ifstream &infile, ImageHeader &header);
+
+void get_pixels(std::ifstream &infile, SoA &pixel_data, unsigned long long pixel_count, bool is_16_bit);
+
+void write_info(std::ofstream& outfile, const ImageHeader& header, const SoA& pixel_data, bool is_16_bit);
+
+void write_cppm(std::ofstream& cppm_outfile, const ImageHeader& header, const SoA& pixel_data);
+
+void maxlevel(int new_maxlevel, bool& is_16_bit, SoA &pixel_data, ImageHeader &header);
+
 double interpolacion(const std::vector<double> &first_point, const std::vector<double> &second_point, int y_value);
 
 std::vector<uint16_t> interpolacion_colores(SoA &pixel_Data, std::vector<double> &coordenadas , int width_counter , ImageDimensions &original_dimension );

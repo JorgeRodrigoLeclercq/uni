@@ -1,4 +1,4 @@
-#include "common/progargs.hpp"
+#include "../common/progargs.hpp"
 #include "functions.hpp"
 
 #include <cstdlib>
@@ -17,7 +17,7 @@ int main(int argc, const char *argv[]) {
 
   gsl::span const args{argv, gsl::narrow<std::size_t>(argc)}; // Creamos la vista
 
-  switch (args[3]) {
+  /*switch (args[3]) {
     case "info":
       break;
 
@@ -37,7 +37,7 @@ int main(int argc, const char *argv[]) {
       std::cerr << "Error: Invalid command: " << args[3] << "\n";
     exit(-1);
   }
-
+*/
 
 
 
@@ -99,9 +99,7 @@ int main(int argc, const char *argv[]) {
   // RELLENAR EL ARRAY OF STRUCTURES CON LOS PIXELES
   get_pixels(infile, pixel_data, pixel_count, is_16_bit);
 
-  if (std::string(args[3]) == "maxlevel") {
-      maxlevel(new_maxlevel, is_16_bit, pixel_span, header);
-  }
+
   // Escribir en outfile, INFO COMMAND
   write_info(outfile, header, pixel_data, is_16_bit);
 

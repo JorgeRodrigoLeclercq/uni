@@ -42,7 +42,7 @@ struct ImageHeader {
     ImageDimensions dimensions;
     int max_color;
 
-    ImageHeader(const std::string& magic = "", ImageDimensions dims = {0, 0}, int max_c = DEFAULT_MAX_COLOR)
+    ImageHeader(std::string  magic = "", ImageDimensions dims = {0, 0}, int max_c = DEFAULT_MAX_COLOR)
       : magic_number(std::move(magic)), dimensions(dims), max_color(max_c) {}
 };
 

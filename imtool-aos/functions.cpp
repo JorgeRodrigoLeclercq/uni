@@ -3,6 +3,9 @@
 #include <bits/algorithmfwd.h>
 #include <cstdint>
 #include <iostream>
+#include <fstream>
+#include <algorithm>
+
 
 // Guardar la información del header de la imagen ppm en magic_number, width, height y max_color
 void get_header(std::ifstream &infile, ImageHeader &header) {
@@ -182,11 +185,6 @@ void write_cppm(std::ofstream &cppm_outfile, const ImageHeader &header, const st
   }
 }
 
-template<typename T>
-T clamp(const T& value, const T& low, const T& high) {
-    return (value < low) ? low : (value > high) ? high : value;
-}
-
 constexpr int MAX_COLOR_8BIT = 255;
 
 void maxlevel(int new_maxlevel, bool& is_16_bit, gsl::span<Pixel> &pixel_data, ImageHeader &header) {
@@ -197,13 +195,13 @@ void maxlevel(int new_maxlevel, bool& is_16_bit, gsl::span<Pixel> &pixel_data, I
   for (auto& pixel : pixel_data) {
     // Escalar cada componente sin redondeo
     uint16_t r_scaled = static_cast<uint16_t>(
-        clamp(static_cast<int>(static_cast<float>(pixel.channels.red) * static_cast<float>(new_maxlevel) / static_cast<float>(header.max_color)),
+        std::clamp(static_cast<int>(static_cast<float>(pixel.channels.red) * static_cast<float>(new_maxlevel) / static_cast<float>(header.max_color)),
               0, new_maxlevel));
     uint16_t g_scaled = static_cast<uint16_t>(
-        clamp(static_cast<int>(static_cast<float>(pixel.channels.green) * static_cast<float>(new_maxlevel) / static_cast<float>(header.max_color)),
+        std::clamp(static_cast<int>(static_cast<float>(pixel.channels.green) * static_cast<float>(new_maxlevel) / static_cast<float>(header.max_color)),
               0, new_maxlevel));
     uint16_t b_scaled = static_cast<uint16_t>(
-        clamp(static_cast<int>(static_cast<float>(pixel.channels.blue) * static_cast<float>(new_maxlevel) / static_cast<float>(header.max_color)),
+        std::clamp(static_cast<int>(static_cast<float>(pixel.channels.blue) * static_cast<float>(new_maxlevel) / static_cast<float>(header.max_color)),
               0, new_maxlevel));
 
     // Asignar valores escalados

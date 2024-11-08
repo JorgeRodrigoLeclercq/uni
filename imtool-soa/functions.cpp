@@ -2,181 +2,238 @@
 #include <algorithm> // For std::clamp
 #include <cmath>
 #include <bits/algorithmfwd.h>
+#include <fstream>
+#include <iostream>
 
 // Guardar la información del header de la imagen ppm en magic_number, width, height y max_color
-void get_header(std::ifstream &infile, std::string &magic_number, int &width, int &height, int &max_color) {
+void get_header(std::ifstream &infile, ImageHeader &header) {
+  const int MAX_IGNORE_CHARS = 256;
     // Leer el header
-    infile >> magic_number >> width >> height >> max_color;
+    infile >> header.magic_number >> header.dimensions.width >> header.dimensions.height >> header.max_color;
 
-    if (magic_number != "P6") {
+    if (header.magic_number != "P6") {
         std::cerr << "Error: This program only supports P6 (binary) format" << '\n';
         exit(1);
     }
 
     // Saltar espacios blancos
-    infile.ignore(256, '\n');
+    infile.ignore(MAX_IGNORE_CHARS, '\n');
 
     // Log el header
-    std::cout << "Magic Number: " << magic_number << '\n';
-    std::cout << "Width: " << width << '\n';
-    std::cout << "Height: " << height << '\n';
-    std::cout << "Max Color: " << max_color << '\n';
+    std::cout << "Magic Number: " << header.magic_number << '\n';
+    std::cout << "Width: " << header.dimensions.width << '\n';
+    std::cout << "Height: " << header.dimensions.height << '\n';
+    std::cout << "Max Color: " << header.max_color << '\n';
 }
 
-// Guardar los pixeles de la imagen ppm en una estructura SoA
-void get_pixels(std::ifstream &infile, SoA &pixel_data, int pixel_count, bool is_16_bit) {
-    if (is_16_bit) {
-        // max_color > 255 t por ende, bits en pixel == 2, en little-endian
-        for (int i = 0; i < pixel_count; ++i) {
-            uint8_t r1;
-            uint8_t r2;
-            uint8_t g1;
-            uint8_t g2;
-            uint8_t b1;
-            uint8_t b2;
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            infile.read(reinterpret_cast<char*>(&r1), 1);
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            infile.read(reinterpret_cast<char*>(&r2), 1);
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            infile.read(reinterpret_cast<char*>(&g1), 1);
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            infile.read(reinterpret_cast<char*>(&g2), 1);
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            infile.read(reinterpret_cast<char*>(&b1), 1);
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            infile.read(reinterpret_cast<char*>(&b2), 1);
+void get_pixels(std::ifstream &infile, SoA &pixel_data, unsigned long long pixel_count, bool is_16_bit) {
+    const int BIT_SHIFT = 8;
+    const int FIRST_PIXELS = 10;
 
-            // Little-endian
-            pixel_data.r[i] = r1 | (r2 << 8);
-            pixel_data.g[i] = g1 | (g2 << 8);
-            pixel_data.b[i] = b1 | (b2 << 8);
-        }
-    } else {
-        // max_color > 255 y por ende, bits en pixel == 1
-        for (int i = 0; i < pixel_count; ++i) {
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            infile.read(reinterpret_cast<char*>(&pixel_data.r[i]), 1);
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            infile.read(reinterpret_cast<char*>(&pixel_data.g[i]), 1);
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            infile.read(reinterpret_cast<char*>(&pixel_data.b[i]), 1);
-        }
-    }
+  if (is_16_bit) {
+    // max_color > 255, por lo tanto, bits por píxel = 2, en little-endian
+    for (unsigned long long int i = 0; i < pixel_count; ++i) {
+      uint8_t red1 = 0;
+      uint8_t red2 = 0;
+      uint8_t green1 = 0;
+      uint8_t green2 = 0;
+      uint8_t blue1 = 0;
+      uint8_t blue2 = 0;
 
-    // Log pixels
-    std::cout << "First few pixels (RGB values):" << '\n';
-    for (int i = 0; i < std::min(10, pixel_count); ++i) {
-        std::cout << "Pixel " << i << ": "
-                  << "R = " << static_cast<int>(pixel_data.r[i]) << ", "
-                  << "G = " << static_cast<int>(pixel_data.g[i]) << ", "
-                  << "B = " << static_cast<int>(pixel_data.b[i]) << '\n';
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      infile.read(reinterpret_cast<char*>(&red1), 1);  // Leer primer byte de rojo
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      infile.read(reinterpret_cast<char*>(&red2), 1);  // Leer segundo byte de rojo
+
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      infile.read(reinterpret_cast<char*>(&green1), 1);  // Leer primer byte de verde
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      infile.read(reinterpret_cast<char*>(&green2), 1);  // Leer segundo byte de verde
+
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      infile.read(reinterpret_cast<char*>(&blue1), 1);  // Leer primer byte de azul
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      infile.read(reinterpret_cast<char*>(&blue2), 1);  // Leer segundo byte de azul
+
+      // Little-endian: combinar los dos bytes para cada componente de color
+      pixel_data.r[i] = static_cast<unsigned char>(
+          red1 | (red2 << BIT_SHIFT));   // Combinación de los dos bytes de rojo
+      pixel_data.g[i] = static_cast<unsigned char>(
+          green1 | (green2 << BIT_SHIFT));  // Combinación de los dos bytes de verde
+      pixel_data.b[i] = static_cast<unsigned char>(
+          blue1 | (blue2 << BIT_SHIFT));   // Combinación de los dos bytes de azul
     }
+  } else {
+    // max_color <= 255, por lo tanto, bits por píxel = 1
+    for (unsigned long long i = 0; i < pixel_count; ++i) {
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      infile.read(reinterpret_cast<char*>(&pixel_data.r[i]), 1);  // Leer un byte de rojo
+
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      infile.read(reinterpret_cast<char*>(&pixel_data.g[i]), 1);  // Leer un byte de verde
+
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      infile.read(reinterpret_cast<char*>(&pixel_data.b[i]), 1);  // Leer un byte de azul
+    }
+  }
+
+  // Log de los primeros píxeles
+  std::cout << "Primeros píxeles (valores RGB):" << '\n';
+  for (unsigned long long int i = 0; i < std::min(static_cast<unsigned long long int>(FIRST_PIXELS), pixel_count); ++i) {
+    std::cout << "Píxel " << i << ": "
+              << "R = " << static_cast<int>(pixel_data.r[i]) << ", "
+              << "G = " << static_cast<int>(pixel_data.g[i]) << ", "
+              << "B = " << static_cast<int>(pixel_data.b[i]) << '\n';
+  }
 }
 
-void write_info(std::ofstream &outfile, const std::string &magic_number, int width, int height, int max_color, SoA &pixel_data, bool is_16_bit) {
-    outfile << magic_number << "\n";
-    outfile << width << " " << height << "\n";
-    outfile << max_color << "\n";
+void write_info(std::ofstream& outfile, const ImageHeader& header, SoA& pixel_data, bool is_16_bit) {
+    const uint16_t MASK_BYTE = 0xFF;
+    const int BITS_PER_BYTE = 8;
 
-    if (is_16_bit) {
-        for (std::size_t i = 0; i < pixel_data.r.size(); ++i) {
-            uint8_t r1 = pixel_data.r[i] & 0xFF;
-            uint8_t r2 = (pixel_data.r[i] >> 8) & 0xFF;
-            uint8_t g1 = pixel_data.g[i] & 0xFF;
-            uint8_t g2 = (pixel_data.g[i] >> 8) & 0xFF;
-            uint8_t b1 = pixel_data.b[i] & 0xFF;
-            uint8_t b2 = (pixel_data.b[i] >> 8) & 0xFF;
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            outfile.write(reinterpret_cast<const char*>(&r1), 1);
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            outfile.write(reinterpret_cast<const char*>(&r2), 1);
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            outfile.write(reinterpret_cast<const char*>(&g1), 1);
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            outfile.write(reinterpret_cast<const char*>(&g2), 1);
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            outfile.write(reinterpret_cast<const char*>(&b1), 1);
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            outfile.write(reinterpret_cast<const char*>(&b2), 1);
-        }
-    } else {
-        for (std::size_t i = 0; i < pixel_data.r.size(); ++i) {
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            outfile.write(reinterpret_cast<const char*>(&pixel_data.r[i]), 1);
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            outfile.write(reinterpret_cast<const char*>(&pixel_data.g[i]), 1);
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            outfile.write(reinterpret_cast<const char*>(&pixel_data.b[i]), 1);
-        }
-    }
-}
+  outfile << header.magic_number << "\n";
+  outfile << header.dimensions.width << " " << header.dimensions.height << "\n";
+  outfile << header.max_color << "\n";
 
-//Ecribir la información de la imagen en el archivo de salida
-
-void write_cppm(std::ofstream &cppm_outfile, SoA &pixel_data, int width, int height, int max_color) {
-    // Mapear cada pixel a un índice
-    std::map<std::tuple<uint8_t, uint8_t, uint8_t>, int> color_table;
-    std::vector<std::tuple<uint8_t, uint8_t, uint8_t>> color_list;
-
-    int color_index = 0;
+  if (is_16_bit) {
     for (std::size_t i = 0; i < pixel_data.r.size(); ++i) {
-        auto color_tuple = std::make_tuple(pixel_data.r[i], pixel_data.g[i], pixel_data.b[i]);
+      uint8_t red1 = pixel_data.r[i] & MASK_BYTE;
+      uint8_t red2 = (pixel_data.r[i] >> BITS_PER_BYTE) & MASK_BYTE;
+      uint8_t green1 = pixel_data.g[i] & MASK_BYTE;
+      uint8_t green2 = (pixel_data.g[i] >> BITS_PER_BYTE) & MASK_BYTE;
+      uint8_t blue1 = pixel_data.b[i] & MASK_BYTE;
+      uint8_t blue2 = (pixel_data.b[i] >> BITS_PER_BYTE) & MASK_BYTE;
 
-        if (color_table.find(color_tuple) == color_table.end()) {
-            color_table[color_tuple] = color_index++;
-            color_list.push_back(color_tuple);
-        }
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      outfile.write(reinterpret_cast<const char*>(&red1), 1);
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      outfile.write(reinterpret_cast<const char*>(&red2), 1);
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      outfile.write(reinterpret_cast<const char*>(&green1), 1);
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      outfile.write(reinterpret_cast<const char*>(&green2), 1);
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      outfile.write(reinterpret_cast<const char*>(&blue1), 1);
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      outfile.write(reinterpret_cast<const char*>(&blue2), 1);
     }
-
-    // CPPM header
-    cppm_outfile << "P6 " << width << " " << height << " " << max_color << " " << color_list.size() << "\n";
-
-    bool is_16_bit = max_color > 255;
-    for (const auto &color_tuple : color_list) {
-        uint8_t r = std::get<0>(color_tuple);
-        uint8_t g = std::get<1>(color_tuple);
-        uint8_t b = std::get<2>(color_tuple);
-
-        if (is_16_bit) {
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            cppm_outfile.write(reinterpret_cast<const char*>(&r), 2);
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            cppm_outfile.write(reinterpret_cast<const char*>(&g), 2);
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            cppm_outfile.write(reinterpret_cast<const char*>(&b), 2);
-        } else {
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            cppm_outfile.write(reinterpret_cast<const char*>(&r), 1);
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            cppm_outfile.write(reinterpret_cast<const char*>(&g), 1);
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            cppm_outfile.write(reinterpret_cast<const char*>(&b), 1);
-        }
-    }
-
-    int table_size = color_list.size();
+  } else {
+    // Para imágenes de 8 bits por componente
     for (std::size_t i = 0; i < pixel_data.r.size(); ++i) {
-        auto color_tuple = std::make_tuple(pixel_data.r[i], pixel_data.g[i], pixel_data.b[i]);
-        int index = color_table[color_tuple];
-
-        if (table_size <= 28) {
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            cppm_outfile.write(reinterpret_cast<const char*>(&index), 1);  // 1 byte <= 28 colors
-        } else if (table_size <= 216) {
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            cppm_outfile.write(reinterpret_cast<const char*>(&index), 2);  // 2 bytes <= 216 colors
-        } else if (table_size <= 65536) {
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            cppm_outfile.write(reinterpret_cast<const char*>(&index), 4);  // 4 bytes <= 232 colors
-        } else {
-            std::cerr << "Error: Color table too large." << '\n';
-            exit(1);
-        }
+      // Escribir un byte de cada componente de color
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      outfile.write(reinterpret_cast<const char*>(&pixel_data.r[i]), 1);
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      outfile.write(reinterpret_cast<const char*>(&pixel_data.g[i]), 1);
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      outfile.write(reinterpret_cast<const char*>(&pixel_data.b[i]), 1);
     }
+  }
 }
 
-void DimensionChange( ImageDimensions & original_dimension,  SoA & pixel_Data,
+void write_cppm(std::ofstream& cppm_outfile, const ImageHeader& header, SoA& pixel_data) {
+    const uint8_t MAX_COLOR_VALUE8 = 255;
+
+  // Mapear cada índice a su color
+  std::map<std::tuple<uint8_t, uint8_t, uint8_t>, int> color_table;
+  std::vector<std::tuple<uint8_t, uint8_t, uint8_t>> color_list;
+
+  int color_index = 0;
+  for (std::size_t i = 0; i < pixel_data.r.size(); ++i) {
+    auto color_tuple = std::make_tuple(pixel_data.r[i], pixel_data.g[i], pixel_data.b[i]);
+
+    if (color_table.find(color_tuple) == color_table.end()) {
+      color_table[color_tuple] = color_index++;
+      color_list.push_back(color_tuple);
+    }
+  }
+
+  // CPPM header
+  cppm_outfile << "C6 " << header.dimensions.width << " " << header.dimensions.height << " " << header.max_color << " " << color_list.size() << "\n";
+
+  bool is_16_bit = header.max_color > MAX_COLOR_VALUE8;
+  for (const auto &color_tuple : color_list) {
+    uint8_t red = std::get<0>(color_tuple);
+    uint8_t green = std::get<1>(color_tuple);
+    uint8_t blue = std::get<2>(color_tuple);
+
+    if (is_16_bit) {
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      cppm_outfile.write(reinterpret_cast<const char*>(&red), 2);
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      cppm_outfile.write(reinterpret_cast<const char*>(&green), 2);
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      cppm_outfile.write(reinterpret_cast<const char*>(&blue), 2);
+    } else {
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      cppm_outfile.write(reinterpret_cast<const char*>(&red), 1);
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      cppm_outfile.write(reinterpret_cast<const char*>(&green), 1);
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      cppm_outfile.write(reinterpret_cast<const char*>(&blue), 1);
+    }
+  }
+
+  // Determinar el tamaño del índice basado en el tamaño de la tabla de colores
+  auto table_size = color_list.size(); // `size_t` es más seguro aquí.
+
+  if (table_size <= static_cast<size_t>(UINT8_MAX)) {
+    for (std::size_t i = 0; i < pixel_data.r.size(); ++i) {
+      auto color_tuple = std::make_tuple(pixel_data.r[i], pixel_data.g[i], pixel_data.b[i]);
+      auto index = static_cast<uint8_t>(color_table[color_tuple]);
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      cppm_outfile.write(reinterpret_cast<const char*>(&index), 1);
+    }
+  } else if (table_size <= static_cast<size_t>(UINT16_MAX)) {
+    for (std::size_t i = 0; i < pixel_data.r.size(); ++i) {
+      auto color_tuple = std::make_tuple(pixel_data.r[i], pixel_data.g[i], pixel_data.b[i]);
+      auto index = static_cast<uint16_t>(color_table[color_tuple]);
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      cppm_outfile.write(reinterpret_cast<const char*>(&index), 2);
+    }
+  } else if (table_size <= static_cast<size_t>(UINT32_MAX)) {
+    for (std::size_t i = 0; i < pixel_data.r.size(); ++i) {
+      auto color_tuple = std::make_tuple(pixel_data.r[i], pixel_data.g[i], pixel_data.b[i]);
+      auto index = static_cast<uint32_t>(color_table[color_tuple]);
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      cppm_outfile.write(reinterpret_cast<const char*>(&index), 4);
+    }
+  } else {
+    std::cerr << "Error: Color table too large." << '\n';
+    exit(1);
+  }
+}
+
+constexpr int MAX_COLOR_8BIT = 255;
+
+void maxlevel(int new_maxlevel, bool& is_16_bit, SoA& color_data, ImageHeader& header) {
+  // Determinar si la salida será de 8 o 16 bits
+  is_16_bit = new_maxlevel > MAX_COLOR_8BIT;
+
+  // Escalar los componentes de color sin redondeo para cada canal
+  for (size_t i = 0; i < color_data.r.size(); ++i) {
+    uint16_t r_scaled = static_cast<uint16_t>(
+        std::clamp(static_cast<int>(static_cast<float>(color_data.r[i]) * static_cast<float>(new_maxlevel) / static_cast<float>(header.max_color)),
+                   0, new_maxlevel));
+    uint16_t g_scaled = static_cast<uint16_t>(
+        std::clamp(static_cast<int>(static_cast<float>(color_data.g[i]) * static_cast<float>(new_maxlevel) / static_cast<float>(header.max_color)),
+                   0, new_maxlevel));
+    uint16_t b_scaled = static_cast<uint16_t>(
+        std::clamp(static_cast<int>(static_cast<float>(color_data.b[i]) * static_cast<float>(new_maxlevel) / static_cast<float>(header.max_color)),
+                   0, new_maxlevel));
+
+    // Asignar los valores escalados
+    color_data.r[i] = static_cast<uint8_t>(r_scaled);
+    color_data.g[i] = static_cast<uint8_t>(g_scaled);
+    color_data.b[i] = static_cast<uint8_t>(b_scaled);
+  }
+
+  // Actualizar max_color al nuevo nivel máximo
+  header.max_color = new_maxlevel;
+}
+
+
+/*void DimensionChange( ImageDimensions & original_dimension,  SoA & pixel_Data,
                      const ImageDimensions & new_dimension) {
   const int pixel_count = new_dimension.width * new_dimension.height;
 
@@ -281,5 +338,5 @@ double interpolacion( const std::vector<double>  &first_point ,const std::vector
       //Formula for getting the z ( color) value of the interpolation of two thredimensional points
       return ( first_point[2] + (( second_point[2] - first_point[2]) * ((y_value - first_point[1]) / ( second_point[1] - first_point[0]))));
 
-    }
+    }*/
 

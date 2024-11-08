@@ -28,7 +28,20 @@ struct Pixel {
       return std::tie(channels.red, channels.green, channels.blue) <
              std::tie(other.channels.red, other.channels.green, other.channels.blue);
     }
+
+    bool operator==(const Pixel &other) const {
+        return channels.red == other.channels.red && channels.green == other.channels.green && channels.blue == other.channels.blue;
+    }
 };
+
+// Especialización de std::hash para la clase Pixel
+namespace std {
+    struct hash<Pixel> {
+        size_t operator()(const Pixel& pix) const noexcept{
+            return hash<int>()(pix.channels.red) ^ (hash<int>()(pix.channels.green) << 1) ^ (hash<int>()(pix.channels.blue) << 2);
+        }
+    };
+}
 
 // Estructura para agrupar dimensiones de la imagen
 struct ImageDimensions {

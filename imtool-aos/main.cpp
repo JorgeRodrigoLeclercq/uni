@@ -17,6 +17,27 @@ int main(int argc, const char *argv[]) {
 
   gsl::span const args{argv, gsl::narrow<std::size_t>(argc)}; // Creamos la vista
 
+  // Variables del header
+  ImageHeader header;
+  std::ifstream infile(args[1], std::ios::binary);  // abrir en modo binario
+
+  get_header(infile, header);
+
+  // Tamaño en pixeles de la imagen
+  auto pixel_count =
+      static_cast<unsigned long long int>(header.dimensions.width * header.dimensions.height);
+
+  // Array of Structures
+  std::vector<Pixel> pixel_data(static_cast<std::size_t>(pixel_count));
+
+  gsl::span<Pixel> pixel_span{pixel_data};
+
+  // Determinar la longitud de cada pixel (2 bytes si max_color > 256; else: 1)
+  bool is_16_bit = header.max_color > MAX_COLOR_VALUE8;
+
+  // RELLENAR EL ARRAY OF STRUCTURES CON LOS PIXELES
+  get_pixels(infile, pixel_data, pixel_count, is_16_bit);
+
   if (args[3] == "info") {
     // Código para el caso "info"
   }
@@ -66,11 +87,6 @@ int main(int argc, const char *argv[]) {
       exit(-1);
   }
 
- std::ifstream infile(args[1], std::ios::binary);  // abrir en modo binario
-  if (!infile) {
-      std::cerr << "Error: Could not open file " << args[1] << "\n";
-      return 1;
-  }
 
   std::ofstream outfile(args[2], std::ios::binary);
   if (!outfile) {
@@ -79,25 +95,9 @@ int main(int argc, const char *argv[]) {
       return 1;
   }
 
-  // Variables del header
-  ImageHeader header;
 
-  // INFO COMMAND
-  get_header(infile, header);
 
-  // Tamaño en pixeles de la imagen
-  auto pixel_count =
-      static_cast<unsigned long long int>(header.dimensions.width * header.dimensions.height);
 
-  // Array of Structures
-  std::vector<Pixel> pixel_data(static_cast<std::size_t>(pixel_count));
-
-  gsl::span<Pixel> pixel_span{pixel_data};
-  // Determinar la longitud de cada pixel (2 bytes si max_color > 256; else: 1)
-  bool is_16_bit = header.max_color > MAX_COLOR_VALUE8;
-
-  // RELLENAR EL ARRAY OF STRUCTURES CON LOS PIXELES
-  get_pixels(infile, pixel_data, pixel_count, is_16_bit);
 
 
   // Escribir en outfile, INFO COMMAND

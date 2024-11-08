@@ -63,9 +63,9 @@ void maxlevel(int new_maxlevel, bool& is_16_bit, gsl::span<Pixel> &pixel_data, I
 
 double interpolacion(const std::vector<double> &first_point, const std::vector<double> &second_point, int y_value);
 
-Pixel interpolacion_colores(const std::vector<Pixel> &pixel_data, const std::vector<double> &coordinates, int width_count, const ImageHeader &original_header);
+Pixel interpolacion_colores(const std::vector<Pixel> &pixel_data, const std::vector<double> &coordinates, int width_count,ImageDimensions &original_dimension);
 
-void DimensionChange(const ImageHeader &original_header, std::vector<Pixel> &pixel_data, ImageHeader &new_header);
+void DimensionChange(ImageDimensions &original_dimension, std::vector<Pixel> &pixel_data, ImageHeader &new_header);
 
 #endif // FUNCTIONS_HPP
 

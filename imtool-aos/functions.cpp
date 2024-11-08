@@ -177,7 +177,9 @@ template<typename T>
 T clamp(const T& value, const T& low, const T& high) {
     return (value < low) ? low : (value > high) ? high : value;
 }
+
 constexpr int MAX_COLOR_8BIT = 255;
+
 void maxlevel(int new_maxlevel, bool& is_16_bit, gsl::span<Pixel> &pixel_data, ImageHeader &header) {
   std::cout << "Previous max_color: " << header.max_color << ", New maxlevel: " << new_maxlevel << '\n';
 
@@ -296,7 +298,7 @@ Pixel interpolacion_colores ( std::vector<Pixel> &pixel_Data, std::vector<double
 
               coordenadas = {new_x, x_floor, x_ceil, new_y , y_floor, y_ceil};
               //We write the new data in our new image
-              new_pixel_data[i + (j * i)] = interpolacion_colores(pixel_Data, coordenadas, i , original_dimension);
+              new_pixel_data[static_cast<unsigned long long int>(i + (j * new_dimension.width))] = interpolacion_colores(pixel_Data, coordenadas, i , original_dimension);
             }
       }
 }

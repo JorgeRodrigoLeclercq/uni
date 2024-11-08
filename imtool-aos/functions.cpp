@@ -209,13 +209,13 @@ void maxlevel(int new_maxlevel, bool& is_16_bit, gsl::span<Pixel> &pixel_data, I
   std::cout << "Updated max_color: " << header.max_color << '\n'; // Depuración
 }
 
-double interpolacion(std::vector<double>  &first_point , std::vector<double> & second_point , int y_value) {
+double interpolacion(const std::vector<double>  &first_point , const std::vector<double> & second_point , const int y_value) {
    //Formula for getting the z ( color) value of the interpolation of two thredimensional points
       return ( first_point[2] + (( second_point[2] - first_point[2]) * ((y_value - first_point[1]) / ( second_point[1] - first_point[0]))));
 
 }
 
-Pixel interpolacion_colores ( std::vector<Pixel> &pixel_Data, std::vector<double> &coordenadas , int width_counter , ImageDimensions &original_dimension ) {
+Pixel interpolacion_colores ( const std::vector<Pixel> &pixel_Data, std::vector<double> &coordenadas , const int width_counter , const ImageDimensions &original_dimension ) {
 
   Pixel pixel;
               std::vector<double> first_point = {coordenadas[1], coordenadas[4], (double)pixel_Data[static_cast<unsigned long long int>(
@@ -225,15 +225,15 @@ Pixel interpolacion_colores ( std::vector<Pixel> &pixel_Data, std::vector<double
                                         static_cast<long>(coordenadas[2] + coordenadas[4]) *
                                         original_dimension.width)].channels.red};
               double color_c1 = interpolacion(first_point, second_point, width_counter);
-              first_point = {coordenadas[1], coordenadas[5],static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
-                                            static_cast<long>(coordenadas[1] + coordenadas[5]) *
+              first_point = {coordenadas[1], coordenadas[4+1],static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
+                                            static_cast<long>(coordenadas[1] + coordenadas[4+1]) *
                                             original_dimension.width)].channels.red)};
-              second_point = {coordenadas[2], coordenadas[5], static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
-                                             static_cast<long>(coordenadas[2] + coordenadas[5]) *
+              second_point = {coordenadas[2], coordenadas[4 +1], static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
+                                             static_cast<long>(coordenadas[2] + coordenadas[4 +1]) *
                                              original_dimension.width)].channels.red)};
               double color_c2 = interpolacion(first_point, second_point, width_counter);
               first_point = {coordenadas[0], coordenadas[4], color_c1};
-              second_point = {coordenadas[0],coordenadas[5], color_c2};
+              second_point = {coordenadas[0],coordenadas[4 +1], color_c2};
               pixel.channels.red      = static_cast<uint16_t>(interpolacion(first_point, second_point, width_counter));
               // --g
               first_point = {coordenadas[1], coordenadas[4], static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
@@ -243,15 +243,15 @@ Pixel interpolacion_colores ( std::vector<Pixel> &pixel_Data, std::vector<double
                                              static_cast<long>(coordenadas[2] + coordenadas[4]) *
                                              original_dimension.width)].channels.green)};
               color_c1 = interpolacion(first_point, second_point, width_counter);
-              first_point = {coordenadas[1], coordenadas[5], static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
-                                            static_cast<long>(coordenadas[1] + coordenadas[5]) *
+              first_point = {coordenadas[1], coordenadas[4 +1 ], static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
+                                            static_cast<long>(coordenadas[1] + coordenadas[4 + 1]) *
                                             original_dimension.width)].channels.green)};
-              second_point = {coordenadas[2], coordenadas[5], static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
-                                             static_cast<long>(coordenadas[2] + coordenadas[5]) *
+              second_point = {coordenadas[2], coordenadas[4 + 1], static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
+                                             static_cast<long>(coordenadas[2] + coordenadas[4 +1]) *
                                              original_dimension.width)].channels.green)};
               color_c2 = interpolacion(first_point, second_point, width_counter);
               first_point = {coordenadas[0], coordenadas[4], color_c1};
-              second_point = {coordenadas[0], coordenadas[5], color_c2};
+              second_point = {coordenadas[0], coordenadas[4 +1], color_c2};
               pixel.channels.green = static_cast<uint16_t>(interpolacion(first_point, second_point, width_counter));
               // --b
               first_point = {coordenadas[1], coordenadas[4], static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
@@ -261,22 +261,22 @@ Pixel interpolacion_colores ( std::vector<Pixel> &pixel_Data, std::vector<double
                                              static_cast<long>(coordenadas[2] + coordenadas[4]) *
                                              original_dimension.width)].channels.blue)};
               color_c1 = interpolacion(first_point, second_point, width_counter);
-              first_point = {coordenadas[1], coordenadas[5], static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
-                                            static_cast<long>(coordenadas[1] + coordenadas[5]) *
+              first_point = {coordenadas[1], coordenadas[4+1], static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
+                                            static_cast<long>(coordenadas[1] + coordenadas[4+ 1]) *
                                             original_dimension.width)].channels.blue)};
-              second_point = {coordenadas[2], coordenadas[5], static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
-                                             static_cast<long>(coordenadas[2] + coordenadas[5]) *
+              second_point = {coordenadas[2], coordenadas[4+1], static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
+                                             static_cast<long>(coordenadas[2] + coordenadas[4+ 1]) *
                                              original_dimension.width)].channels.blue)};
               color_c2 = interpolacion(first_point, second_point, width_counter);
               first_point = {coordenadas[0], coordenadas[4], color_c1};
-              second_point = {coordenadas[0], coordenadas[5], color_c2};
+              second_point = {coordenadas[0], coordenadas[4+1], color_c2};
               pixel.channels.blue = static_cast<uint16_t>(interpolacion(first_point, second_point, width_counter));
 
   return pixel;
 
 }
 
-  void DimensionChange(ImageDimensions& original_dimension, std::vector<Pixel> &pixel_Data , ImageDimensions& new_dimension) {
+  void DimensionChange(const ImageDimensions& original_dimension, const  std::vector<Pixel> &pixel_Data , const ImageDimensions& new_dimension) {
       std::vector<Pixel> new_pixel_data(static_cast<std::size_t>(new_dimension.width * new_dimension.height));
       Pixel pixel; pixel.channels.red = 0; pixel.channels.green = 0; pixel.channels.blue = 0;
       double new_x =  0.0;

@@ -1,7 +1,7 @@
 #include "functions.hpp"
 #include <cmath>
 #include <bits/algorithmfwd.h>
-
+#include <cstdint>
 
 // Guardar la información del header de la imagen ppm en magic_number, width, height y max_color
 void get_header(std::ifstream &infile, ImageHeader &header) {
@@ -118,61 +118,69 @@ void write_info(std::ofstream &outfile, const ImageHeader &header, const std::ve
 }
 
 void write_cppm(std::ofstream &cppm_outfile, const ImageHeader &header, const std::vector<Pixel> &pixel_data) {
-  const uint8_t MAX_COLOR_VALUE8 = 255;
-  const int MAX_COLORS_1BYTE = 28;
-  const int MAX_COLORS_2BYTES = 216;
-  const int MAX_COLORS_4BYTES = 65536;
-    // Mapear cada índice a su color
-    std::map<Pixel, int> color_table;
-    std::vector<Pixel> color_list;
+    const uint8_t MAX_COLOR_VALUE8 = 255;
 
-    int color_index = 0;
+  // Mapear cada índice a su color
+  std::map<Pixel, int> color_table;
+  std::vector<Pixel> color_list;
+
+  int color_index = 0;
+  for (const auto &pixel : pixel_data) {
+    if (color_table.find(pixel) == color_table.end()) {
+      color_table[pixel] = color_index++;
+      color_list.push_back(pixel);
+    }
+  }
+
+  // CPPM header
+  cppm_outfile << "C6 " << header.dimensions.width << " " << header.dimensions.height << " " << header.max_color << " " << color_list.size() << "\n";
+
+  bool is_16_bit = header.max_color > MAX_COLOR_VALUE8;
+  for (const auto &color : color_list) {
+    if (is_16_bit) {
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      cppm_outfile.write(reinterpret_cast<const char*>(&color.channels.red), 2);
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      cppm_outfile.write(reinterpret_cast<const char*>(&color.channels.green), 2);
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      cppm_outfile.write(reinterpret_cast<const char*>(&color.channels.blue), 2);
+    } else {
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      cppm_outfile.write(reinterpret_cast<const char*>(&color.channels.red), 1);
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      cppm_outfile.write(reinterpret_cast<const char*>(&color.channels.green), 1);
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      cppm_outfile.write(reinterpret_cast<const char*>(&color.channels.blue), 1);
+    }
+  }
+
+  // Determinar el tamaño del índice basado en el tamaño de la tabla de colores
+  auto table_size = color_list.size(); // `size_t` es más seguro aquí.
+
+  if (table_size <= static_cast<size_t>(UINT8_MAX)) {
     for (const auto &pixel : pixel_data) {
-        if (color_table.find(pixel) == color_table.end()) {
-            color_table[pixel] = color_index++;
-            color_list.push_back(pixel);
-        }
+      auto index = static_cast<uint8_t>(color_table[pixel]);
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      cppm_outfile.write(reinterpret_cast<const char*>(&index), 1);
     }
-
-    // CPPM header
-    cppm_outfile << "C6 " << header.dimensions.width << " " << header.dimensions.height << " " << header.max_color << " " << color_list.size() << "\n";
-
-    bool is_16_bit = header.max_color > MAX_COLOR_VALUE8;
-    for (const auto &color : color_list) {
-        if (is_16_bit) {
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            cppm_outfile.write(reinterpret_cast<const char*>(&color.channels.red), 2);
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            cppm_outfile.write(reinterpret_cast<const char*>(&color.channels.green), 2);
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            cppm_outfile.write(reinterpret_cast<const char*>(&color.channels.blue), 2);
-        } else {
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            cppm_outfile.write(reinterpret_cast<const char*>(&color.channels.red), 1);
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            cppm_outfile.write(reinterpret_cast<const char*>(&color.channels.green), 1);
-            // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-            cppm_outfile.write(reinterpret_cast<const char*>(&color.channels.blue), 1);
-        }
-    }
-    int table_size = color_list.size();
+  } else if (table_size <= static_cast<size_t>(UINT16_MAX)) {
     for (const auto &pixel : pixel_data) {
-      int index = color_table[pixel];
-      if (table_size <= MAX_COLORS_1BYTE) {
-        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-        cppm_outfile.write(reinterpret_cast<const char*>(&index), 1);  // 1 byte <= 28 colors
-      } else if (table_size <= MAX_COLORS_2BYTES) {
-        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-        cppm_outfile.write(reinterpret_cast<const char*>(&index), 2);  // 2 bytes <= 216 colors
-      } else if (table_size <= MAX_COLORS_4BYTES) {
-        // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-        cppm_outfile.write(reinterpret_cast<const char*>(&index), 4);  // 4 bytes <= 232 colors
-      } else {
-        std::cerr << "Error: Color table too large." << '\n';
-        exit(1);
-      }
+      auto index = static_cast<uint16_t>(color_table[pixel]);
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      cppm_outfile.write(reinterpret_cast<const char*>(&index), 2);
     }
+  } else if (table_size <= static_cast<size_t>(UINT32_MAX)) {
+    for (const auto &pixel : pixel_data) {
+      auto index = static_cast<uint32_t>(color_table[pixel]);
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+      cppm_outfile.write(reinterpret_cast<const char*>(&index), 4);
+    }
+  } else {
+    std::cerr << "Error: Color table too large." << '\n';
+    exit(1);
+  }
 }
+
 template<typename T>
 T clamp(const T& value, const T& low, const T& high) {
     return (value < low) ? low : (value > high) ? high : value;
@@ -181,7 +189,6 @@ T clamp(const T& value, const T& low, const T& high) {
 constexpr int MAX_COLOR_8BIT = 255;
 
 void maxlevel(int new_maxlevel, bool& is_16_bit, gsl::span<Pixel> &pixel_data, ImageHeader &header) {
-  std::cout << "Previous max_color: " << header.max_color << ", New maxlevel: " << new_maxlevel << '\n';
 
   // Determinar si la salida será de 8 o 16 bits
   is_16_bit = new_maxlevel > MAX_COLOR_8BIT;
@@ -206,7 +213,6 @@ void maxlevel(int new_maxlevel, bool& is_16_bit, gsl::span<Pixel> &pixel_data, I
 
   // Actualizar max_color al nuevo nivel máximo
   header.max_color = new_maxlevel;
-  std::cout << "Updated max_color: " << header.max_color << '\n'; // Depuración
 }
 
 double interpolacion(const std::vector<double>  &first_point , const std::vector<double> & second_point , const int y_value) {

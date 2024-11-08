@@ -14,26 +14,26 @@ int main(int argc, char *argv[]) {
 
   gsl::span const args{argv, gsl::narrow<std::size_t>(argc)}; // Creamos la vista
 
-  /*switch (args[3]) {
-    case "info":
-      break;
-
-    case "maxlevel":
-      break;
-
-    case "resize":
-      break;
-
-    case "cutfreq":
-      break;
-
-    case "compress":
-      break;
-
-    default:
-      std::cerr << "Error: Invalid command: " << args[3] << "\n";
+  if (args[3] == "info") {
+    // Código para el caso "info"
+  }
+  else if (args[3] == "maxlevel") {
+    // Código para el caso "maxlevel"
+  }
+  else if (args[3] == "resize") {
+    // Código para el caso "resize"
+  }
+  else if (args[3] == "cutfreq") {
+    // Código para el caso "cutfreq"
+  }
+  else if (args[3] == "compress") {
+    // Código para el caso "compress"
+  }
+  else {
+    std::cerr << "Error: Invalid command: " << args[3] << "\n";
     exit(-1);
-  }*/
+  }
+
 
 
 

@@ -210,6 +210,8 @@ void DimensionChange( ImageDimensions & original_dimension,  SoA & pixel_Data,
       new_pixel_data.b[static_cast<unsigned long long int> (i  + (j * new_dimension.width))] = new_data[2];
     }
   }
+
+
 }
 
 std::vector<uint16_t> interpolacion_colores ( const SoA &pixel_Data, const std::vector<double> &coordenadas , const int width_counter , const ImageDimensions &original_dimension ) {

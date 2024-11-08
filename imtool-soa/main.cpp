@@ -33,6 +33,13 @@ int main(int argc, char *argv[]) {
     exit(-1);
   }
 
+
+
+
+
+
+
+
   std::ifstream infile(args[1], std::ios::binary);
   std::ofstream outfile(args[2], std::ios::binary);
 

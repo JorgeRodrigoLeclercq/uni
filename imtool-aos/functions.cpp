@@ -2,6 +2,7 @@
 #include <cmath>
 #include <bits/algorithmfwd.h>
 #include <cstdint>
+#include <iostream>
 
 // Guardar la información del header de la imagen ppm en magic_number, width, height y max_color
 void get_header(std::ifstream &infile, ImageHeader &header) {

@@ -1,4 +1,4 @@
-//#include "progargs.hpp"
+#include "common/progargs.hpp"
 #include "functions.hpp"
 
 #include <cstdlib>
@@ -8,34 +8,45 @@
 #include <string>
 #include <vector>
 
-const uint8_t MAX_COLOR_VALUE8 = 255;
-const uint16_t MAX_COLOR_VALUE16 = 65535;
+constexpr uint8_t MAX_COLOR_VALUE8 = 255;
+constexpr uint16_t MAX_COLOR_VALUE16 = 65535;
 
 int main(int argc, const char *argv[]) {
 
-  //checkNumberArgs(argc); // Comprobar que el número de argumentos es correcto
+  checkNumberArgs(argc); // Comprobar que el número de argumentos es correcto para todas las funciones
 
   gsl::span const args{argv, gsl::narrow<std::size_t>(argc)}; // Creamos la vista
 
-  /*if (std::string(args[3]) == "info") {
-    // Código para "info"
-  }
-  else if (std::string(args[3]) == "maxlevel") {
-    // Código para "maxlevel"
-  }
-  else if (std::string(args[3]) == "resize") {
-    // Código para "resize"
-  }
-  else if (std::string(args[3]) == "cutfreq") {
-    // Código para "cutfreq"
-  }
-  else if (std::string(args[3]) == "compress") {
-    // Código para "compress"
-  }
-  else {
-    std::cerr << "Error: Invalid command: " << args[3] << "\n";
+  switch (args[3]) {
+    case "info":
+      break;
+
+    case "maxlevel":
+      break;
+
+    case "resize":
+      break;
+
+    case "cutfreq":
+      break;
+
+    case "compress":
+      break;
+
+    default:
+      std::cerr << "Error: Invalid command: " << args[3] << "\n";
     exit(-1);
-  }*/
+  }
+
+
+
+
+
+
+
+
+
+
 
   if (std::string(args[3]) == "maxlevel") {
       if (argc !=5) {

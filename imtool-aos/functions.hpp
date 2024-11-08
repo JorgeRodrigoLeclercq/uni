@@ -1,17 +1,14 @@
 #ifndef FUNCTIONS_HPP
 #define FUNCTIONS_HPP
 
-#include <iostream>
-#include <fstream>
+#include <cstdint>
+#include <gsl/span>
+#include <map>
+#include <string>
 #include <utility>
 #include <vector>
-#include <string>
-#include <cstdint>
-#include <map>
-#include <variant>
-#include <gsl/span>
 
-const int DEFAULT_MAX_COLOR = 255; // Constante para el valor por defecto de max_color
+constexpr int DEFAULT_MAX_COLOR = 255; // Constante para el valor por defecto de max_color
 
 // Estructura para representar los canales de color de un píxel
 struct ColorChannels {
@@ -45,7 +42,7 @@ struct ImageHeader {
     ImageDimensions dimensions;
     int max_color;
 
-    ImageHeader(std::string magic = "", ImageDimensions dims = {0, 0}, int max_c = DEFAULT_MAX_COLOR)
+    ImageHeader(const std::string& magic = "", ImageDimensions dims = {0, 0}, int max_c = DEFAULT_MAX_COLOR)
       : magic_number(std::move(magic)), dimensions(dims), max_color(max_c) {}
 };
 

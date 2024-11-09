@@ -36,11 +36,14 @@ struct Pixel {
 
 // Especialización de std::hash para la clase Pixel
 namespace std {
-    struct hash<Pixel> {
-        size_t operator()(const Pixel& pix) const noexcept{
-            return hash<int>()(pix.channels.red) ^ (hash<int>()(pix.channels.green) << 1) ^ (hash<int>()(pix.channels.blue) << 2);
-        }
-    };
+  template <>
+  struct hash<Pixel> {
+      size_t operator()(const Pixel& pix) const noexcept {
+        return hash<int>()(pix.channels.red)
+               ^ (hash<int>()(pix.channels.green) << 1)
+               ^ (hash<int>()(pix.channels.blue) << 2);
+      }
+  };
 }
 
 // Estructura para agrupar dimensiones de la imagen

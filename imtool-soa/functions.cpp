@@ -56,12 +56,9 @@ void get_pixels(std::ifstream &infile, SoA &pixel_data, unsigned long long pixel
       infile.read(reinterpret_cast<char*>(&blue2), 1);  // Leer segundo byte de azul
 
       // Little-endian: combinar los dos bytes para cada componente de color
-      pixel_data.r[i] = static_cast<unsigned char>(
-          red1 | (red2 << BIT_SHIFT));   // Combinación de los dos bytes de rojo
-      pixel_data.g[i] = static_cast<unsigned char>(
-          green1 | (green2 << BIT_SHIFT));  // Combinación de los dos bytes de verde
-      pixel_data.b[i] = static_cast<unsigned char>(
-          blue1 | (blue2 << BIT_SHIFT));   // Combinación de los dos bytes de azul
+      pixel_data.r[i] = static_cast<uint16_t>(red1 | (red2 << BIT_SHIFT));
+      pixel_data.g[i] = static_cast<uint16_t>(green1 | (green2 << BIT_SHIFT));
+      pixel_data.b[i] = static_cast<uint16_t>(blue1 | (blue2 << BIT_SHIFT));
     }
   } else {
     // max_color <= 255, por lo tanto, bits por píxel = 1
@@ -87,7 +84,7 @@ void get_pixels(std::ifstream &infile, SoA &pixel_data, unsigned long long pixel
   }
 }
 
-void write_info(std::ofstream& outfile, const ImageHeader& header, SoA& pixel_data, bool is_16_bit) {
+void write_info(std::ofstream& outfile, ImageHeader& header, SoA& pixel_data, bool is_16_bit) {
     const uint16_t MASK_BYTE = 0xFF;
     const int BITS_PER_BYTE = 8;
 
@@ -131,7 +128,7 @@ void write_info(std::ofstream& outfile, const ImageHeader& header, SoA& pixel_da
   }
 }
 
-void write_cppm(std::ofstream& cppm_outfile, const ImageHeader& header, SoA& pixel_data) {
+void write_cppm(std::ofstream& cppm_outfile, ImageHeader& header, SoA& pixel_data) {
     const uint8_t MAX_COLOR_VALUE8 = 255;
 
   // Mapear cada índice a su color
@@ -202,30 +199,31 @@ void write_cppm(std::ofstream& cppm_outfile, const ImageHeader& header, SoA& pix
     std::cerr << "Error: Color table too large." << '\n';
     exit(1);
   }
+
 }
 
 constexpr int MAX_COLOR_8BIT = 255;
 
-void maxlevel(int new_maxlevel, bool& is_16_bit, SoA& color_data, ImageHeader& header) {
+void maxlevel(int new_maxlevel, bool& is_16_bit, SoA& pixel_data, ImageHeader& header) {
   // Determinar si la salida será de 8 o 16 bits
   is_16_bit = new_maxlevel > MAX_COLOR_8BIT;
 
   // Escalar los componentes de color sin redondeo para cada canal
-  for (size_t i = 0; i < color_data.r.size(); ++i) {
+  for (size_t i = 0; i < pixel_data.r.size(); ++i) {
     uint16_t r_scaled = static_cast<uint16_t>(
-        std::clamp(static_cast<int>(static_cast<float>(color_data.r[i]) * static_cast<float>(new_maxlevel) / static_cast<float>(header.max_color)),
+        std::clamp(static_cast<int>(static_cast<float>(pixel_data.r[i]) * static_cast<float>(new_maxlevel) / static_cast<float>(header.max_color)),
                    0, new_maxlevel));
     uint16_t g_scaled = static_cast<uint16_t>(
-        std::clamp(static_cast<int>(static_cast<float>(color_data.g[i]) * static_cast<float>(new_maxlevel) / static_cast<float>(header.max_color)),
+        std::clamp(static_cast<int>(static_cast<float>(pixel_data.g[i]) * static_cast<float>(new_maxlevel) / static_cast<float>(header.max_color)),
                    0, new_maxlevel));
     uint16_t b_scaled = static_cast<uint16_t>(
-        std::clamp(static_cast<int>(static_cast<float>(color_data.b[i]) * static_cast<float>(new_maxlevel) / static_cast<float>(header.max_color)),
+        std::clamp(static_cast<int>(static_cast<float>(pixel_data.b[i]) * static_cast<float>(new_maxlevel) / static_cast<float>(header.max_color)),
                    0, new_maxlevel));
 
     // Asignar los valores escalados
-    color_data.r[i] = static_cast<uint8_t>(r_scaled);
-    color_data.g[i] = static_cast<uint8_t>(g_scaled);
-    color_data.b[i] = static_cast<uint8_t>(b_scaled);
+    pixel_data.r[i] = r_scaled;
+    pixel_data.g[i] = g_scaled;
+    pixel_data.b[i] = b_scaled;
   }
 
   // Actualizar max_color al nuevo nivel máximo

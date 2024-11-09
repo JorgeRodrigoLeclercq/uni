@@ -20,7 +20,7 @@ struct ImageDimensions {
 
 // Structure of Arrays (SoA)
 struct SoA {
-    std::vector<uint8_t> r, g, b;  // arrays distintos para el rojo, el verde y el azul
+    std::vector<uint16_t> r, g, b;  // arrays distintos para el rojo, el verde y el azul
 };
 
 struct ImageHeader {
@@ -36,9 +36,9 @@ void get_header(std::ifstream &infile, ImageHeader &header);
 
 void get_pixels(std::ifstream &infile, SoA &pixel_data, unsigned long long pixel_count, bool is_16_bit);
 
-void write_info(std::ofstream& outfile, const ImageHeader& header, const SoA& pixel_data, bool is_16_bit);
+void write_info(std::ofstream& outfile, ImageHeader& header, SoA& pixel_data, bool is_16_bit);
 
-void write_cppm(std::ofstream& cppm_outfile, const ImageHeader& header, const SoA& pixel_data);
+void write_cppm(std::ofstream& cppm_outfile, ImageHeader& header, SoA& pixel_data);
 
 void maxlevel(int new_maxlevel, bool& is_16_bit, SoA &pixel_data, ImageHeader &header);
 

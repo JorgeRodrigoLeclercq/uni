@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
 
   gsl::span const args{argv, gsl::narrow<std::size_t>(argc)}; // Creamos la vista
 
-  if (args[3] == "info") {
+  /*if (args[3] == "info") {
     // Código para el caso "info"
   }
   else if (args[3] == "maxlevel") {
@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
   else {
     std::cerr << "Error: Invalid command: " << args[3] << "\n";
     exit(-1);
-  }
+  }*/
 
 
 
@@ -72,7 +72,6 @@ int main(int argc, char *argv[]) {
     infile.close();
     return 1;
   }
-
   ImageHeader header;
   auto pixel_count =
       static_cast<unsigned long long int>(header.dimensions.width * header.dimensions.height);
@@ -86,21 +85,15 @@ int main(int argc, char *argv[]) {
   // Variables del header
   bool is_16_bit = header.max_color > MAX_COLOR_VALUE8;
 
-
+  get_header(infile, header);
   // // RELLENAR LOS ARRAYS DE LA ESTRUCTURA CON LOS PIXELES
   get_pixels(infile, pixel_data, pixel_count, is_16_bit);
 
 
   if (std::string(args[3]) == "maxlevel") {
     maxlevel(new_maxlevel, is_16_bit, pixel_data, header);
-    write_info(outfile, header, pixel_data, is_16_bit);
-
-    std::ofstream cppm_outfile(args[3], std::ios::binary);
-    // COMPRESS COMMAND
-    write_cppm(cppm_outfile, header, pixel_data);
   }
   // Escribir en outfile, INFO COMMAND
-
   write_info(outfile, header, pixel_data, is_16_bit);
 
   std::ofstream cppm_outfile(args[3], std::ios::binary);

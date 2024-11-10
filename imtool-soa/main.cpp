@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <gsl/gsl>
+#include <imtool-aos/functions.hpp>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -67,9 +68,58 @@ int main(int argc, const char *argv[]) {
       exit(-1);
     }
   }
-  else if (args[3] == "resize"){
-    // Código para el comando "resize"
+
+  //--------------------------------------------------
+  else if (args[3] == "resize") {
+    if (argc != 4 + 1) {
+      std::cerr << "Error: Invalid number of extra arguments for resize: " << (argc - 4) << "\n";
+      exit(-1);
+    }
+    ImageDimensions new_dimensions{};
+    ImageDimensions old_dimensions{};
+    old_dimensions.width = header.dimensions.width;
+    old_dimensions.height = header.dimensions.height;
+
+    try {
+      new_dimensions.width= std::stoi(args[4]);
+    } catch (const std::invalid_argument &){
+      std::cerr << "Error: Invalid resize width " << args[4] << "\n";
+      exit(-1);
+    }
+    try {
+      new_dimensions.width= std::stoi(args[4+1]);
+    } catch (const std::invalid_argument &){
+      std::cerr << "Error: Invalid resize heigth" << args[4+1] << "\n";
+      exit(-1);
+    }
+
+    if (new_dimensions.width < 0 ){
+      std::cerr << "Error: Invalid resize width: " << new_dimensions.width << "\n";
+      exit(-1);
+    }
+    else if (new_dimensions.height < 0 ){
+      std::cerr << "Error: Invalid resize height: " << new_dimensions.height << "\n";
+      exit(-1);
+    }
+
+    const int new_pixel_count = new_dimensions.width * new_dimensions.height;
+
+    // Structure of Arrays
+    SoA new_pixel_data;
+    new_pixel_data.r.resize(new_pixel_count);
+    new_pixel_data.g.resize(new_pixel_count);
+    new_pixel_data.b.resize(new_pixel_count);
+
+    new_pixel_data = ReSize(old_dimensions, pixel_data,new_dimensions );
+    header.dimensions.height = new_dimensions.height;
+    header.dimensions.width = new_dimensions.width;
+
+    write_info(outfile, header, new_pixel_data, is_16_bit);
+
   }
+
+
+
   else if (args[3] == "cutfreq"){
     // Código para el comando "cutfreq"
   }

@@ -291,7 +291,7 @@ Pixel interpolacion_colores ( const std::vector<Pixel> &pixel_Data, std::vector<
 
               coordenadas = {new_x, x_floor, x_ceil, new_y , y_floor, y_ceil};
               //We write the new data in our new image
-              new_pixel_data[static_cast<unsigned long long int>(i + (j * new_dimension.width))] = interpolacion_colores(pixel_Data, coordenadas, i , original_dimension);
+              new_pixel_data[static_cast<unsigned long long int>(j + (i * new_dimension.width))] = interpolacion_colores(pixel_Data, coordenadas, i , original_dimension);
             }
       }
 }

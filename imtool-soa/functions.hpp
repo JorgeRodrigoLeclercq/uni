@@ -44,7 +44,8 @@ void maxlevel(int new_maxlevel, bool& is_16_bit, SoA &pixel_data, ImageHeader &h
 
 double interpolacion(const std::vector<double> &first_point, const std::vector<double> &second_point, int y_value);
 
-std::vector<uint16_t> interpolacion_colores(SoA &pixel_Data, std::vector<double> &coordenadas , int width_counter , ImageDimensions &original_dimension );
+std::vector<uint16_t> interpolacion_colores ( const SoA &pixel_Data, const std::vector<double> &coordenadas , const int width_counter , const ImageDimensions &original_dimension ) ;
 
-void DimensionChange(ImageDimensions& original_dimension, std::vector<SoA> &pixel_data, ImageDimensions& new_dimension);
+SoA ReSize( ImageDimensions & original_dimension,  SoA & pixel_Data,
+                     const ImageDimensions & new_dimension) ;
 #endif // FUNCTIONS_HPP

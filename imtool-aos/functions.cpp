@@ -1,10 +1,10 @@
 #include "functions.hpp"
 #include <cmath>
 #include <bits/algorithmfwd.h>
-#include <cstdint>
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+#include <limits>
 
 // Guardar la información del header de la imagen ppm en magic_number, width, height y max_color
 void get_header(std::ifstream &infile, ImageHeader &header) {
@@ -110,19 +110,19 @@ void write_info(std::ofstream &outfile, const ImageHeader &header, const std::ve
 // Function to write the color table indices based on the color map
 void write_color_table(std::ofstream &outfile, const std::vector<Pixel> &pixel_data,
                        const std::map<Pixel, int> &color_table) {
-  if (auto const table_size = color_table.size(); table_size <= UINT8_MAX) {
+  if (auto const table_size = color_table.size(); table_size <= std::numeric_limits<uint8_t>::max()) {
     for (const auto &pixel : pixel_data) {
       auto index = static_cast<uint8_t>(color_table.at(pixel));
       // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
       outfile.write(reinterpret_cast<const char*>(&index), 1);
     }
-  } else if (table_size <= UINT16_MAX) {
+  } else if (table_size <= std::numeric_limits<uint16_t>::max()) {
     for (const auto &pixel : pixel_data) {
       auto index = static_cast<uint16_t>(color_table.at(pixel));
       // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
       outfile.write(reinterpret_cast<const char*>(&index), 2);
     }
-  } else if (table_size <= UINT32_MAX) {
+  } else if (table_size <= std::numeric_limits<uint32_t>::max()) {
     for (const auto &pixel : pixel_data) {
       auto index = static_cast<uint32_t>(color_table.at(pixel));
       // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
@@ -174,10 +174,9 @@ void write_cppm(std::ofstream &cppm_outfile, const ImageHeader &header, const st
   write_color_table(cppm_outfile, pixel_data, color_table);
 }
 
-constexpr int MAX_COLOR_8BIT = 255;
 
-void maxlevel(int new_maxlevel, bool& is_16_bit, gsl::span<Pixel> &pixel_data, ImageHeader &header) {
-
+void maxlevel(int new_maxlevel, bool is_16_bit, gsl::span<Pixel> &pixel_data, ImageHeader &header) {
+    constexpr int MAX_COLOR_8BIT = 255;
   // Determinar si la salida será de 8 o 16 bits
   is_16_bit = new_maxlevel > MAX_COLOR_8BIT;
 

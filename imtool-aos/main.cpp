@@ -41,7 +41,6 @@ int main(int argc, const char *argv[]) {
 
   // Array of Structures
   std::vector<Pixel> pixel_data(static_cast<std::size_t>(pixel_count));
-  gsl::span<Pixel> const pixel_span{pixel_data};  // ¿ESTO QUÉ HACE?
   bool const is_16_bit = header.max_color > MAX_COLOR_VALUE8;  // determinar la longitud de cada pixel (2 bytes si max_color > 256; else: 1)
   get_pixels(infile, pixel_data, pixel_count, is_16_bit);  // rellenar el Array of Structures con los píxeles
 
@@ -53,7 +52,6 @@ int main(int argc, const char *argv[]) {
     }
 
     int new_maxlevel= 0;
-
     try {
       new_maxlevel = std::stoi(args[4]);
     } catch (const std::invalid_argument &){
@@ -64,6 +62,8 @@ int main(int argc, const char *argv[]) {
       std::cerr << "Error: Invalid maxlevel value: " << new_maxlevel << "\n";
       exit(-1);
     }
+    gsl::span<Pixel> pixel_span{pixel_data};
+    maxlevel(new_maxlevel, is_16_bit, pixel_span, header);
   }
   else if (args[3] == "resize"){
     // Código para el comando "resize"

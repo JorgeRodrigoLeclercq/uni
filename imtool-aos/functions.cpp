@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+#include <limits>
 
 
 // Guardar la información del header de la imagen ppm en magic_number, width, height y max_color
@@ -161,19 +162,19 @@ void write_cppm(std::ofstream &cppm_outfile, const ImageHeader &header, const st
   // Determinar el tamaño del índice basado en el tamaño de la tabla de colores
   auto table_size = color_list.size(); // `size_t` es más seguro aquí.
 
-  if (table_size <= static_cast<size_t>(UINT8_MAX)) {
+  if (table_size <= static_cast<size_t>(std::numeric_limits<uint8_t>::max())) {
     for (const auto &pixel : pixel_data) {
       auto index = static_cast<uint8_t>(color_table[pixel]);
       // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
       cppm_outfile.write(reinterpret_cast<const char*>(&index), 1);
     }
-  } else if (table_size <= static_cast<size_t>(UINT16_MAX)) {
+  } else if (table_size <= static_cast<size_t>(std::numeric_limits<uint16_t>::max())) {
     for (const auto &pixel : pixel_data) {
       auto index = static_cast<uint16_t>(color_table[pixel]);
       // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
       cppm_outfile.write(reinterpret_cast<const char*>(&index), 2);
     }
-  } else if (table_size <= static_cast<size_t>(UINT32_MAX)) {
+  } else if (table_size <= static_cast<size_t>(std::numeric_limits<uint32_t>::max())) {
     for (const auto &pixel : pixel_data) {
       auto index = static_cast<uint32_t>(color_table[pixel]);
       // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
@@ -193,7 +194,7 @@ void maxlevel(int new_maxlevel, bool& is_16_bit, gsl::span<Pixel> &pixel_data, I
   is_16_bit = new_maxlevel > MAX_COLOR_8BIT;
 
   for (auto& pixel : pixel_data) {
-    // Escalar cada componente sin redondeo
+    // Escalar cada componente de color
     uint16_t r_scaled = static_cast<uint16_t>(
         std::clamp(static_cast<int>(static_cast<float>(pixel.channels.red) * static_cast<float>(new_maxlevel) / static_cast<float>(header.max_color)),
               0, new_maxlevel));
@@ -204,7 +205,7 @@ void maxlevel(int new_maxlevel, bool& is_16_bit, gsl::span<Pixel> &pixel_data, I
         std::clamp(static_cast<int>(static_cast<float>(pixel.channels.blue) * static_cast<float>(new_maxlevel) / static_cast<float>(header.max_color)),
               0, new_maxlevel));
 
-    // Asignar valores escalados
+    // Asignar valores escalados en 8 o 16 bits
     pixel.channels.red = is_16_bit ? r_scaled : static_cast<uint8_t>(r_scaled);
     pixel.channels.green = is_16_bit ? g_scaled : static_cast<uint8_t>(g_scaled);
     pixel.channels.blue = is_16_bit ? b_scaled : static_cast<uint8_t>(b_scaled);

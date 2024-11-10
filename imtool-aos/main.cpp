@@ -44,7 +44,7 @@ int main(int argc, const char *argv[]) {
   bool is_16_bit = header.max_color > MAX_COLOR_VALUE8;  // determinar la longitud de cada pixel (2 bytes si max_color > 256; else: 1)
   get_pixels(infile, pixel_data, pixel_count, is_16_bit);  // rellenar el Array of Structures con los píxeles
 
-  if (args[3] == "maxlevel"){
+  if (args[3] == std::string("maxlevel")){
     // Código para el comando "maxlevel"
     if (argc != 5) {
       std::cerr << "Error: Invalid number of arguments for maxlevel: " << (argc - 4) << "\n";
@@ -65,13 +65,13 @@ int main(int argc, const char *argv[]) {
     gsl::span<Pixel> pixel_span{pixel_data};
     maxlevel(new_maxlevel, is_16_bit, pixel_span, header);
   }
-  else if (args[3] == "resize"){
+  else if (args[3] == std::string("resize")){
     // Código para el comando "resize"
   }
-  else if (args[3] == "cutfreq"){
+  else if (args[3] == std::string("cutfreq")){
     // Código para el comando "cutfreq"
   }
-  else if (args[3] == "compress"){
+  else if (args[3] == std::string("compress")){
     // Código para el comando "compress"
     write_cppm(outfile, header, pixel_data);
     return 0;

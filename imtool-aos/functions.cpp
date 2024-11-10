@@ -175,7 +175,7 @@ void write_cppm(std::ofstream &cppm_outfile, const ImageHeader &header, const st
 }
 
 
-void maxlevel(int new_maxlevel, bool is_16_bit, gsl::span<Pixel> &pixel_data, ImageHeader &header) {
+void maxlevel(int new_maxlevel, bool& is_16_bit, gsl::span<Pixel> &pixel_data, ImageHeader &header) {
     constexpr int MAX_COLOR_8BIT = 255;
   // Determinar si la salida será de 8 o 16 bits
   is_16_bit = new_maxlevel > MAX_COLOR_8BIT;

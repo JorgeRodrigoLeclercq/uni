@@ -41,7 +41,7 @@ int main(int argc, const char *argv[]) {
 
   // Array of Structures
   std::vector<Pixel> pixel_data(static_cast<std::size_t>(pixel_count));
-  bool const is_16_bit = header.max_color > MAX_COLOR_VALUE8;  // determinar la longitud de cada pixel (2 bytes si max_color > 256; else: 1)
+  bool is_16_bit = header.max_color > MAX_COLOR_VALUE8;  // determinar la longitud de cada pixel (2 bytes si max_color > 256; else: 1)
   get_pixels(infile, pixel_data, pixel_count, is_16_bit);  // rellenar el Array of Structures con los píxeles
 
   if (args[3] == "maxlevel"){

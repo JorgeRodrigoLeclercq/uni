@@ -13,103 +13,78 @@ constexpr uint16_t MAX_COLOR_VALUE16 = 65535;
 
 int main(int argc, const char *argv[]) {
 
-  checkNumberArgs(argc); // Comprobar que el número de argumentos es correcto para todas las funciones
+  // Comprobar que el número de argumentos es correcto para todas las funciones
+  checkNumberArgs(argc);
+  gsl::span const args{argv, gsl::narrow<std::size_t>(argc)};
 
-  gsl::span const args{argv, gsl::narrow<std::size_t>(argc)}; // Creamos la vista
+  // Abrir archivos de entrada y de salida
+  std::ifstream infile(args[1], std::ios::binary);
+  if (!infile) {
+    std::cerr << "Error: Could not open file " << args[2] << "\n";
+    return 1;
+  }
 
-  // Variables del header
+  std::ofstream outfile(args[2], std::ios::binary);
+  if (!outfile) {
+    std::cerr << "Error: Could not open file " << args[2] << "\n";
+    infile.close();
+    return 1;
+  }
+
+  // Extramos el header del archivo
   ImageHeader header;
-  std::ifstream infile(args[1], std::ios::binary);  // abrir en modo binario
-
   get_header(infile, header);
 
   // Tamaño en pixeles de la imagen
-  auto pixel_count =
-      static_cast<unsigned long long int>(header.dimensions.width * header.dimensions.height);
+  auto pixel_count = static_cast<unsigned long long int>(header.dimensions.width) *
+                   static_cast<unsigned long long int>(header.dimensions.height);
 
   // Array of Structures
   std::vector<Pixel> pixel_data(static_cast<std::size_t>(pixel_count));
+  gsl::span<Pixel> const pixel_span{pixel_data};  // ¿ESTO QUÉ HACE?
+  bool const is_16_bit = header.max_color > MAX_COLOR_VALUE8;  // determinar la longitud de cada pixel (2 bytes si max_color > 256; else: 1)
+  get_pixels(infile, pixel_data, pixel_count, is_16_bit);  // rellenar el Array of Structures con los píxeles
 
-  gsl::span<Pixel> pixel_span{pixel_data};
+  if (args[3] == "maxlevel"){
+    // Código para el comando "maxlevel"
+    if (argc != 5) {
+      std::cerr << "Error: Invalid number of arguments for maxlevel: " << (argc - 4) << "\n";
+      exit(-1);
+    }
 
-  // Determinar la longitud de cada pixel (2 bytes si max_color > 256; else: 1)
-  bool is_16_bit = header.max_color > MAX_COLOR_VALUE8;
+    int new_maxlevel= 0;
 
-  // RELLENAR EL ARRAY OF STRUCTURES CON LOS PIXELES
-  get_pixels(infile, pixel_data, pixel_count, is_16_bit);
-
-  if (args[3] == "info") {
-    // Código para el caso "info"
+    try {
+      new_maxlevel = std::stoi(args[4]);
+    } catch (const std::invalid_argument &){
+      std::cerr << "Error: Invalid argument for maxlevel: " << args[4] << "\n";
+      exit(-1);
+    }
+    if (new_maxlevel < 0 || new_maxlevel > MAX_COLOR_VALUE16){
+      std::cerr << "Error: Invalid maxlevel value: " << new_maxlevel << "\n";
+      exit(-1);
+    }
   }
-  else if (args[3] == "maxlevel") {
-    // Código para el caso "maxlevel"
+  else if (args[3] == "resize"){
+    // Código para el comando "resize"
   }
-  else if (args[3] == "resize") {
-    // Código para el caso "resize"
+  else if (args[3] == "cutfreq"){
+    // Código para el comando "cutfreq"
   }
-  else if (args[3] == "cutfreq") {
-    // Código para el caso "cutfreq"
-  }
-  else if (args[3] == "compress") {
-    // Código para el caso "compress"
+  else if (args[3] == "compress"){
+    // Código para el comando "compress"
+    write_cppm(outfile, header, pixel_data);
+    return 0;
   }
   else {
     std::cerr << "Error: Invalid command: " << args[3] << "\n";
     exit(-1);
   }
 
+  write_info(outfile, header, pixel_data, is_16_bit);  // escribimos la nueva información en el arhcivo de salida
 
-
-
-
-
-
-
-
-
-
-
-  if (std::string(args[3]) == "maxlevel") {
-      if (argc !=5) {
-          std::cerr << "Error: Invalid number of arguments for maxlevel: " << (argc - 4) << "\n";
-      exit(-1);
-      }
-  }
-  int new_maxlevel= 0;
-  try {
-      new_maxlevel = std::stoi(args[4]);
-  } catch (const std::invalid_argument &){
-      std::cerr << "Error: Invalid argument for maxlevel: " << args[4] << "\n";
-      exit(-1);
-  }
-  if (new_maxlevel < 0 || new_maxlevel > MAX_COLOR_VALUE16){
-      std::cerr << "Error: Invalid maxlevel value: " << new_maxlevel << "\n";
-      exit(-1);
-  }
-
-
-  std::ofstream outfile(args[2], std::ios::binary);
-  if (!outfile) {
-      std::cerr << "Error: Could not open file " << args[2] << "\n";
-      infile.close();
-      return 1;
-  }
-
-
-
-
-
-
-  // Escribir en outfile, INFO COMMAND
-  write_info(outfile, header, pixel_data, is_16_bit);
-
-  std::ofstream cppm_outfile(args[3], std::ios::binary);
-
-  // COMPRESS COMMAND
-  write_cppm(cppm_outfile, header, pixel_data);
-
+  // Cerramos los archivos
   infile.close();
   outfile.close();
-  cppm_outfile.close();
   return 0;
 };

@@ -21,8 +21,8 @@ struct ColorChannels {
 struct Pixel {
     ColorChannels channels;
 
-    Pixel(uint16_t red = 0, uint16_t green = 0, uint16_t blue = 0)
-      : channels{red, green, blue} {}
+    explicit Pixel(uint16_t const red = 0, uint16_t const green = 0, uint16_t const blue = 0)
+      : channels{.red=red, .green=green, .blue=blue} {}
 
     bool operator<(const Pixel &other) const {
       return std::tie(channels.red, channels.green, channels.blue) <
@@ -35,16 +35,13 @@ struct Pixel {
 };
 
 // Especialización de std::hash para la clase Pixel
-namespace std {
-  template <>
-  struct hash<Pixel> {
-      size_t operator()(const Pixel& pix) const noexcept {
-        return hash<int>()(pix.channels.red)
-               ^ (hash<int>()(pix.channels.green) << 1)
-               ^ (hash<int>()(pix.channels.blue) << 2);
-      }
-  };
-}
+template <>
+struct std::hash<Pixel> {
+    size_t operator()(Pixel const & pix) const noexcept {
+      return hash<int>()(pix.channels.red) ^ (hash<int>()(pix.channels.green) << 1) ^
+             (hash<int>()(pix.channels.blue) << 2);
+    }
+};
 
 // Estructura para agrupar dimensiones de la imagen
 struct ImageDimensions {
@@ -58,17 +55,19 @@ struct ImageHeader {
     ImageDimensions dimensions;
     int max_color;
 
-    ImageHeader(std::string  magic = "", ImageDimensions dims = {0, 0}, int max_c = DEFAULT_MAX_COLOR)
+    explicit ImageHeader(std::string  magic = "", ImageDimensions const dims = {.width=0, .height = 0},
+                         int const max_c = DEFAULT_MAX_COLOR)
       : magic_number(std::move(magic)), dimensions(dims), max_color(max_c) {}
 };
 
 // Funciones para manipular imágenes
-
 void get_header(std::ifstream & infile, ImageHeader & header);
 
 void get_pixels(std::ifstream &infile, std::vector<Pixel> &pixel_data, unsigned long long pixel_count, bool is_16_bit);
 
 void write_info(std::ofstream &outfile, const ImageHeader &header, const std::vector<Pixel> &pixel_data, bool is_16_bit);
+
+void write_color_table(std::ofstream &outfile, const std::vector<Pixel> &pixel_data, const std::map<Pixel, int> &color_table);
 
 void write_cppm(std::ofstream &cppm_outfile, const ImageHeader &header, const std::vector<Pixel> &pixel_data);
 

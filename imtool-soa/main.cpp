@@ -1,6 +1,7 @@
 #include "../common/progargs.hpp"
-#include "functions.hpp"
 #include "cutfreq.hpp"
+#include "functions.hpp"
+#include "ReSize.hpp"
 
 #include <cstdlib>
 #include <fstream>
@@ -101,7 +102,7 @@ int main(int argc, const char *argv[]) {
     new_pixel_data.g.resize(new_pixel_count);
     new_pixel_data.b.resize(new_pixel_count);
 
-    new_pixel_data = ReSize(old_dimensions, pixel_data,new_dimensions );
+    new_pixel_data = ReSize(old_dimensions, pixel_data,new_dimensions , new_dimensions);
     header.dimensions.height = new_dimensions.height;
     header.dimensions.width = new_dimensions.width;
 

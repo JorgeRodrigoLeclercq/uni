@@ -1,13 +1,11 @@
 
-#include "Resize.hpp"
-#include <algorithm> // For std::clamp
-#include <cmath>
-#include "functions.hpp"
+#include "ReSize.hpp"
+
+#include <algorithm>  // For std::clamp
 #include <bits/algorithmfwd.h>
+#include <cmath>
 #include <fstream>
 #include <iostream>
-
-
 
 SoA ReSize( ImageDimensions & original_dimension,  SoA & pixel_Data,
                      const ImageDimensions & new_dimension) {

@@ -3,12 +3,9 @@
 
 #include <algorithm>
 #include <cstdint>
-#include <fstream>
-#include <gsl/span>
-#include <iostream>
-#include <map>
+
 #include <string>
-#include <tuple>
+#include <cmath>
 #include <utility>
 #include <vector>
 

@@ -6,8 +6,8 @@ add_executable(imtool-soa main.cpp
         ../common/priority_queue.hpp
         cutfreq.hpp
         cutfreq.cpp
-        Resize.cpp
-        Resize.hpp
+        ReSize.cpp
+        ReSize.hpp
         maxlevel.cpp
         maxlevel.cpp
         maxlevel.hpp)

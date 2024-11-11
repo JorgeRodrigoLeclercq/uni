@@ -1,7 +1,7 @@
 #include "../common/progargs.hpp"
 #include "cutfreq.hpp"
 #include "functions.hpp"
-
+#include "Resize.hpp"
 #include <cstdlib>
 #include <fstream>
 #include <gsl/gsl>

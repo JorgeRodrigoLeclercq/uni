@@ -103,7 +103,7 @@ int main(int argc, const char *argv[]) {
       exit(-1);
     }
 
-    const auto new_pixel_count = static_cast<ulong>(new_dimensions.width * new_dimensions.height);
+    const auto new_pixel_count = static_cast<unsigned long>(new_dimensions.width * new_dimensions.height);
 
     // Structure of Arrays
     SoA new_pixel_data;
@@ -121,7 +121,7 @@ int main(int argc, const char *argv[]) {
 
 
 
-  else if (args[3] == "cutfreq"){
+  else if (args[3] == std::string( "cutfreq")){
     try{cutfreq(pixel_data, std::stoi(args[4]));}
     catch (const std::invalid_argument &){
       std::cerr << "Error: Invalid cutfreq: " << args[4] << "\n";

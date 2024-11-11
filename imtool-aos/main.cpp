@@ -1,4 +1,5 @@
 #include "../common/progargs.hpp"
+#include "cutfreq.hpp"
 #include "functions.hpp"
 
 #include <cstdlib>
@@ -10,6 +11,7 @@
 
 constexpr uint8_t MAX_COLOR_VALUE8 = 255;
 constexpr uint16_t MAX_COLOR_VALUE16 = 65535;
+constexpr uint8_t EXTRA_ARGS = 5;
 
 int main(int argc, const char *argv[]) {
 
@@ -46,7 +48,7 @@ int main(int argc, const char *argv[]) {
 
   if (args[3] == std::string("maxlevel")){
     // Código para el comando "maxlevel"
-    if (argc != 5) {
+    if (argc != EXTRA_ARGS) {
       std::cerr << "Error: Invalid number of arguments for maxlevel: " << (argc - 4) << "\n";
       exit(-1);
     }
@@ -68,8 +70,12 @@ int main(int argc, const char *argv[]) {
   else if (args[3] == std::string("resize")){
     // Código para el comando "resize"
   }
-  else if (args[3] == std::string("cutfreq")){
-    // Código para el comando "cutfreq"
+  else if (args[3] == std::string("cutfreq") && argc == EXTRA_ARGS){
+    try{cutfreq(pixel_data, std::stoi(args[4]));}
+    catch (const std::invalid_argument &){
+      std::cerr << "Error: Invalid cutfreq: " << args[4] << "\n";
+      exit(-1);
+    };
   }
   else if (args[3] == std::string("compress")){
     // Código para el comando "compress"

@@ -2,7 +2,7 @@
 #define FUNCTIONS_HPP
 
 #include <cstdint>
-#include <gsl/span>
+#include <gsl/gsl>
 #include <map>
 #include <string>
 #include <utility>

@@ -11,6 +11,7 @@
 
 constexpr uint8_t MAX_COLOR_VALUE8 = 255;
 constexpr uint16_t MAX_COLOR_VALUE16 = 65535;
+constexpr uint8_t EXTRA_ARGS = 5;
 
 int main(int argc, const char *argv[]) {
 
@@ -50,7 +51,7 @@ int main(int argc, const char *argv[]) {
 
   if (args[3] == "maxlevel"){
     // Código para el comando "maxlevel"
-    if (argc != 5) {
+    if (argc != EXTRA_ARGS) {
       std::cerr << "Error: Invalid number of arguments for maxlevel: " << (argc - 4) << "\n";
       exit(-1);
     }

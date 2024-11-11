@@ -71,8 +71,6 @@ void write_color_table(std::ofstream &outfile, const std::vector<Pixel> &pixel_d
 
 void write_cppm(std::ofstream &cppm_outfile, const ImageHeader &header, const std::vector<Pixel> &pixel_data);
 
-void maxlevel(int new_maxlevel, bool& is_16_bit, gsl::span<Pixel> &pixel_data, ImageHeader &header);
-
 #endif // FUNCTIONS_HPP
 
 

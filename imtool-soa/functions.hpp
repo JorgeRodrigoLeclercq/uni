@@ -40,6 +40,4 @@ void write_info(std::ofstream& outfile, ImageHeader& header, SoA& pixel_data, bo
 
 void write_cppm(std::ofstream& cppm_outfile, ImageHeader& header, SoA& pixel_data);
 
-void maxlevel(int new_maxlevel, bool& is_16_bit, SoA &pixel_data, ImageHeader &header);
-
 #endif // FUNCTIONS_HPP

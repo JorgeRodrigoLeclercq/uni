@@ -7,5 +7,9 @@ add_executable(imtool-aos main.cpp
         cutfreq.cpp
         cutfreq.hpp
         Resize.cpp
-        Resize.hpp)
+        Resize.hpp
+        maxlevel.cpp
+        maxlevel.hpp
+        maxlevel.hpp
+        maxlevel.hpp)
 target_link_libraries (imtool-aos imgaos common Microsoft.GSL::GSL)

@@ -233,7 +233,7 @@ void maxlevel(int new_maxlevel, bool& is_16_bit, SoA& pixel_data, ImageHeader& h
 
 SoA ReSize( ImageDimensions & original_dimension,  SoA & pixel_Data,
                      const ImageDimensions & new_dimension) {
-  const auto pixel_count = static_cast<uint>( std::abs(new_dimension.width * new_dimension.height));
+  const auto pixel_count = static_cast<size_t>( std::abs(new_dimension.width * new_dimension.height));
 
   // Structure of Arrays
   SoA new_pixel_data;

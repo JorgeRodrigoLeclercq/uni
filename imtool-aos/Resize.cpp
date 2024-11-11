@@ -1,4 +1,4 @@
-#include "functions.hpp"
+#include "Resize.hpp"
 #include <cmath>
 #include <bits/algorithmfwd.h>
 #include <iostream>
@@ -15,12 +15,12 @@ double interpolacion(const std::vector<double>  &first_point , const std::vector
 Pixel interpolacion_colores ( const std::vector<Pixel> &pixel_Data, std::vector<double> &coordenadas , const int width_counter , const ImageDimensions &original_dimension ) {
 
   Pixel pixel;
-              std::vector<double> first_point = {coordenadas[1], coordenadas[4], (double)pixel_Data[static_cast<unsigned long long int>(
+              std::vector<double> first_point = {coordenadas[1], coordenadas[4], static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
                             static_cast<long>(coordenadas[1] + coordenadas[4]) *
-                            original_dimension.width)].channels.red};
-              std::vector<double> second_point = {coordenadas[2], coordenadas[4], (double)pixel_Data[static_cast<unsigned long long int>(
+                            original_dimension.width)].channels.red)};
+              std::vector<double> second_point = {coordenadas[2], coordenadas[4], static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
                                         static_cast<long>(coordenadas[2] + coordenadas[4]) *
-                                        original_dimension.width)].channels.red};
+                                        original_dimension.width)].channels.red)};
               double color_c1 = interpolacion(first_point, second_point, width_counter);
               first_point = {coordenadas[1], coordenadas[4+1],static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
                                             static_cast<long>(coordenadas[1] + coordenadas[4+1]) *
@@ -95,7 +95,7 @@ Pixel interpolacion_colores ( const std::vector<Pixel> &pixel_Data, std::vector<
 
               coordenadas = {new_x, x_floor, x_ceil, new_y , y_floor, y_ceil};
               //We write the new data in our new image
-              new_pixel_data[static_cast<unsigned long int>(j + (i * new_dimension.width))] = interpolacion_colores(pixel_Data, coordenadas, i , original_dimension);
+              new_pixel_data[static_cast<unsigned long long int>(j + (i * new_dimension.width))] = interpolacion_colores(pixel_Data, coordenadas, i , original_dimension);
             }
       }
 }

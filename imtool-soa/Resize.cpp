@@ -1,6 +1,8 @@
-#include "functions.hpp"
+
+#include "Resize.hpp"
 #include <algorithm> // For std::clamp
 #include <cmath>
+#include "functions.hpp"
 #include <bits/algorithmfwd.h>
 #include <fstream>
 #include <iostream>
@@ -36,9 +38,9 @@ SoA ReSize( ImageDimensions & original_dimension,  SoA & pixel_Data,
       coordenadas = {new_x, x_floor, x_ceil, new_y , y_floor, y_ceil};
       //We write the new data in our new image
       std::vector<uint16_t> new_data = interpolacion_colores(pixel_Data, coordenadas, i , original_dimension);
-      new_pixel_data.r[static_cast<unsigned long int >(j + (i * new_dimension.width))] = new_data[0];
-      new_pixel_data.g[static_cast<unsigned long int> (j  + (i * new_dimension.width))] = new_data[1];
-      new_pixel_data.b[static_cast<unsigned long int> (j  + (i * new_dimension.width))] = new_data[2];
+      new_pixel_data.r[static_cast<unsigned long long int >(j + (i * new_dimension.width))] = new_data[0];
+      new_pixel_data.g[static_cast<unsigned long long int> (j  + (i * new_dimension.width))] = new_data[1];
+      new_pixel_data.b[static_cast<unsigned long long int> (j  + (i * new_dimension.width))] = new_data[2];
     }
   }
   return new_pixel_data;

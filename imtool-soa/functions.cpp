@@ -83,7 +83,7 @@ void get_pixels(std::ifstream &infile, SoA &pixel_data, unsigned long long pixel
               << "B = " << static_cast<int>(pixel_data.b[i]) << '\n';
   }
 }
-
+/*
 void write_info(std::ofstream& outfile, ImageHeader& header, SoA& pixel_data, bool is_16_bit) {
     const uint16_t MASK_BYTE = 0xFF;
     const int BITS_PER_BYTE = 8;
@@ -127,7 +127,7 @@ void write_info(std::ofstream& outfile, ImageHeader& header, SoA& pixel_data, bo
     }
   }
 }
-
+*/
 void write_cppm(std::ofstream& cppm_outfile, ImageHeader& header, SoA& pixel_data) {
     const uint8_t MAX_COLOR_VALUE8 = 255;
 
@@ -233,7 +233,7 @@ void maxlevel(int new_maxlevel, bool& is_16_bit, SoA& pixel_data, ImageHeader& h
 
 SoA ReSize( ImageDimensions & original_dimension,  SoA & pixel_Data,
                      const ImageDimensions & new_dimension) {
-  const int pixel_count = new_dimension.width * new_dimension.height;
+  const auto pixel_count = static_cast<uint>( std::abs(new_dimension.width * new_dimension.height));
 
   // Structure of Arrays
   SoA new_pixel_data;
@@ -251,18 +251,18 @@ SoA ReSize( ImageDimensions & original_dimension,  SoA & pixel_Data,
   for ( int i = 0; i < new_dimension.height; i++ ) {
     for ( int j = 0; j < new_dimension.width; j++ ) {
       new_x = static_cast<double>( j * original_dimension.width) / static_cast<double>(new_dimension.width);
-      x_floor = floor(new_x);
-      x_ceil = ceil(new_x);
+      x_floor = std::floor(new_x);
+      x_ceil = std::ceil(new_x);
       new_y =  static_cast<double>( i * original_dimension.height) / static_cast<double>(new_dimension.height);
-      y_floor = floor(new_y);
-      y_ceil = ceil(new_y);
+      y_floor = std::floor(new_y);
+      y_ceil = std::ceil(new_y);
 
       coordenadas = {new_x, x_floor, x_ceil, new_y , y_floor, y_ceil};
       //We write the new data in our new image
       std::vector<uint16_t> new_data = interpolacion_colores(pixel_Data, coordenadas, i , original_dimension);
-      new_pixel_data.r[static_cast<unsigned long long int> (j + (i * new_dimension.width))] = new_data[0];
-      new_pixel_data.g[static_cast<unsigned long long int> (j  + (i * new_dimension.width))] = new_data[1];
-      new_pixel_data.b[static_cast<unsigned long long int> (j  + (i * new_dimension.width))] = new_data[2];
+      new_pixel_data.r[ static_cast<unsigned long int >(j + (i * new_dimension.width))] = new_data[0];
+      new_pixel_data.g[static_cast<unsigned long int> (j  + (i * new_dimension.width))] = new_data[1];
+      new_pixel_data.b[static_cast<unsigned long int> (j  + (i * new_dimension.width))] = new_data[2];
     }
   }
   return new_pixel_data;
@@ -277,18 +277,17 @@ std::vector<uint16_t> interpolacion_colores ( const SoA &pixel_Data, const std::
               double color_c1 = 0.0;
               double color_c2 = 0.0;
 
-              for ( auto color : pixel_Data) {
-                first_point = {coordenadas[1], coordenadas[4], static_cast<double>(color[static_cast<unsigned long long int>(
+                first_point = {coordenadas[1], coordenadas[4], static_cast<double>(pixel_Data.r[static_cast<unsigned long long int>(
                             static_cast<long>(coordenadas[1] + coordenadas[4]) *
                             original_dimension.width)])};
-                second_point = {coordenadas[2], coordenadas[4], static_cast<double>(color[static_cast<unsigned long long int>(
+                second_point = {coordenadas[2], coordenadas[4], static_cast<double>(pixel_Data.r[static_cast<unsigned long long int>(
                                           (coordenadas[2] + coordenadas[4]) *
                                           original_dimension.width)])};
                 color_c1 = interpolacion(first_point, second_point, width_counter);
-                first_point = {coordenadas[1], coordenadas[ 4 + 1 ],static_cast<double>(color[static_cast<unsigned long long int>(
+                first_point = {coordenadas[1], coordenadas[ 4 + 1 ],static_cast<double>(pixel_Data.r[static_cast<unsigned long long int>(
                                               (coordenadas[1] + coordenadas[4 + 1]) *
                                               original_dimension.width)])};
-                second_point = {coordenadas[2], coordenadas[4 + 1], static_cast<double>(color[static_cast<unsigned long long int>(
+                second_point = {coordenadas[2], coordenadas[4 + 1], static_cast<double>(pixel_Data.r[static_cast<unsigned long long int>(
                                                (coordenadas[2] + coordenadas[4 + 1]) *
                                                original_dimension.width)])};
                 color_c2 = interpolacion(first_point, second_point, width_counter);
@@ -297,7 +296,7 @@ std::vector<uint16_t> interpolacion_colores ( const SoA &pixel_Data, const std::
 
                 new_colors.push_back( static_cast<uint16_t>(interpolacion(first_point, second_point, width_counter)));
 
-              }
+
 
                return new_colors;
 

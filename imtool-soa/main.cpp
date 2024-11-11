@@ -48,7 +48,7 @@ int main(int argc, const char *argv[]) {
   bool const is_16_bit = header.max_color > MAX_COLOR_VALUE8;  // determinar la longitud de cada pixel (2 bytes si max_color > 256; else: 1)
   get_pixels(infile, pixel_data, pixel_count, is_16_bit);  // rellenar el Structure of Arrays con los píxeles
 
-  if (args[3] == "maxlevel"){
+  if (args[3] == std::string("maxlevel")){
     // Código para el comando "maxlevel"
     if (argc != 5) {
       std::cerr << "Error: Invalid number of arguments for maxlevel: " << (argc - 4) << "\n";
@@ -70,7 +70,7 @@ int main(int argc, const char *argv[]) {
   }
 
   //--------------------------------------------------
-  else if (args[3] == "resize") {
+  else if (args[3] == std::string("resize")) {
     if (argc != 4 + 1) {
       std::cerr << "Error: Invalid number of extra arguments for resize: " << (argc - 4) << "\n";
       exit(-1);
@@ -102,7 +102,7 @@ int main(int argc, const char *argv[]) {
       exit(-1);
     }
 
-    const int new_pixel_count = new_dimensions.width * new_dimensions.height;
+    const auto new_pixel_count = static_cast<ulong>(new_dimensions.width * new_dimensions.height);
 
     // Structure of Arrays
     SoA new_pixel_data;
@@ -114,16 +114,16 @@ int main(int argc, const char *argv[]) {
     header.dimensions.height = new_dimensions.height;
     header.dimensions.width = new_dimensions.width;
 
-    write_info(outfile, header, new_pixel_data, is_16_bit);
+    //write_info(outfile, header, new_pixel_data, is_16_bit);
 
   }
 
 
 
-  else if (args[3] == "cutfreq"){
+  else if (args[3] == std::string("cutfreq")){
     // Código para el comando "cutfreq"
   }
-  else if (args[3] == "compress"){
+  else if (args[3] == std::string("compress")){
     // Código para el comando "compress"
     write_cppm(outfile, header, pixel_data);
     return 0;
@@ -133,7 +133,7 @@ int main(int argc, const char *argv[]) {
     exit(-1);
   }
 
-  write_info(outfile, header, pixel_data, is_16_bit);  // escribimos la nueva información en el arhcivo de salida
+  //write_info(outfile, header, pixel_data, is_16_bit);  // escribimos la nueva información en el arhcivo de salida
 
   // Cerramos los archivos
   infile.close();

@@ -65,7 +65,7 @@ void get_pixels(std::ifstream & infile, std::vector<Pixel> & pixel_data,
     }
   }
 }
-
+/*
 // Ecribir la información de la imagen en el archivo de salida
 void write_info(std::ofstream &outfile, const ImageHeader &header, const std::vector<Pixel> &pixel_data, bool is_16_bit) {
   outfile << header.magic_number << "\n";
@@ -106,7 +106,7 @@ void write_info(std::ofstream &outfile, const ImageHeader &header, const std::ve
     }
   }
 }
-
+*/
 // Function to write the color table indices based on the color map
 void write_color_table(std::ofstream &outfile, const std::vector<Pixel> &pixel_data,
                        const std::map<Pixel, int> &color_table) {
@@ -283,15 +283,15 @@ Pixel interpolacion_colores ( const std::vector<Pixel> &pixel_Data, std::vector<
       for ( int i = 0; i < new_dimension.height; i++ ) {
             for ( int j = 0; j < new_dimension.width; j++ ) {
               new_x = static_cast<double>( j * original_dimension.width) / static_cast<double>(new_dimension.width);
-              x_floor = floor(new_x);
-              x_ceil = ceil(new_x);
+              x_floor = std::floor(new_x);
+              x_ceil = std::ceil(new_x);
               new_y =  static_cast<double>( i * original_dimension.height) / static_cast<double>(new_dimension.height);
-              y_floor = floor(new_y);
-              y_ceil = ceil(new_y);
+              y_floor = std::floor(new_y);
+              y_ceil = std::ceil(new_y);
 
               coordenadas = {new_x, x_floor, x_ceil, new_y , y_floor, y_ceil};
               //We write the new data in our new image
-              new_pixel_data[static_cast<unsigned long long int>(j + (i * new_dimension.width))] = interpolacion_colores(pixel_Data, coordenadas, i , original_dimension);
+              new_pixel_data[static_cast<unsigned long int>(j + (i * new_dimension.width))] = interpolacion_colores(pixel_Data, coordenadas, i , original_dimension);
             }
       }
 }

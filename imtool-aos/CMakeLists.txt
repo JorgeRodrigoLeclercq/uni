@@ -5,5 +5,7 @@ add_executable(imtool-aos main.cpp
         ../common/progargs.hpp
         ../common/priority_queue.hpp
         cutfreq.cpp
-        cutfreq.hpp)
+        cutfreq.hpp
+        Resize.cpp
+        Resize.hpp)
 target_link_libraries (imtool-aos imgaos common Microsoft.GSL::GSL)

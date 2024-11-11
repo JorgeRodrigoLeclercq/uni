@@ -83,7 +83,7 @@ void get_pixels(std::ifstream &infile, SoA &pixel_data, unsigned long long pixel
               << "B = " << static_cast<int>(pixel_data.b[i]) << '\n';
   }
 }
-/*
+
 void write_info(std::ofstream& outfile, ImageHeader& header, SoA& pixel_data, bool is_16_bit) {
     const uint16_t MASK_BYTE = 0xFF;
     const int BITS_PER_BYTE = 8;
@@ -127,7 +127,7 @@ void write_info(std::ofstream& outfile, ImageHeader& header, SoA& pixel_data, bo
     }
   }
 }
-*/
+
 void write_cppm(std::ofstream& cppm_outfile, ImageHeader& header, SoA& pixel_data) {
     const uint8_t MAX_COLOR_VALUE8 = 255;
 
@@ -260,7 +260,7 @@ SoA ReSize( ImageDimensions & original_dimension,  SoA & pixel_Data,
       coordenadas = {new_x, x_floor, x_ceil, new_y , y_floor, y_ceil};
       //We write the new data in our new image
       std::vector<uint16_t> new_data = interpolacion_colores(pixel_Data, coordenadas, i , original_dimension);
-      new_pixel_data.r[ static_cast<unsigned long int >(j + (i * new_dimension.width))] = new_data[0];
+      new_pixel_data.r[static_cast<unsigned long int >(j + (i * new_dimension.width))] = new_data[0];
       new_pixel_data.g[static_cast<unsigned long int> (j  + (i * new_dimension.width))] = new_data[1];
       new_pixel_data.b[static_cast<unsigned long int> (j  + (i * new_dimension.width))] = new_data[2];
     }

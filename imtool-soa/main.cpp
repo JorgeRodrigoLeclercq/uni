@@ -121,7 +121,7 @@ int main(int argc, const char *argv[]) {
 
 
 
-  else if (args[3] == std::string( "cutfreq")){
+  else if (args[3] == "cutfreq"){
     try{cutfreq(pixel_data, std::stoi(args[4]));}
     catch (const std::invalid_argument &){
       std::cerr << "Error: Invalid cutfreq: " << args[4] << "\n";

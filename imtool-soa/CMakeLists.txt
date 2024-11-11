@@ -5,5 +5,7 @@ add_executable(imtool-soa main.cpp
         ../common/progargs.hpp
         ../common/priority_queue.hpp
         cutfreq.hpp
-        cutfreq.cpp)
+        cutfreq.cpp
+        Resize.cpp
+        Resize.hpp)
 target_link_libraries (imtool-soa PRIVATE imgsoa common  Microsoft.GSL::GSL)

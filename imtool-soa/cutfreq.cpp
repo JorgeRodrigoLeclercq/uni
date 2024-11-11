@@ -8,11 +8,11 @@
 #include <cmath>
 
 
-std::unordered_map<Pixel, int> contarFrecuencias(const std::vector<Pixel>& pixel_data) {
+std::unordered_map<Pixel, int> contarFrecuencias(const SoA& pixel_data) {
   std::unordered_map<Pixel, int> frecuencias;
 
-  for (const auto &pixel : pixel_data) {
-    frecuencias[pixel]++;
+  for (unsigned short const index : pixel_data.r) {
+    frecuencias[Pixel{pixel_data.r[index],pixel_data.g[index], pixel_data.b[index]}]++;
   }
   return frecuencias;
 }
@@ -35,7 +35,7 @@ double calcularDistancia(const Pixel &pixel1, const Pixel &pixel2) {
   return sqrt(suma);
 }
 
-void cutfreq(std::vector<Pixel> &pixel_data, int n_colors) {
+void cutfreq(SoA &pixel_data, int n_colors) {
   std::unordered_map<Pixel, int> const frecuencias = contarFrecuencias(pixel_data);
   Bounded_priority_queue<Pixel, int> const colores_menos_frecuentes = menosFrecuentes(frecuencias, n_colors);
 
@@ -52,10 +52,15 @@ void cutfreq(std::vector<Pixel> &pixel_data, int n_colors) {
       }
     }
   }
-  for (auto &mypixel : pixel_data) {
-    auto replace_pixel = reemplazos.find(mypixel); // comprobar si el pixel es uno a reemplazar
+
+  for (unsigned short const index : pixel_data.r) {
+    Pixel new_pixel = Pixel{pixel_data.r[index],pixel_data.g[index], pixel_data.b[index]};
+    auto replace_pixel = reemplazos.find(new_pixel); // comprobar si el pixel es uno a reemplazar
     if (replace_pixel != reemplazos.end()) {
-      mypixel = replace_pixel->second.first;
+      new_pixel = replace_pixel->second.first;
+      pixel_data.r[index] = new_pixel.channels.red;
+      pixel_data.g[index] = new_pixel.channels.green;
+      pixel_data.b[index] = new_pixel.channels.blue;
     }
   }
 }

@@ -1,10 +1,10 @@
 #include "../common/progargs.hpp"
 #include "functions.hpp"
+#include "cutfreq.hpp"
 
 #include <cstdlib>
 #include <fstream>
 #include <gsl/gsl>
-#include <imtool-aos/functions.hpp>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -122,7 +122,11 @@ int main(int argc, const char *argv[]) {
 
 
   else if (args[3] == "cutfreq"){
-    // Código para el comando "cutfreq"
+    try{cutfreq(pixel_data, std::stoi(args[4]));}
+    catch (const std::invalid_argument &){
+      std::cerr << "Error: Invalid cutfreq: " << args[4] << "\n";
+      exit(-1);
+    };
   }
   else if (args[3] == "compress"){
     // Código para el comando "compress"

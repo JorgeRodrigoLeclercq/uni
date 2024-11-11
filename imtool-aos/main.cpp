@@ -21,17 +21,7 @@ int main(int argc, const char *argv[]) {
 
   // Abrir archivos de entrada y de salida
   std::ifstream infile(args[1], std::ios::binary);
-  if (!infile) {
-    std::cerr << "Error: Could not open file " << args[2] << "\n";
-    return 1;
-  }
-
   std::ofstream outfile(args[2], std::ios::binary);
-  if (!outfile) {
-    std::cerr << "Error: Could not open file " << args[2] << "\n";
-    infile.close();
-    return 1;
-  }
 
   // Extramos el header del archivo
   ImageHeader header;
@@ -69,6 +59,8 @@ int main(int argc, const char *argv[]) {
   }
   else if (args[3] == std::string("resize")){
     // Código para el comando "resize"
+    // checkResize
+    // resize...
   }
   else if (args[3] == std::string("cutfreq") && argc == EXTRA_ARGS){
     try{cutfreq(pixel_data, std::stoi(args[4]));}
@@ -83,14 +75,11 @@ int main(int argc, const char *argv[]) {
     return 0;
   }
   else {
-    std::cerr << "Error: Invalid command: " << args[3] << "\n";
+    std::cerr << "Error: Invalid option: " << args[3] << "\n";
     exit(-1);
   }
 
   write_info(outfile, header, pixel_data, is_16_bit);  // escribimos la nueva información en el arhcivo de salida
 
-  // Cerramos los archivos
-  infile.close();
-  outfile.close();
   return 0;
 };

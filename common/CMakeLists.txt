@@ -6,6 +6,7 @@ add_library(common
         ../imtool-soa/functions.cpp
         binaryio.hpp
         progargs.hpp
+        header.hpp
         priority_queue.hpp
 
 )

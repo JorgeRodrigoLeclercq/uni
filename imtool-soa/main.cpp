@@ -21,17 +21,7 @@ int main(int argc, const char *argv[]) {
 
   // Abrir archivos de entrada y de salida
   std::ifstream infile(args[1], std::ios::binary);
-  if (!infile) {
-    std::cerr << "Error: Could not open file " << args[2] << "\n";
-    return 1;
-  }
-
   std::ofstream outfile(args[2], std::ios::binary);
-  if (!outfile) {
-    std::cerr << "Error: Could not open file " << args[2] << "\n";
-    infile.close();
-    return 1;
-  }
 
   // Extramos el header del archivo
   ImageHeader header;

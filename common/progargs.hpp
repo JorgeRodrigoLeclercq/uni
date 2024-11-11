@@ -3,6 +3,7 @@
 #define PROGARGS_HPP
 
 #include <iostream>
+#include <fstream>
 
 inline int checkNumberArgs(int const argc) {
   if (argc < 4) {
@@ -11,5 +12,7 @@ inline int checkNumberArgs(int const argc) {
   }
   return 0;
 }
+
+
 
 #endif // PROGARGS_HPP

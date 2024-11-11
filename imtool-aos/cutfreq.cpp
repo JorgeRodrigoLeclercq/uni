@@ -32,7 +32,7 @@ double calcularDistancia(const Pixel &pixel1, const Pixel &pixel2) {
   suma += std::pow((pixel1.channels.green - pixel2.channels.blue), 2);
   suma += std::pow((pixel1.channels.blue - pixel2.channels.blue), 2);
 
-  return sqrt(suma);
+  return suma;
 }
 
 void cutfreq(std::vector<Pixel> &pixel_data, int n_colors) {

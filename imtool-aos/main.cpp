@@ -1,4 +1,5 @@
 #include "../common/progargs.hpp"
+#include "cutfreq.hpp"
 #include "functions.hpp"
 
 #include <cstdlib>
@@ -69,7 +70,7 @@ int main(int argc, const char *argv[]) {
     // Código para el comando "resize"
   }
   else if (args[3] == std::string("cutfreq")){
-    // Código para el comando "cutfreq"
+    cutfreq(pixel_data);
   }
   else if (args[3] == std::string("compress")){
     // Código para el comando "compress"

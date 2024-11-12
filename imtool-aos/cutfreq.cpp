@@ -18,7 +18,7 @@ std::unordered_map<Pixel, int> contarFrecuencias(const std::vector<Pixel>& pixel
 }
 
 Bounded_priority_queue<Pixel, int> menosFrecuentes(const std::unordered_map<Pixel,int>& colores, int size) {
-  Bounded_priority_queue<Pixel, int> colores_menos_frecuentes(size);
+  Bounded_priority_queue<Pixel, int> colores_menos_frecuentes( size);
 
   for (const auto &color : colores) {
     colores_menos_frecuentes.enqueue(color.first, color.second);

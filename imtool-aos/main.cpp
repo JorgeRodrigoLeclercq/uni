@@ -58,8 +58,21 @@ int main(int argc, const char *argv[]) {
     gsl::span<Pixel> pixel_span{pixel_data};
     maxlevel(new_maxlevel, is_16_bit, pixel_span, header);
   }
+  //--------------------------------------------------------------------------
   else if (args[3] == std::string("resize")){
     // Código para el comando "resize"
+    checkNumberArgs(argc);
+
+    ImageDimensions new_dimensions{};
+    new_dimensions.width= std::stoi(args[4]);
+    new_dimensions.width= std::stoi(args[4+1]);
+
+    checkHeightArgs(new_dimensions.height);
+    checkWidthArgs(new_dimensions.width); checkNumberArgs(argc);
+
+
+    ReSize(header, pixel_data, new_dimensions, outfile);
+
     // checkResize
     // resize...
   }
@@ -80,7 +93,7 @@ int main(int argc, const char *argv[]) {
     exit(-1);
   }
 
-  write_info(outfile, header, pixel_data, is_16_bit);  // escribimos la nueva información en el arhcivo de salida
+  //write_info(outfile, header, pixel_data, is_16_bit);  // escribimos la nueva información en el arhcivo de salida
 
   return 0;
 };

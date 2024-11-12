@@ -67,6 +67,7 @@ void get_pixels(std::ifstream & infile, std::vector<Pixel> & pixel_data,
 }
 
 // Ecribir la información de la imagen en el archivo de salida
+/*
 void write_info(std::ofstream &outfile, const ImageHeader &header, const std::vector<Pixel> &pixel_data, bool is_16_bit) {
   outfile << header.magic_number << "\n";
   outfile << header.dimensions.width << " " << header.dimensions.height << "\n";
@@ -106,7 +107,7 @@ void write_info(std::ofstream &outfile, const ImageHeader &header, const std::ve
     }
   }
 }
-
+*/
 // Function to write the color table indices based on the color map
 void write_color_table(std::ofstream &outfile, const std::vector<Pixel> &pixel_data,
                        const std::map<Pixel, int> &color_table) {

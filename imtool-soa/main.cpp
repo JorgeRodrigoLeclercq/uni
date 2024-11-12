@@ -1,7 +1,7 @@
 #include "../common/progargs.hpp"
 #include "cutfreq.hpp"
-#include "functions.hpp"
-#include "ReSize.cpp"
+#include "maxlevel.hpp"
+#include "ReSize.hpp"
 
 #include <cstdlib>
 #include <fstream>
@@ -72,13 +72,14 @@ int main(int argc, const char *argv[]) {
     checkHeightArgs(new_dimensions.height);
     checkWidthArgs(new_dimensions.width);
 
+
     ReSize(header, pixel_data,new_dimensions , outfile);
 
   }
 
 
 
-  else if (args[3] == "cutfreq"){
+  else if (args[3] == std::string("cutfreq")){
     try{cutfreq(pixel_data, std::stoi(args[4]));}
     catch (const std::invalid_argument &){
       std::cerr << "Error: Invalid cutfreq: " << args[4] << "\n";

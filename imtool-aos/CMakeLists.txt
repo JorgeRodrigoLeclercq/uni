@@ -1,6 +1,5 @@
 add_executable(imtool-aos main.cpp
         functions.cpp
-        ../imtool-soa/functions.cpp
         ../common/binaryio.hpp
         ../common/progargs.hpp
         ../common/priority_queue.hpp

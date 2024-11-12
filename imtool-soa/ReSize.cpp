@@ -1,18 +1,16 @@
 
 #include "ReSize.hpp"
 
-#include "./imtool-soa/functions.cpp"
-
 #include <algorithm>  // For std::clamp
 #include <cmath>
 #include <fstream>
-
+#include <imtool-aos/functions.hpp>
 
 void ReSize ( ImageHeader header, SoA & pixel_data , const ImageDimensions new_dimensions, std::ofstream &output) {
 
   const auto new_pixel_count = static_cast<unsigned long>(new_dimensions.width )* static_cast<unsigned long> (new_dimensions.height);
 
-  bool const is_16_bit = header.max_color > MAX_COLOR_VALUE8;
+  bool const is_16_bit = header.max_color > DEFAULT_MAX_COLOR;
   // Structure of Arrays
   SoA new_pixel_data;
   new_pixel_data.r.resize(new_pixel_count);
@@ -22,7 +20,6 @@ void ReSize ( ImageHeader header, SoA & pixel_data , const ImageDimensions new_d
   PixelCalculator(header, pixel_data, new_dimensions , new_pixel_data);
   header.dimensions.width = new_dimensions.width;
   header.dimensions.height = new_dimensions.height;
-
 
   write_info( output, header , new_pixel_data, is_16_bit);
 

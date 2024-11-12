@@ -3,7 +3,6 @@ add_library(common
         progargs.cpp
         binaryio.cpp
         ../imtool-aos/functions.cpp
-        ../imtool-soa/functions.cpp
         binaryio.hpp
         progargs.hpp
         header.hpp

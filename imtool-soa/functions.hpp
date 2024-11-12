@@ -13,6 +13,7 @@
 #include <vector>
 
 constexpr int DEFAULT_MAX_COLOR = 255;
+
 struct ImageDimensions {
     int width;
     int height;

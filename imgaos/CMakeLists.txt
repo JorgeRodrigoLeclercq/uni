@@ -2,7 +2,6 @@
 add_library(imgaos
         imageaos.cpp imageaos.hpp
         ../imtool-aos/functions.cpp
-        ../imtool-soa/functions.cpp
         ../common/binaryio.hpp
         ../common/progargs.hpp
         ../common/priority_queue.hpp

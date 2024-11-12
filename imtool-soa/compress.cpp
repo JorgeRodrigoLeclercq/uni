@@ -1,9 +1,46 @@
 #include "compress.hpp"
 
-#include <map>
+#include <limits>
 
-void write_cppm(std::ofstream& cppm_outfile, ImageHeader& header, SoA& pixel_data) {
-    const uint8_t MAX_COLOR_VALUE8 = 255;
+void write_color_table(std::ofstream &outfile, SoA& pixel_data,
+                       std::map<std::tuple<uint8_t, uint8_t, uint8_t>, int> const &color_table) {
+  if (auto const table_size = color_table.size(); table_size <= std::numeric_limits<uint8_t>::max()) {
+    for (std::size_t i = 0; i < pixel_data.r.size(); ++i) {
+      auto color_tuple = std::make_tuple(pixel_data.r[i], pixel_data.g[i], pixel_data.b[i]);
+      uint8_t const index = static_cast<uint8_t>(color_table.at(color_tuple));
+      char const byte = static_cast<char>(index);
+      outfile.write(&byte, 1);
+    }
+  } else if (table_size <= std::numeric_limits<uint16_t>::max()) {
+    for (std::size_t i = 0; i < pixel_data.r.size(); ++i) {
+      auto color_tuple = std::make_tuple(pixel_data.r[i], pixel_data.g[i], pixel_data.b[i]);
+      uint16_t const index = static_cast<uint16_t>(color_table.at(color_tuple));
+      char const byte1 = static_cast<char>(index & 0xFF);
+      char const byte2 = static_cast<char>((index >> 8) & 0xFF);
+      outfile.write(&byte1, 1);
+      outfile.write(&byte2, 1);
+    }
+  } else if (table_size <= std::numeric_limits<uint32_t>::max()) {
+    for (std::size_t i = 0; i < pixel_data.r.size(); ++i) {
+      auto color_tuple = std::make_tuple(pixel_data.r[i], pixel_data.g[i], pixel_data.b[i]);
+      uint32_t const index = static_cast<uint32_t>(color_table.at(color_tuple));
+      char const byte1 = static_cast<char>(index & 0xFF);
+      char const byte2 = static_cast<char>((index >> 8) & 0xFF);
+      char const byte3 = static_cast<char>((index >> 16) & 0xFF);
+      char const byte4 = static_cast<char>((index >> 24) & 0xFF);
+      outfile.write(&byte1, 1);
+      outfile.write(&byte2, 1);
+      outfile.write(&byte3, 1);
+      outfile.write(&byte4, 1);
+    }
+  } else {
+    std::cerr << "Error: Color table too large." << '\n';
+    exit(1);
+  }
+}
+
+void compress(std::ofstream& cppm_outfile, ImageHeader & header, SoA& pixel_data) {
+  constexpr uint8_t MAX_COLOR_VALUE8 = 255;
 
   // Mapear cada índice a su color
   std::map<std::tuple<uint8_t, uint8_t, uint8_t>, int> color_table;
@@ -18,59 +55,10 @@ void write_cppm(std::ofstream& cppm_outfile, ImageHeader& header, SoA& pixel_dat
     }
   }
 
-  // CPPM header
-  cppm_outfile << "C6 " << header.dimensions.width << " " << header.dimensions.height << " " << header.max_color << " " << color_list.size() << "\n";
-
+  header.magic_number = "C6";
   bool const is_16_bit = header.max_color > MAX_COLOR_VALUE8;
-  for (const auto &color_tuple : color_list) {
-    uint8_t red = std::get<0>(color_tuple);
-    uint8_t green = std::get<1>(color_tuple);
-    uint8_t blue = std::get<2>(color_tuple);
 
-    if (is_16_bit) {
-      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-      cppm_outfile.write(reinterpret_cast<const char*>(&red), 2);
-      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-      cppm_outfile.write(reinterpret_cast<const char*>(&green), 2);
-      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-      cppm_outfile.write(reinterpret_cast<const char*>(&blue), 2);
-    } else {
-      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-      cppm_outfile.write(reinterpret_cast<const char*>(&red), 1);
-      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-      cppm_outfile.write(reinterpret_cast<const char*>(&green), 1);
-      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-      cppm_outfile.write(reinterpret_cast<const char*>(&blue), 1);
-    }
-  }
+  write_info(cppm_outfile, header, pixel_data, is_16_bit);
 
-  // Determinar el tamaño del índice basado en el tamaño de la tabla de colores
-  auto table_size = color_list.size(); // `size_t` es más seguro aquí.
-
-  if (table_size <= static_cast<size_t>(UINT8_MAX)) {
-    for (std::size_t i = 0; i < pixel_data.r.size(); ++i) {
-      auto color_tuple = std::make_tuple(pixel_data.r[i], pixel_data.g[i], pixel_data.b[i]);
-      auto index = static_cast<uint8_t>(color_table[color_tuple]);
-      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-      cppm_outfile.write(reinterpret_cast<const char*>(&index), 1);
-    }
-  } else if (table_size <= static_cast<size_t>(UINT16_MAX)) {
-    for (std::size_t i = 0; i < pixel_data.r.size(); ++i) {
-      auto color_tuple = std::make_tuple(pixel_data.r[i], pixel_data.g[i], pixel_data.b[i]);
-      auto index = static_cast<uint16_t>(color_table[color_tuple]);
-      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-      cppm_outfile.write(reinterpret_cast<const char*>(&index), 2);
-    }
-  } else if (table_size <= static_cast<size_t>(UINT32_MAX)) {
-    for (std::size_t i = 0; i < pixel_data.r.size(); ++i) {
-      auto color_tuple = std::make_tuple(pixel_data.r[i], pixel_data.g[i], pixel_data.b[i]);
-      auto index = static_cast<uint32_t>(color_table[color_tuple]);
-      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-      cppm_outfile.write(reinterpret_cast<const char*>(&index), 4);
-    }
-  } else {
-    std::cerr << "Error: Color table too large." << '\n';
-    exit(1);
-  }
-
+  write_color_table(cppm_outfile, pixel_data, color_table);
 }

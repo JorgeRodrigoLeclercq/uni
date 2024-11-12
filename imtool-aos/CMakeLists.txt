@@ -9,6 +9,7 @@ add_executable(imtool-aos main.cpp
         Resize.hpp
         maxlevel.cpp
         maxlevel.hpp
-        maxlevel.hpp
-        maxlevel.hpp)
+        compress.cpp
+        compress.hpp
+        )
 target_link_libraries (imtool-aos imgaos common Microsoft.GSL::GSL)

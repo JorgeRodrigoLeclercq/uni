@@ -1,4 +1,6 @@
 #include "../common/progargs.hpp"
+#include "../common/header.hpp"
+#include "functions.hpp"
 #include "cutfreq.hpp"
 #include "maxlevel.hpp"
 #include "ReSize.hpp"
@@ -11,7 +13,6 @@
 #include <vector>
 
 constexpr uint8_t MAX_COLOR_VALUE8 = 255;
-constexpr uint16_t MAX_COLOR_VALUE16 = 65535;
 constexpr uint8_t EXTRA_ARGS = 5;
 
 int main(int argc, const char *argv[]) {

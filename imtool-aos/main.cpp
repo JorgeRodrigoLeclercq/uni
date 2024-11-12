@@ -1,4 +1,5 @@
 #include "../common/progargs.hpp"
+#include "../common/header.hpp"
 #include "common/pixel_structures.hpp"
 #include "cutfreq.hpp"
 #include "functions.hpp"
@@ -42,7 +43,6 @@ int main(int argc, const char *argv[]) {
     gsl::span<Pixel> pixel_span{pixel_data};
     maxlevel(new_maxlevel, is_16_bit, pixel_span, header);
   }
-  //--------------------------------------------------------------------------
   else if (args[3] == std::string("resize")){
     // Código para el comando "resize"
     checkNumberArgs(argc);
@@ -77,7 +77,7 @@ int main(int argc, const char *argv[]) {
     exit(-1);
   }
 
-  //write_info(outfile, header, pixel_data, is_16_bit);  // escribimos la nueva información en el arhcivo de salida
+  write_info(outfile, header, pixel_data, is_16_bit);  // escribimos la nueva información en el arhcivo de salida
 
   return 0;
 };

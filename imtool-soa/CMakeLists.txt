@@ -9,6 +9,7 @@ add_executable(imtool-soa main.cpp
         ReSize.cpp
         ReSize.hpp
         maxlevel.cpp
-        maxlevel.cpp
-        maxlevel.hpp)
+        maxlevel.hpp
+        compress.hpp
+        compress.cpp)
 target_link_libraries (imtool-soa PRIVATE imgsoa common  Microsoft.GSL::GSL)

@@ -5,101 +5,66 @@
 #ifndef PRIORITY_QUEUE_HPP
 #define PRIORITY_QUEUE_HPP
 
+#include "functions.hpp"
 #include <vector>
-#include <tuple>
-#include <ostream>
 #include <utility>
-#include <iomanip>
 
-template <typename Element_type, typename Priority_type> // Allows to use any type
+struct Pixel;
+
+// Este algoritmo se ha extraido del libro The Art of Computer Programming vol.3, capitulo 5.2.3
+
 class Bounded_priority_queue {
-  // A `priority queue' is a queue-like structure where the elements are sorted
-  // by a priority instead of the usual FIFO format. A `bounded priority queue'
-  // is a priority queue, but when it is full, it discards the biggest element.
+  // Implementado para limitar la estructura de cola de prioridad de std.
   public:
-    constexpr Bounded_priority_queue (std::size_t max_capacity)
-      : elements_(max_capacity, Element_type{}), priorities_(max_capacity, Priority_type{}) { }
+    constexpr Bounded_priority_queue (std::size_t max_capacity) : elements_(max_capacity, Pixel{}), priorities_(max_capacity, 0) { }
 
-    constexpr void enqueue (Element_type const & element,
-                            Priority_type priority) {
+    constexpr void enqueue (Pixel element, int priority) {
       if (size_ == std::size(elements_)) {
-          // The first element is the biggest one. If the element to be inserted has less priority than
-          // the first one. Then remove the first one and append the new one.
+          // Si el elemento tiene mayor prioridad que el último elemento de la cola de prioridad, lo eliminamos.
           if (priority < priorities_[0]) {
-            [[maybe_unused]] auto const dummy = dequeue_last();
+            dequeue_last();
             heap_append(element, priority);
           }
       } else {
-        heap_append(element, priority);
+        heap_append(element, priority); // añadir al final y propagar hacia arriba
       }
     }
 
-    constexpr Element_type dequeue_last () {
-      Element_type const element = std::move(elements_[0]);
+    constexpr void dequeue_last () {
       size_--;
       if (size_ != 0) {
         std::swap(elements_[0], elements_[size_]);
         std::swap(priorities_[0], priorities_[size_]);
         max_heapify(0);
       }
-      return element;
     }
 
-    constexpr std::vector<Element_type> const & get_all () const {
+    [[nodiscard]] constexpr std::vector<Pixel> const & get_all () const {
       return elements_;
-    }
-
-    friend std::ostream & operator<< (std::ostream & out,
-                                      Bounded_priority_queue const & queue) {
-      queue.print_helper(out, 0, 1);
-      return out;
     }
 
   private:
 
-    using index_type = std::ptrdiff_t;
-
-    // We are going to store the binary tree in an array (AoCPv3 s5.2.3 p144)
-    //
-    //       +-------------------------------------+
-    //       |                (0)                  |
-    //       |            /         \              |
-    //       |        (1)             (2)          |
-    //       |      /    \          /     \        |
-    //       |    (3)    (4)      (5)      (6)     |
-    //       |    / \    /  \     /  \    /   \    |
-    //       |  (7)(8) (9) (10) (11)(12) (13)(14)  |
-    //       +-------------------------------------+
-    //
-    // That way the binary tree is `flat', all the nodes in the tree are
-    // contiguous and there is no need for a `link' field in the node record.
-    // This leverages the memory usage a lot. And reduces the number of caché
-    // misses. Since all the child nodes are contiguous in memory. The original
-    // implementation used 1-based arrays. In C++ we have to translate them to
-    // 0-based ones.
-    //
-    //  - parent x      = floor ((x - 1) / 2)
-    //  - left-child x  = x * 2 + 1
-    //  - right-child x = x * 2 + 2
+    using index_type = std::size_t;
 
     constexpr static auto parent (index_type index) {
       return (index - 1) / 2;
     }
 
     constexpr static auto left_child (index_type index) {
-      return index * 2 + 1;
+      return (index * 2) + 1;
     }
 
     constexpr static auto right_child (index_type index) {
-      return index * 2 + 2;
+      return (index * 2) + 2;
     }
 
     // When we append to the heap, we just add the element to the end of the
     // vector and then propagate up. Swapping the child nodes with the parent
     // nodes when these don't follow the heap properties.
 
-    constexpr void heap_append (Element_type const & element,
-                                Priority_type priority) {
+    constexpr void heap_append (Pixel const & element,
+                                int priority) {
       elements_[size_] = element;
       priorities_[size_] = priority;
       size_++;
@@ -147,16 +112,8 @@ class Bounded_priority_queue {
       }
     }
 
-    void print_helper (std::ostream & out, index_type index, int depth) const {
-      if (index >= size_) { return; }
-      print_helper(out, left_child(index), depth + 1);
-      out << std::setw(depth * 4) << "|- " << "(" << priorities_[index]
-          << ", " << elements_[index] << ")\n";
-      print_helper(out, right_child(index), depth + 1);
-    }
-
-    std::vector<Element_type>  elements_;
-    std::vector<Priority_type> priorities_;
+    std::vector<Pixel>  elements_;
+    std::vector<int> priorities_;
     index_type size_{};
 };
 

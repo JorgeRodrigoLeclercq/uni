@@ -1,14 +1,12 @@
 //
-// Created by golden on 11/8/24.
+// Created by golden on 11/12/24.
 //
 
-#ifndef CUTFREQ_HPP
-#define CUTFREQ_HPP
-#include "common/priority_queue.hpp"
-#include "functions.hpp"
+#ifndef PIXEL_STRUCTURES_HPP
+#define PIXEL_STRUCTURES_HPP
 
-#include <unordered_map>
-#include <vector>
+#include <cstdint>
+#include <string>
 
 // Estructura para representar los canales de color de un píxel
 struct ColorChannels {
@@ -37,6 +35,7 @@ struct Pixel {
 // Especialización de std::hash para la clase Pixel
 constexpr int hash_green_shift = 8;
 constexpr int hash_blue_shift = 16;
+template <>
 struct std::hash<Pixel> {
   size_t operator()(Pixel const & pix) const noexcept {
     return hash<int>()(pix.channels.red) bitor (hash<int>()(pix.channels.green) << hash_green_shift) bitor
@@ -44,8 +43,4 @@ struct std::hash<Pixel> {
   }
 };
 
-std::unordered_map<Pixel, int> contarFrecuencias(const SoA& pixel_data);
-Bounded_priority_queue<Pixel, int> menosFrecuentes(const std::unordered_map<Pixel,int>& colores, int size);
-double calcularDistancia(const Pixel &pixel1, const Pixel &pixel2);
-void cutfreq(SoA &pixel_data, int n_colors);
-#endif //CUTFREQ_HPP
+#endif //PIXEL_STRUCTURES_HPP

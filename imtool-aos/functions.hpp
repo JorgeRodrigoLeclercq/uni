@@ -35,11 +35,13 @@ struct Pixel {
 };
 
 // Especialización de std::hash para la clase Pixel
+constexpr int hash_green_shift = 8;
+constexpr int hash_blue_shift = 16;
 template <>
 struct std::hash<Pixel> {
     size_t operator()(Pixel const & pix) const noexcept {
-      return hash<int>()(pix.channels.red) ^ (hash<int>()(pix.channels.green) << 1) ^
-             (hash<int>()(pix.channels.blue) << 2);
+      return hash<int>()(pix.channels.red) bitor (hash<int>()(pix.channels.green) << hash_green_shift) bitor
+             (hash<int>()(pix.channels.blue) << hash_blue_shift);
     }
 };
 

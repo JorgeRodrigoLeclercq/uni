@@ -1,11 +1,11 @@
-#include "Resize.hpp"
-#include <cmath>
-#include <bits/algorithmfwd.h>
-#include <iostream>
-#include <fstream>
-#include <algorithm>
-#include <limits>
+#include "resize.hpp"
 
+#include <algorithm>
+#include <bits/algorithmfwd.h>
+#include <cmath>
+#include <fstream>
+#include <iostream>
+#include <limits>
 
 void ReSize ( ImageHeader header,  const std::vector<Pixel> &pixel_Data, const ImageDimensions new_dimensions, std::ofstream &output) {
 

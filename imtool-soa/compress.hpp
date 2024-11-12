@@ -1,6 +1,6 @@
 #ifndef COMPRESS_HPP
 #define COMPRESS_HPP
-#include "functions.hpp"
+#include "info.hpp"
 
 void write_cppm(std::ofstream& cppm_outfile, ImageHeader& header, SoA& pixel_data);
 

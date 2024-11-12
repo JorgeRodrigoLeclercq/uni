@@ -1,9 +1,9 @@
-#include "../common/progargs.hpp"
 #include "../common/header.hpp"
-#include "functions.hpp"
+#include "../common/progargs.hpp"
 #include "cutfreq.hpp"
+#include "info.hpp"
 #include "maxlevel.hpp"
-#include "ReSize.hpp"
+#include "resize.hpp"
 
 #include <cstdlib>
 #include <fstream>
@@ -42,7 +42,7 @@ int main(int argc, const char *argv[]) {
   get_pixels(infile, pixel_data, pixel_count, is_16_bit);  // rellenar el Structure of Arrays con los píxeles
 
   if (args[3] == std::string("maxlevel")) {
-    int new_maxlevel = checkMaxLevel(args[4]);
+    int const new_maxlevel = checkMaxLevel(args[4]);
     maxlevel(new_maxlevel, is_16_bit, pixel_data, header);
   }
 

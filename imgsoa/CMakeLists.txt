@@ -1,8 +1,8 @@
 # Add to this list all files related to imgsoa library
 add_library(imgsoa
         imagesoa.cpp
-        ../imtool-aos/functions.cpp
-        ../imtool-soa/functions.cpp
+        ../imtool-aos/info.cpp
+        ../imtool-soa/info.cpp
         ../common/binaryio.hpp
         ../common/progargs.hpp
         ../common/priority_queue.hpp

@@ -1,13 +1,13 @@
 add_executable(imtool-soa main.cpp
-        functions.cpp
-        functions.hpp
+        info.cpp
+        info.hpp
         ../common/binaryio.hpp
         ../common/progargs.hpp
         ../common/priority_queue.hpp
         cutfreq.hpp
         cutfreq.cpp
-        ReSize.cpp
-        ReSize.hpp
+        resize.cpp
+        resize.hpp
         maxlevel.cpp
         maxlevel.hpp
         compress.hpp

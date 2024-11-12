@@ -1,12 +1,13 @@
 add_executable(imtool-aos main.cpp
-        functions.cpp
+        info.cpp
+        info.hpp
         ../common/binaryio.hpp
         ../common/progargs.hpp
         ../common/priority_queue.hpp
         cutfreq.cpp
         cutfreq.hpp
-        Resize.cpp
-        Resize.hpp
+        resize.cpp
+        resize.hpp
         maxlevel.cpp
         maxlevel.hpp
         compress.cpp

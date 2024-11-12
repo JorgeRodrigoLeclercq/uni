@@ -1,16 +1,14 @@
 #ifndef RESIZE_HPP
 #define RESIZE_HPP
 
+#include "info.hpp"
+
 #include <algorithm>
-#include <cstdint>
-#include "functions.hpp"
-#include <string>
 #include <cmath>
+#include <cstdint>
+#include <string>
 #include <utility>
 #include <vector>
-
-
-
 
 double interpolacion(const std::vector<double> &first_point, const std::vector<double> &second_point, int y_value);
 

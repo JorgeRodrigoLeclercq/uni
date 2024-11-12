@@ -2,8 +2,10 @@
 // Created by fjavi on 11/11/2024.
 //
 #include "maxlevel.hpp"
-#include <algorithm> // Para std::clamp
-#include "functions.hpp"
+
+#include "info.hpp"
+
+#include <algorithm>  // Para std::clamp
 #include <limits>
 
 void maxlevel(int new_maxlevel, bool& is_16_bit, SoA& pixel_data, ImageHeader& header) {

@@ -5,8 +5,9 @@
 #ifndef MAXLEVEL_HPP
 #define MAXLEVEL_HPP
 
-#include "functions.hpp" // Asegúrate de que incluye las estructuras SoA e ImageHeader necesarias.
-#include <cstdint>       // Para uint16_t
+#include "info.hpp"  // Asegúrate de que incluye las estructuras SoA e ImageHeader necesarias.
+
+#include <cstdint>  // Para uint16_t
 
 constexpr int MAX_COLOR_8BIT = 255;
 

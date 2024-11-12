@@ -1,5 +1,5 @@
 
-#include "ReSize.hpp"
+#include "resize.hpp"
 
 #include <algorithm>  // For std::clamp
 #include <cmath>

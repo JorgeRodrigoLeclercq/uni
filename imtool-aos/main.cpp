@@ -1,10 +1,11 @@
-#include "../common/progargs.hpp"
 #include "../common/header.hpp"
+#include "../common/progargs.hpp"
 #include "common/pixel_structures.hpp"
 #include "cutfreq.hpp"
-#include "functions.hpp"
+#include "info.hpp"
 #include "maxlevel.hpp"
-#include "Resize.hpp"
+#include "resize.hpp"
+
 #include <cstdlib>
 #include <fstream>
 #include <gsl/gsl>
@@ -39,12 +40,11 @@ int main(int argc, const char *argv[]) {
   get_pixels(infile, pixel_data, pixel_count, is_16_bit);  // rellenar el Array of Structures con los píxeles
 
   if (args[3] == std::string("maxlevel")) {
-    int new_maxlevel = checkMaxLevel(args[4]);
+    int const new_maxlevel = checkMaxLevel(args[4]);
     gsl::span<Pixel> pixel_span{pixel_data};
     maxlevel(new_maxlevel, is_16_bit, pixel_span, header);
   }
   else if (args[3] == std::string("resize")){
-    // Código para el comando "resize"
     checkNumberArgs(argc);
 
     ImageDimensions new_dimensions{};
@@ -54,11 +54,7 @@ int main(int argc, const char *argv[]) {
     checkHeightArgs(new_dimensions.height);
     checkWidthArgs(new_dimensions.width); checkNumberArgs(argc);
 
-
     ReSize(header, pixel_data, new_dimensions, outfile);
-
-    // checkResize
-    // resize...
   }
   else if (args[3] == std::string("cutfreq") && argc == EXTRA_ARGS){
     try{cutfreq(pixel_data, std::stoi(args[4]));}
@@ -68,11 +64,10 @@ int main(int argc, const char *argv[]) {
     };
   }
   else if (args[3] == std::string("compress")){
-    // Código para el comando "compress"
     //write_cppm(outfile, header, pixel_data);
     return 0;
   }
-  else {
+  else if (args[3] != std::string("info")){
     std::cerr << "Error: Invalid option: " << args[3] << "\n";
     exit(-1);
   }

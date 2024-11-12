@@ -12,7 +12,6 @@
 #include <vector>
 
 constexpr uint8_t MAX_COLOR_VALUE8 = 255;
-constexpr uint16_t MAX_COLOR_VALUE16 = 65535;
 constexpr uint8_t EXTRA_ARGS = 5;
 
 int main(int argc, const char *argv[]) {
@@ -38,24 +37,10 @@ int main(int argc, const char *argv[]) {
   bool is_16_bit = header.max_color > MAX_COLOR_VALUE8;  // determinar la longitud de cada pixel (2 bytes si max_color > 256; else: 1)
   get_pixels(infile, pixel_data, pixel_count, is_16_bit);  // rellenar el Array of Structures con los píxeles
 
-  if (args[3] == std::string("maxlevel")){
-    // Código para el comando "maxlevel"
-    if (argc != EXTRA_ARGS) {
-      std::cerr << "Error: Invalid number of arguments for maxlevel: " << (argc - 4) << "\n";
-      exit(-1);
-    }
+  if (args[3] == std::string("maxlevel")) {
+    checkNumberArgs(argc);
 
-    int new_maxlevel= 0;
-    try {
-      new_maxlevel = std::stoi(args[4]);
-    } catch (const std::invalid_argument &){
-      std::cerr << "Error: Invalid argument for maxlevel: " << args[4] << "\n";
-      exit(-1);
-    }
-    if (new_maxlevel < 0 || new_maxlevel > MAX_COLOR_VALUE16){
-      std::cerr << "Error: Invalid maxlevel value: " << new_maxlevel << "\n";
-      exit(-1);
-    }
+    int new_maxlevel = checkMaxLevel(args[4]);
     gsl::span<Pixel> pixel_span{pixel_data};
     maxlevel(new_maxlevel, is_16_bit, pixel_span, header);
   }

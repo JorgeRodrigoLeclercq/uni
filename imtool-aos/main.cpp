@@ -38,8 +38,6 @@ int main(int argc, const char *argv[]) {
   get_pixels(infile, pixel_data, pixel_count, is_16_bit);  // rellenar el Array of Structures con los píxeles
 
   if (args[3] == std::string("maxlevel")) {
-    checkNumberArgs(argc);
-
     int new_maxlevel = checkMaxLevel(args[4]);
     gsl::span<Pixel> pixel_span{pixel_data};
     maxlevel(new_maxlevel, is_16_bit, pixel_span, header);

@@ -1,6 +1,6 @@
 #ifndef COMPRESS_HPP
 #define COMPRESS_HPP
-#include "functions.hpp"
+#include "info.hpp"
 
 void write_color_table(std::ofstream &outfile, const std::vector<Pixel> &pixel_data, const std::map<Pixel, int> &color_table);
 

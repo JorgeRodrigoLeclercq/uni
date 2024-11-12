@@ -1,7 +1,7 @@
 #ifndef RESIZE_HPP
 #define RESIZE_HPP
 
-#include "functions.hpp"
+#include "info.hpp"
 #include <cstdint>
 #include <gsl/gsl>
 #include <map>

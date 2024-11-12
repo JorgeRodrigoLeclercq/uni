@@ -4,7 +4,7 @@
 #include <algorithm>  // For std::clamp
 #include <cmath>
 #include <fstream>
-#include <imtool-aos/functions.hpp>
+#include <imtool-aos/info.hpp>
 
 void ReSize ( ImageHeader header, SoA & pixel_data , const ImageDimensions new_dimensions, std::ofstream &output) {
 

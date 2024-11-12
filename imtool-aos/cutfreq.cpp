@@ -6,6 +6,7 @@
 #include "common/priority_queue.hpp"
 #include <unordered_map>
 #include <cmath>
+#include <gsl/gsl>
 
 
 std::unordered_map<Pixel, int> contarFrecuencias(const std::vector<Pixel>& pixel_data) {
@@ -17,8 +18,8 @@ std::unordered_map<Pixel, int> contarFrecuencias(const std::vector<Pixel>& pixel
   return frecuencias;
 }
 
-Bounded_priority_queue<Pixel, int> menosFrecuentes(const std::unordered_map<Pixel,int>& colores, int size) {
-  Bounded_priority_queue<Pixel, int> colores_menos_frecuentes(gsl::narrow<std::size_t>(size));
+Bounded_priority_queue menosFrecuentes(const std::unordered_map<Pixel,int>& colores, int size) {
+  Bounded_priority_queue colores_menos_frecuentes(gsl::narrow<std::size_t>(size), Pixel{0,0,0});
 
   for (const auto &color : colores) {
     colores_menos_frecuentes.enqueue(color.first, color.second);
@@ -37,7 +38,7 @@ double calcularDistancia(const Pixel &pixel1, const Pixel &pixel2) {
 
 void cutfreq(std::vector<Pixel> &pixel_data, int n_colors) {
   std::unordered_map<Pixel, int> const frecuencias = contarFrecuencias(pixel_data);
-  Bounded_priority_queue<Pixel, int> const colores_menos_frecuentes = menosFrecuentes(frecuencias, n_colors);
+  Bounded_priority_queue const colores_menos_frecuentes = menosFrecuentes(frecuencias, n_colors);
 
   std::unordered_map<Pixel, std::pair<Pixel, double>> reemplazos;
   for (const auto &pixel : colores_menos_frecuentes.get_all()) {

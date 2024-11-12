@@ -5,7 +5,7 @@
 #ifndef PRIORITY_QUEUE_HPP
 #define PRIORITY_QUEUE_HPP
 
-#include "functions.hpp"
+#include "pixel_structures.hpp"
 #include <vector>
 #include <utility>
 
@@ -16,9 +16,9 @@ struct Pixel;
 class Bounded_priority_queue {
   // Implementado para limitar la estructura de cola de prioridad de std.
   public:
-    constexpr Bounded_priority_queue (std::size_t max_capacity) : elements_(max_capacity, Pixel{}), priorities_(max_capacity, 0) { }
+  Bounded_priority_queue (std::size_t max_capacity, Pixel initialiser) : elements_(max_capacity, initialiser), priorities_(max_capacity, 0) { }
 
-    constexpr void enqueue (Pixel element, int priority) {
+    void enqueue (Pixel element, int priority) {
       if (size_ == std::size(elements_)) {
           // Si el elemento tiene mayor prioridad que el último elemento de la cola de prioridad, lo eliminamos.
           if (priority < priorities_[0]) {
@@ -30,16 +30,16 @@ class Bounded_priority_queue {
       }
     }
 
-    constexpr void dequeue_last () {
+    void dequeue_last () {
       size_--;
       if (size_ != 0) {
         std::swap(elements_[0], elements_[size_]);
         std::swap(priorities_[0], priorities_[size_]);
-        max_heapify(0);
+        max_heapify();
       }
     }
 
-    [[nodiscard]] constexpr std::vector<Pixel> const & get_all () const {
+    [[nodiscard]]  std::vector<Pixel> const & get_all () const {
       return elements_;
     }
 
@@ -47,15 +47,15 @@ class Bounded_priority_queue {
 
     using index_type = std::size_t;
 
-    constexpr static auto parent (index_type index) {
+     static auto parent (index_type index) {
       return (index - 1) / 2;
     }
 
-    constexpr static auto left_child (index_type index) {
+     static auto left_child (index_type index) {
       return (index * 2) + 1;
     }
 
-    constexpr static auto right_child (index_type index) {
+     static auto right_child (index_type index) {
       return (index * 2) + 2;
     }
 
@@ -63,7 +63,7 @@ class Bounded_priority_queue {
     // vector and then propagate up. Swapping the child nodes with the parent
     // nodes when these don't follow the heap properties.
 
-    constexpr void heap_append (Pixel const & element,
+     void heap_append (Pixel const & element,
                                 int priority) {
       elements_[size_] = element;
       priorities_[size_] = priority;
@@ -71,7 +71,7 @@ class Bounded_priority_queue {
       propagate_up(size_ - 1);
     }
 
-    constexpr void propagate_up (index_type index)
+     void propagate_up (index_type index)
     // This function takes and index and propagates up the heap invariant:
     //
     //    «Every parent has more priority than both of its children»
@@ -86,12 +86,13 @@ class Bounded_priority_queue {
       }
     }
 
-    constexpr void max_heapify (index_type index)
+     void max_heapify ()
     // This procedure's purpose is mantaining the heap's properties of this
     // class's internal heap. It assumes that the subtree located at the given
     // nodes left and right children already satisfy the max-heap property. But
-    // the tree at the index (current node) does not.
+    // the tree at the index (current node) does not
     {
+      index_type index = 0;
       for (;;) {
         index_type const left = left_child (index);
         index_type const right = right_child (index);

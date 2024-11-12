@@ -1,6 +1,8 @@
 #ifndef FUNCTIONS_HPP
 #define FUNCTIONS_HPP
 
+#include "common/pixel_structures.hpp"
+
 #include <cstdint>
 #include <gsl/gsl>
 #include <map>
@@ -9,41 +11,6 @@
 #include <vector>
 
 constexpr int DEFAULT_MAX_COLOR = 255; // Constante para el valor por defecto de max_color
-
-// Estructura para representar los canales de color de un píxel
-struct ColorChannels {
-    uint16_t red;
-    uint16_t green;
-    uint16_t blue;
-};
-
-// Definición de Pixel utilizando ColorChannels
-struct Pixel {
-    ColorChannels channels;
-
-    explicit Pixel(uint16_t const red = 0, uint16_t const green = 0, uint16_t const blue = 0)
-      : channels{.red=red, .green=green, .blue=blue} {}
-
-    bool operator<(const Pixel &other) const {
-      return std::tie(channels.red, channels.green, channels.blue) <
-             std::tie(other.channels.red, other.channels.green, other.channels.blue);
-    }
-
-    bool operator==(const Pixel &other) const {
-        return channels.red == other.channels.red && channels.green == other.channels.green && channels.blue == other.channels.blue;
-    }
-};
-
-// Especialización de std::hash para la clase Pixel
-constexpr int hash_green_shift = 8;
-constexpr int hash_blue_shift = 16;
-template <>
-struct std::hash<Pixel> {
-    size_t operator()(Pixel const & pix) const noexcept {
-      return hash<int>()(pix.channels.red) bitor (hash<int>()(pix.channels.green) << hash_green_shift) bitor
-             (hash<int>()(pix.channels.blue) << hash_blue_shift);
-    }
-};
 
 // Estructura para agrupar dimensiones de la imagen
 struct ImageDimensions {

@@ -1,4 +1,5 @@
 #include "../common/progargs.hpp"
+#include "common/pixel_structures.hpp"
 #include "cutfreq.hpp"
 #include "functions.hpp"
 #include "maxlevel.hpp"

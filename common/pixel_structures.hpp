@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <string>
+#include <vector>
 
 // Estructura para representar los canales de color de un píxel
 struct ColorChannels {
@@ -41,6 +42,11 @@ struct std::hash<Pixel> {
     return hash<int>()(pix.channels.red) bitor (hash<int>()(pix.channels.green) << hash_green_shift) bitor
            (hash<int>()(pix.channels.blue) << hash_blue_shift);
   }
+};
+
+// Structure of Arrays (SoA)
+struct SoA {
+    std::vector<uint16_t> r, g, b;  // arrays distintos para el rojo, el verde y el azul
 };
 
 #endif //PIXEL_STRUCTURES_HPP

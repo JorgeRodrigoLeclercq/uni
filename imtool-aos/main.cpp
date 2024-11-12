@@ -69,7 +69,7 @@ int main(int argc, const char *argv[]) {
   }
   else if (args[3] == std::string("compress")){
     // Código para el comando "compress"
-    write_cppm(outfile, header, pixel_data);
+    //write_cppm(outfile, header, pixel_data);
     return 0;
   }
   else {

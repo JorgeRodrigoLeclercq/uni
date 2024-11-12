@@ -1,7 +1,7 @@
 #include "../common/progargs.hpp"
 #include "cutfreq.hpp"
 #include "functions.hpp"
-#include "ReSize.hpp"
+#include "ReSize.cpp"
 
 #include <cstdlib>
 #include <fstream>
@@ -63,50 +63,16 @@ int main(int argc, const char *argv[]) {
 
   //--------------------------------------------------
   else if (args[3] == std::string("resize")) {
-    if (argc != 4 + 1) {
-      std::cerr << "Error: Invalid number of extra arguments for resize: " << (argc - 4) << "\n";
-      exit(-1);
-    }
+    checkNumberArgs(argc);
+
     ImageDimensions new_dimensions{};
-    ImageDimensions old_dimensions{};
-    old_dimensions.width = header.dimensions.width;
-    old_dimensions.height = header.dimensions.height;
+    new_dimensions.width= std::stoi(args[4]);
+    new_dimensions.width= std::stoi(args[4+1]);
 
-    try {
-      new_dimensions.width= std::stoi(args[4]);
-    } catch (const std::invalid_argument &){
-      std::cerr << "Error: Invalid resize width " << args[4] << "\n";
-      exit(-1);
-    }
-    try {
-      new_dimensions.width= std::stoi(args[4+1]);
-    } catch (const std::invalid_argument &){
-      std::cerr << "Error: Invalid resize heigth" << args[4+1] << "\n";
-      exit(-1);
-    }
+    checkHeightArgs(new_dimensions.height);
+    checkWidthArgs(new_dimensions.width);
 
-    if (new_dimensions.width < 0 ){
-      std::cerr << "Error: Invalid resize width: " << new_dimensions.width << "\n";
-      exit(-1);
-    }
-    else if (new_dimensions.height < 0 ){
-      std::cerr << "Error: Invalid resize height: " << new_dimensions.height << "\n";
-      exit(-1);
-    }
-
-    const auto new_pixel_count = static_cast<unsigned long>(new_dimensions.width * new_dimensions.height);
-
-    // Structure of Arrays
-    SoA new_pixel_data;
-    new_pixel_data.r.resize(new_pixel_count);
-    new_pixel_data.g.resize(new_pixel_count);
-    new_pixel_data.b.resize(new_pixel_count);
-
-    new_pixel_data = ReSize(old_dimensions, pixel_data,new_dimensions , new_dimensions);
-    header.dimensions.height = new_dimensions.height;
-    header.dimensions.width = new_dimensions.width;
-
-    write_info(outfile, header, new_pixel_data, is_16_bit);
+    ReSize(header, pixel_data,new_dimensions , outfile);
 
   }
 

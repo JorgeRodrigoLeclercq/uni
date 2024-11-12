@@ -2,6 +2,7 @@
 #include "cutfreq.hpp"
 #include "functions.hpp"
 #include "maxlevel.hpp"
+#include "Resize.hpp"
 #include <cstdlib>
 #include <fstream>
 #include <gsl/gsl>

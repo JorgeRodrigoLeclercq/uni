@@ -14,5 +14,22 @@ inline int checkNumberArgs(int const argc) {
 }
 
 
+inline int checkWidthArgs(int const width) {
+  if (width < 0 ){
+    std::cerr << "Error: Invalid resize width: " << width << "\n";
+    exit(-1);
+  }
+  return 0;
+}
+
+inline int checkHeightArgs(int const heigth) {
+  if (heigth< 0 ){
+    std::cerr << "Error: Invalid resize height: " << heigth << "\n";
+    exit(-1);
+  }
+  return 0;
+}
+
+
 
 #endif // PROGARGS_HPP

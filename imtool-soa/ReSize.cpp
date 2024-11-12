@@ -1,21 +1,40 @@
 
 #include "ReSize.hpp"
 
+#include "./imtool-soa/functions.cpp"
+
 #include <algorithm>  // For std::clamp
-#include <bits/algorithmfwd.h>
 #include <cmath>
 #include <fstream>
-#include <iostream>
 
-SoA ReSize( ImageDimensions & original_dimension,  SoA & pixel_Data,
-                     const ImageDimensions & new_dimension) {
-  const auto pixel_count = static_cast<uint>( std::abs(new_dimension.width * new_dimension.height));
 
+void ReSize ( ImageHeader header, SoA & pixel_data , const ImageDimensions new_dimensions, std::ofstream &output) {
+
+  const auto new_pixel_count = static_cast<unsigned long>(new_dimensions.width )* static_cast<unsigned long> (new_dimensions.height);
+
+  bool const is_16_bit = header.max_color > MAX_COLOR_VALUE8;
   // Structure of Arrays
   SoA new_pixel_data;
-  new_pixel_data.r.resize(pixel_count);
-  new_pixel_data.g.resize(pixel_count);
-  new_pixel_data.b.resize(pixel_count);
+  new_pixel_data.r.resize(new_pixel_count);
+  new_pixel_data.g.resize(new_pixel_count);
+  new_pixel_data.b.resize(new_pixel_count);
+
+  PixelCalculator(header, pixel_data, new_dimensions , new_pixel_data);
+  header.dimensions.width = new_dimensions.width;
+  header.dimensions.height = new_dimensions.height;
+
+
+  write_info( output, header , new_pixel_data, is_16_bit);
+
+}
+
+void PixelCalculator(  const ImageHeader & header,  SoA & pixel_Data,
+                     const ImageDimensions & new_dimension, SoA &new_pixel_data) {
+  ImageDimensions original_dimension{};
+  original_dimension.width = header.dimensions.width;
+  original_dimension.height = header.dimensions.height;
+
+
   double new_x =  0.0;
   double x_floor = 0.0;
   double x_ceil = 0.0;
@@ -23,6 +42,7 @@ SoA ReSize( ImageDimensions & original_dimension,  SoA & pixel_Data,
   double y_floor = 0.0;
   double y_ceil = 0.0;
   std::vector<double> coordenadas = {new_x, x_floor, x_ceil, new_y , y_floor, y_ceil};
+
 
   for ( int i = 0; i < new_dimension.height; i++ ) {
     for ( int j = 0; j < new_dimension.width; j++ ) {
@@ -41,8 +61,6 @@ SoA ReSize( ImageDimensions & original_dimension,  SoA & pixel_Data,
       new_pixel_data.b[static_cast<unsigned long long int> (j  + (i * new_dimension.width))] = new_data[2];
     }
   }
-  return new_pixel_data;
-
 
 }
 

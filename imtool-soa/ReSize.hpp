@@ -3,13 +3,15 @@
 
 #include <algorithm>
 #include <cstdint>
-
+#include "./imtool-soa/functions.hpp"
 #include <string>
 #include <cmath>
 #include <utility>
 #include <vector>
 
+
 constexpr int DEFAULT_MAX_COLOR = 255;
+constexpr uint8_t MAX_COLOR_VALUE8 = 255;
 struct ImageDimensions {
   int width;
   int height;
@@ -34,7 +36,8 @@ double interpolacion(const std::vector<double> &first_point, const std::vector<d
 
 std::vector<uint16_t> interpolacion_colores ( const SoA &pixel_Data, const std::vector<double> &coordenadas ,  int width_counter , const ImageDimensions &original_dimension ) ;
 
+void ReSize ( ImageHeader header, SoA & pixel_data , ImageDimensions new_dimensions, std::ofstream &output);
 
-SoA ReSize( ImageDimensions & original_dimension,  SoA & pixel_Data,
-                     const ImageDimensions & new_dimension) ;
+void PixelCalculator(  const ImageHeader & header,  SoA & pixel_Data,
+                     const ImageDimensions & new_dimension, SoA &new_pixel_data);
 #endif //RESIZE_HPP

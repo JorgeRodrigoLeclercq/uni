@@ -9,7 +9,6 @@
 #include <vector>
 #include <utility>
 
-struct Pixel;
 
 // Este algoritmo se ha extraido del libro The Art of Computer Programming vol.3, capitulo 5.2.3
 
@@ -39,29 +38,23 @@ class Bounded_priority_queue {
       }
     }
 
-    [[nodiscard]]  std::vector<Pixel> const & get_all () const {
+    [[nodiscard]] std::vector<Pixel> const & get_all () const {
       return elements_;
     }
 
   private:
 
-    using index_type = std::size_t;
-
-     static auto parent (index_type index) {
+     static auto parent (std::size_t index) {
       return (index - 1) / 2;
     }
 
-     static auto left_child (index_type index) {
+     static auto left_child (std::size_t index) {
       return (index * 2) + 1;
     }
 
-     static auto right_child (index_type index) {
+     static auto right_child (std::size_t index) {
       return (index * 2) + 2;
     }
-
-    // When we append to the heap, we just add the element to the end of the
-    // vector and then propagate up. Swapping the child nodes with the parent
-    // nodes when these don't follow the heap properties.
 
      void heap_append (Pixel const & element,
                                 int priority) {
@@ -71,13 +64,7 @@ class Bounded_priority_queue {
       propagate_up(size_ - 1);
     }
 
-     void propagate_up (index_type index)
-    // This function takes and index and propagates up the heap invariant:
-    //
-    //    «Every parent has more priority than both of its children»
-    //
-    // We start from index and check whether the parent has less priority than
-    // its child, if so, swap them and go up.
+     void propagate_up (std::size_t index)
     {
       while (index > 0 and priorities_[parent(index)] < priorities_[index]) {
         std::swap(elements_[index], elements_[parent(index)]);
@@ -87,17 +74,13 @@ class Bounded_priority_queue {
     }
 
      void max_heapify ()
-    // This procedure's purpose is mantaining the heap's properties of this
-    // class's internal heap. It assumes that the subtree located at the given
-    // nodes left and right children already satisfy the max-heap property. But
-    // the tree at the index (current node) does not
     {
-      index_type index = 0;
+      std::size_t index = 0;
       for (;;) {
-        index_type const left = left_child (index);
-        index_type const right = right_child (index);
-        index_type largest = index;
-        // Check which has the largest priority
+        std::size_t const left = left_child (index);
+        std::size_t const right = right_child (index);
+        std::size_t largest = index;
+        // Buscar mayor prioridad
         if (left < size_ and priorities_[largest] < priorities_[left]) {
           largest = left;
         }
@@ -115,7 +98,7 @@ class Bounded_priority_queue {
 
     std::vector<Pixel>  elements_;
     std::vector<int> priorities_;
-    index_type size_{};
+    std::size_t size_{};
 };
 
 #endif //PRIORITY_QUEUE_HPP

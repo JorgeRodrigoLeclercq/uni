@@ -43,7 +43,7 @@ add_subdirectory(imtool-soa)
 enable_testing()
 #add_subdirectory(utest-common)
 add_subdirectory(utest-imgaos)
-#add_subdirectory(utest-imgsoa)
+add_subdirectory(utest-imgsoa)
 #add_subdirectory(ftest-aos)
 #add_subdirectory(ftest-soa)
 

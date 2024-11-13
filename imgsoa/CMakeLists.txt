@@ -1,7 +1,15 @@
 # Add to this list all files related to imgsoa library
 add_library(imgsoa
-        ../imgaos/info.cpp
         info.cpp
+        info.hpp
+        cutfreq.cpp
+        cutfreq.hpp
+        resize.cpp
+        resize.hpp
+        maxlevel.cpp
+        maxlevel.hpp
+        compress.cpp
+        compress.hpp
         ../common/binaryio.hpp
         ../common/progargs.hpp
         ../common/priority_queue.hpp

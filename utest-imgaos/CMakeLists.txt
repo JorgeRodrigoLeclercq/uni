@@ -1,10 +1,12 @@
 # Executable for all unit tests with list of sources
 # For example, you may have one ∗_test.cpp for each ∗.cpp in img−aos
-add_executable(utest-img-aos
+add_executable(utest-imgaos
         utest_maxlevel.cpp)
 # Library dependencies
-target_link_libraries (utest-img-aos
+target_link_libraries (utest-imgaos
         PRIVATE
-        img-aos
+        imgaos
         GTest::gtest_main
         Microsoft.GSL::GSL)
+include(GoogleTest)
+gtest_discover_tests(utest-imgaos)

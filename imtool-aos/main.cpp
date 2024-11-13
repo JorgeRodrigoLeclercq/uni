@@ -6,6 +6,7 @@
 #include "imgaos/maxlevel.hpp"
 #include "imgaos/resize.hpp"
 
+#include <chrono>
 #include <cstdlib>
 #include <fstream>
 #include <gsl/gsl>
@@ -23,8 +24,6 @@ int main(int argc, const char *argv[]) {
   std::ofstream outfile(args[2], std::ios::binary);
   ImageHeader header;
   get_header(infile, header);
-
-  // Tamaño en pixeles de la imagen
   auto pixel_count = static_cast<unsigned long long int>(header.dimensions.width) *
                    static_cast<unsigned long long int>(header.dimensions.height);
   std::vector<Pixel> pixel_data(static_cast<std::size_t>(pixel_count));
@@ -46,6 +45,7 @@ int main(int argc, const char *argv[]) {
   else if (args[3] == std::string("cutfreq") && argc == EXTRA_ARGS){
     int const n_colors = checkCutFreq(args, argc);
     cutfreq(pixel_data, n_colors);
+    write_info(outfile, header, pixel_data, is_16_bit);
   }
   else if (args[3] == std::string("compress")){
     //write_cppm(outfile, header, pixel_data);

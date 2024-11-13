@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+#include <tuple>
 
 // Estructura para representar los canales de color de un píxel
 struct ColorChannels {

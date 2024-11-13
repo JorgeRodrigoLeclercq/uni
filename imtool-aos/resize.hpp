@@ -11,12 +11,12 @@
 
 
 
-
 void ReSize ( ImageHeader header,  const std::vector<Pixel> &pixel_Data,  ImageDimensions new_dimensions,std::ofstream &output) ;
 
-double interpolacion(const std::vector<double> &first_point, const std::vector<double> &second_point, int y_value);
-
-Pixel interpolacion_colores ( const std::vector<Pixel> &pixel_Data, std::vector<double> &coordenadas ,  int width_counter , const ImageDimensions &original_dimension );
-
 void DimensionChange(const ImageDimensions& original_dimension, const  std::vector<Pixel> &pixel_Data , const ImageDimensions& new_dimension,  std::vector<Pixel> &new_pixel_data);
+
+
+Pixel interpolacion_correcta_colores(const Pixel &right_up, const float fraction ,const Pixel &left_up);
+
+std::vector<float> coordinates_calculator(int  x_coordinate , const ImageDimensions &new_dimension,  int y_coordinate,const ImageDimensions &original_dimension);
 #endif //RESIZE_HPP

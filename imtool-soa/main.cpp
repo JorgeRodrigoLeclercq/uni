@@ -23,6 +23,7 @@ int main(int argc, const char *argv[]) {
 
   // Abrir archivos de entrada y de salida
   std::ifstream infile(args[1], std::ios::binary);
+
   std::ofstream outfile(args[2], std::ios::binary);
 
   // Extramos el header del archivo

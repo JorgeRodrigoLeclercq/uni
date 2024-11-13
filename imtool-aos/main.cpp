@@ -24,7 +24,15 @@ int main(int argc, const char *argv[]) {
 
   // Abrir archivos de entrada y de salida
   std::ifstream infile(args[1], std::ios::binary);
+  if (!infile) {
+    std::cerr << "Error: Could not open file " << args[1] << "\n";
+    return 1;
+  }
   std::ofstream outfile(args[2], std::ios::binary);
+  if (!outfile) {
+    std::cerr << "Error: Could not open file " << args[2] << "\n";
+    return 1;
+  }
 
   // Extramos el header del archivo
   ImageHeader header;
@@ -49,10 +57,11 @@ int main(int argc, const char *argv[]) {
 
     ImageDimensions new_dimensions{};
     new_dimensions.width= std::stoi(args[4]);
-    new_dimensions.width= std::stoi(args[4+1]);
+    new_dimensions.height= std::stoi(args[5]);
 
     checkHeightArgs(new_dimensions.height);
-    checkWidthArgs(new_dimensions.width); checkNumberArgs(argc);
+    checkWidthArgs(new_dimensions.width);
+    checkNumberArgs(argc);
 
     ReSize(header, pixel_data, new_dimensions, outfile);
   }
@@ -72,7 +81,6 @@ int main(int argc, const char *argv[]) {
     exit(-1);
   }
 
-  write_info(outfile, header, pixel_data, is_16_bit);  // escribimos la nueva información en el arhcivo de salida
 
   return 0;
 };

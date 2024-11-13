@@ -29,96 +29,67 @@ void ReSize ( ImageHeader header,  const std::vector<Pixel> &pixel_Data, const I
 }
 
 
-double interpolacion(const std::vector<double>  &first_point , const std::vector<double> & second_point , const int y_value) {
-   //Formula for getting the z ( color) value of the interpolation of two thredimensional points
-      return ( first_point[2] + (( second_point[2] - first_point[2]) * ((y_value - first_point[1]) / ( second_point[1] - first_point[0]))));
 
-}
-
-Pixel interpolacion_colores ( const std::vector<Pixel> &pixel_Data, std::vector<double> &coordenadas , const int width_counter , const ImageDimensions &original_dimension ) {
-
+Pixel interpolacion_correcta_colores(const Pixel &right_up, const float fraction ,const Pixel &left_up) {
   Pixel pixel;
-              std::vector<double> first_point = {coordenadas[1], coordenadas[4], static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
-                            static_cast<long>(coordenadas[1] + coordenadas[4]) *
-                            original_dimension.width)].channels.red)};
-              std::vector<double> second_point = {coordenadas[2], coordenadas[4], static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
-                                        static_cast<long>(coordenadas[2] + coordenadas[4]) *
-                                        original_dimension.width)].channels.red)};
-              double color_c1 = interpolacion(first_point, second_point, width_counter);
-              first_point = {coordenadas[1], coordenadas[4+1],static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
-                                            static_cast<long>(coordenadas[1] + coordenadas[4+1]) *
-                                            original_dimension.width)].channels.red)};
-              second_point = {coordenadas[2], coordenadas[4 +1], static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
-                                             static_cast<long>(coordenadas[2] + coordenadas[4 +1]) *
-                                             original_dimension.width)].channels.red)};
-              double color_c2 = interpolacion(first_point, second_point, width_counter);
-              first_point = {coordenadas[0], coordenadas[4], color_c1};
-              second_point = {coordenadas[0],coordenadas[4 +1], color_c2};
-              pixel.channels.red      = static_cast<uint16_t>(interpolacion(first_point, second_point, width_counter));
-              // --g
-              first_point = {coordenadas[1], coordenadas[4], static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
-                                            static_cast<long>(coordenadas[1] + coordenadas[4]) *
-                                            original_dimension.width)].channels.green)};
-              second_point = {coordenadas[2], coordenadas[4], static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
-                                             static_cast<long>(coordenadas[2] + coordenadas[4]) *
-                                             original_dimension.width)].channels.green)};
-              color_c1 = interpolacion(first_point, second_point, width_counter);
-              first_point = {coordenadas[1], coordenadas[4 +1 ], static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
-                                            static_cast<long>(coordenadas[1] + coordenadas[4 + 1]) *
-                                            original_dimension.width)].channels.green)};
-              second_point = {coordenadas[2], coordenadas[4 + 1], static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
-                                             static_cast<long>(coordenadas[2] + coordenadas[4 +1]) *
-                                             original_dimension.width)].channels.green)};
-              color_c2 = interpolacion(first_point, second_point, width_counter);
-              first_point = {coordenadas[0], coordenadas[4], color_c1};
-              second_point = {coordenadas[0], coordenadas[4 +1], color_c2};
-              pixel.channels.green = static_cast<uint16_t>(interpolacion(first_point, second_point, width_counter));
-              // --b
-              first_point = {coordenadas[1], coordenadas[4], static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
-                                            static_cast<long>(coordenadas[1] + coordenadas[4]) *
-                                            original_dimension.width)].channels.blue)};
-              second_point = {coordenadas[2], coordenadas[4], static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
-                                             static_cast<long>(coordenadas[2] + coordenadas[4]) *
-                                             original_dimension.width)].channels.blue)};
-              color_c1 = interpolacion(first_point, second_point, width_counter);
-              first_point = {coordenadas[1], coordenadas[4+1], static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
-                                            static_cast<long>(coordenadas[1] + coordenadas[4+ 1]) *
-                                            original_dimension.width)].channels.blue)};
-              second_point = {coordenadas[2], coordenadas[4+1], static_cast<double>(pixel_Data[static_cast<unsigned long long int>(
-                                             static_cast<long>(coordenadas[2] + coordenadas[4+ 1]) *
-                                             original_dimension.width)].channels.blue)};
-              color_c2 = interpolacion(first_point, second_point, width_counter);
-              first_point = {coordenadas[0], coordenadas[4], color_c1};
-              second_point = {coordenadas[0], coordenadas[4+1], color_c2};
-              pixel.channels.blue = static_cast<uint16_t>(interpolacion(first_point, second_point, width_counter));
+  pixel.channels.red =static_cast<uint16_t>( (static_cast<float>(right_up.channels.red - left_up.channels.red ) * fraction ) + static_cast<float>(left_up.channels.red));
+  pixel.channels.blue =static_cast<uint16_t>( (static_cast<float>(right_up.channels.blue - left_up.channels.blue ) * fraction ) + static_cast<float>(left_up.channels.blue));
+  pixel.channels.green =static_cast<uint16_t>( (static_cast<float>(right_up.channels.green- left_up.channels.green ) * fraction ) + static_cast<float>(left_up.channels.green));
 
   return pixel;
 
 }
 
-  void DimensionChange(const ImageDimensions& original_dimension, const  std::vector<Pixel> &pixel_Data , const ImageDimensions& new_dimension,  std::vector<Pixel> &new_pixel_data) {
 
-      Pixel pixel; pixel.channels.red = 0; pixel.channels.green = 0; pixel.channels.blue = 0;
-      double new_x =  0.0;
-      double x_floor = 0.0;
-      double x_ceil = 0.0;
-      double new_y = 0.0;
-      double y_floor = 0.0;
-      double y_ceil = 0.0;
-      std::vector<double> coordenadas = {new_x, x_floor, x_ceil, new_y , y_floor, y_ceil};
+  void DimensionChange(const ImageDimensions& original_dimension, const  std::vector<Pixel> &pixel_Data ,
+    const ImageDimensions& new_dimension,  std::vector<Pixel> &new_pixel_data) {
 
-      for ( int i = 0; i < new_dimension.height; i++ ) {
-            for ( int j = 0; j < new_dimension.width; j++ ) {
-              new_x = static_cast<double>( j * original_dimension.width) / static_cast<double>(new_dimension.width);
-              x_floor = std::floor(new_x);
-              x_ceil = std::ceil(new_x);
-              new_y =  static_cast<double>( i * original_dimension.height) / static_cast<double>(new_dimension.height);
-              y_floor = std::floor(new_y);
-              y_ceil = std::ceil(new_y);
+      Pixel pixel_left_down{};
+      Pixel pixel_right_down{};
+      Pixel pixel_left_up{};
+      Pixel pixel_right_up{};
+      Pixel color1{};
+      Pixel color2{};
+      float fraction = 0.0;
+      std::vector<float> coordinates = {0,0,0,0,0,0};
 
-              coordenadas = {new_x, x_floor, x_ceil, new_y , y_floor, y_ceil};
-              //We write the new data in our new image
-              new_pixel_data[static_cast<std::size_t>(j + (i * new_dimension.width))] = interpolacion_colores(pixel_Data, coordenadas, i , original_dimension);
+      for ( int j = 0; j < new_dimension.height; j++ ) {
+            for ( int i = 0; i < new_dimension.width; i++ ) {
+              coordinates = coordinates_calculator(i, new_dimension , j , original_dimension );
+
+              fraction= coordinates[0] / coordinates[2];
+              //fraction = 0.5;
+
+              pixel_left_down = pixel_Data[static_cast<unsigned long long int>((coordinates[1] * static_cast<float>(original_dimension.width)) + coordinates[4])];
+              pixel_right_down = pixel_Data[static_cast<unsigned long long int>((coordinates[2] * static_cast<float>(original_dimension.width)) + coordinates[4])];
+              pixel_left_up = pixel_Data[static_cast<unsigned long long int>((coordinates[1]  * static_cast<float>(original_dimension.width)) + coordinates[4 +1])];
+              pixel_right_up = pixel_Data[static_cast<unsigned long long int>((coordinates[2] * static_cast<float>(original_dimension.width)) + coordinates[4 + 1])];
+
+              color1 = interpolacion_correcta_colores(pixel_right_down, fraction, pixel_left_down);
+              color2 = interpolacion_correcta_colores(pixel_right_up, fraction, pixel_left_up);
+
+              fraction= coordinates[3]/ coordinates[4 +1];
+              new_pixel_data[static_cast<unsigned long int>(std::abs((i * new_dimension.width) + j))] = interpolacion_correcta_colores(color1, fraction, color2);
+
+
+
             }
       }
+}
+
+std::vector<float> coordinates_calculator(int const x_coordinate , const ImageDimensions &new_dimension, const int y_coordinate,const ImageDimensions &original_dimension) {
+
+  std::vector<float> coordinates{0,0,0,0,0,0};
+
+  coordinates[0]= static_cast<float>( x_coordinate * original_dimension.width) / static_cast<float>(new_dimension.width);
+  coordinates[1] = std::floor(coordinates[0]);
+  coordinates[2]= std::ceil(coordinates[0]);
+  coordinates[3] =  static_cast<float>( y_coordinate * original_dimension.height) / static_cast<float>(new_dimension.height);
+  coordinates[4] = std::floor(coordinates[3]);
+  coordinates[4 +1] = std::ceil(coordinates[3]);
+
+  return coordinates;
+
+
+
 }

@@ -2,8 +2,12 @@
 #ifndef PROGARGS_HPP
 #define PROGARGS_HPP
 
-#include <iostream>
+#include <cstdint>
 #include <fstream>
+#include <gsl/span>
+#include <iostream>
+
+constexpr uint8_t EXTRA_ARGS = 5;
 
 inline int checkNumberArgs(int const argc) {
   if (argc < 4) {
@@ -28,22 +32,30 @@ inline int checkMaxLevel(const std::string& arg) {
   return new_maxlevel;
 }
 
-inline int checkWidthArgs(int const width) {
-  if (width < 0 ){
-    std::cerr << "Error: Invalid resize width: " << width << "\n";
+inline void checkDimensions(ImageDimensions const& dimensions) {
+  if (dimensions.width < 0 ){
+    std::cerr << "Error: Invalid resize width: " << dimensions.width << "\n";
     exit(-1);
   }
-  return 0;
-}
-
-inline int checkHeightArgs(int const heigth) {
-  if (heigth< 0 ){
-    std::cerr << "Error: Invalid resize height: " << heigth << "\n";
+  if (dimensions.height < 0) {
+    std::cerr << "Error: Invalid resize height: " << dimensions.height << "\n";
     exit(-1);
   }
-  return 0;
 }
 
-
+inline int checkCutFreq(gsl::span<char const *> args, int argc) {
+  if (argc != EXTRA_ARGS) {
+    std::cerr << "Error: Invalid number of arguments for cutfreq: " << argc - 1 << "\n";
+    exit(-1);
+  }
+  int n_colors = 0;
+  try {
+    n_colors = std::stoi(args[4]);
+  } catch (const std::invalid_argument&) {
+    std::cerr << "Error: Invalid cutfreq: " << args[4] << "\n";
+    exit(-1);
+  }
+  return n_colors;
+}
 
 #endif // PROGARGS_HPP

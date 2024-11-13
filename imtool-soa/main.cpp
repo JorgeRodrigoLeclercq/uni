@@ -10,82 +10,47 @@
 #include <gsl/gsl>
 #include <iostream>
 #include <string>
-#include <vector>
 
 constexpr uint8_t MAX_COLOR_VALUE8 = 255;
-constexpr uint8_t EXTRA_ARGS = 5;
 
 int main(int argc, const char *argv[]) {
-
-  // Comprobar que el número de argumentos es correcto para todas las funciones
+  //Checks, abrir archivos y extraer header
   checkNumberArgs(argc);
   gsl::span const args{argv, gsl::narrow<std::size_t>(argc)};
-
-  // Abrir archivos de entrada y de salida
   std::ifstream infile(args[1], std::ios::binary);
-
   std::ofstream outfile(args[2], std::ios::binary);
-
-  // Extramos el header del archivo
   ImageHeader header;
   get_header(infile, header);
-
-  // Tamaño en pixeles de la imagen
+  //Crear strcucture of arrays y llenarla con los pixeles
   auto pixel_count = static_cast<unsigned long long int>(header.dimensions.width) *
                    static_cast<unsigned long long int>(header.dimensions.height);
-
-  // Structure of Arrays
   SoA pixel_data;
-  pixel_data.r.resize(pixel_count);
-  pixel_data.g.resize(pixel_count);
-  pixel_data.b.resize(pixel_count);
+  pixel_data.resize(static_cast<std::size_t>(pixel_count));
   bool is_16_bit = header.max_color > MAX_COLOR_VALUE8;  // determinar la longitud de cada pixel (2 bytes si max_color > 256; else: 1)
   get_pixels(infile, pixel_data, pixel_count, is_16_bit);  // rellenar el Structure of Arrays con los píxeles
-
+  // Funciones
   if (args[3] == std::string("maxlevel")) {
     int const new_maxlevel = checkMaxLevel(args[4]);
     maxlevel(new_maxlevel, is_16_bit, pixel_data, header);
   }
-
-  //--------------------------------------------------
   else if (args[3] == std::string("resize")) {
-    checkNumberArgs(argc);
-
     ImageDimensions new_dimensions{};
     new_dimensions.width= std::stoi(args[4]);
-    new_dimensions.width= std::stoi(args[4+1]);
-
-    checkHeightArgs(new_dimensions.height);
-    checkWidthArgs(new_dimensions.width);
-
-
+    new_dimensions.height= std::stoi(args[4+1]);
+    checkDimensions(new_dimensions);
     ReSize(header, pixel_data,new_dimensions , outfile);
-
   }
-
-
-
-  else if (args[3] == std::string("cutfreq")){
-    try{cutfreq(pixel_data, std::stoi(args[4]));}
-    catch (const std::invalid_argument &){
-      std::cerr << "Error: Invalid cutfreq: " << args[4] << "\n";
-      exit(-1);
-    };
+  else if (args[3] == std::string("cutfreq") && argc == EXTRA_ARGS){
+    int const n_colors = checkCutFreq(args, argc);
+    cutfreq(pixel_data, n_colors);
   }
   else if (args[3] == std::string("compress")){
-    // Código para el comando "compress"
     //write_cppm(outfile, header, pixel_data);
-    return 0;
   }
   else {
     std::cerr << "Error: Invalid command: " << args[3] << "\n";
     exit(-1);
   }
-
   write_info(outfile, header, pixel_data, is_16_bit);  // escribimos la nueva información en el arhcivo de salida
-
-  // Cerramos los archivos
-  infile.close();
-  outfile.close();
   return 0;
 };

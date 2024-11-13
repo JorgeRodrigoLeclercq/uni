@@ -48,6 +48,11 @@ struct std::hash<Pixel> {
 // Structure of Arrays (SoA)
 struct SoA {
     std::vector<uint16_t> r, g, b;  // arrays distintos para el rojo, el verde y el azul
+  void resize(std::size_t const size) {
+    r.resize(size);
+    g.resize(size);
+    b.resize(size);
+  }
 };
 
 #endif //PIXEL_STRUCTURES_HPP

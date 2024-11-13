@@ -29,8 +29,7 @@ void ReSize ( ImageHeader header,  const std::vector<Pixel> &pixel_Data, const I
 }
 
 
-
-Pixel interpolacion_correcta_colores(const Pixel &right_up, const float fraction ,const Pixel &left_up) {
+Pixel interpolacion_correcta_colores(const Pixel &left_up, const float fraction ,const Pixel &right_up) {
   Pixel pixel;
   pixel.channels.red =static_cast<uint16_t>( (static_cast<float>(right_up.channels.red - left_up.channels.red ) * fraction ) + static_cast<float>(left_up.channels.red));
   pixel.channels.blue =static_cast<uint16_t>( (static_cast<float>(right_up.channels.blue - left_up.channels.blue ) * fraction ) + static_cast<float>(left_up.channels.blue));
@@ -89,7 +88,5 @@ std::vector<float> coordinates_calculator(int const x_coordinate , const ImageDi
   coordinates[4 +1] = std::ceil(coordinates[3]);
 
   return coordinates;
-
-
 
 }

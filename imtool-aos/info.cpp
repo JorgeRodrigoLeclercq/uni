@@ -70,7 +70,7 @@ void write_info(std::ofstream &outfile, const ImageHeader &header, const std::ve
       outfile.write(&blue2, 1);
     }
   } else {
-    //int contador = 0;
+    //int contador = 1;
     for (auto const &pixel : pixel_data) {
       char const red   = static_cast<char>(pixel.channels.red );
       char const green = static_cast<char>(pixel.channels.green );
@@ -79,9 +79,9 @@ void write_info(std::ofstream &outfile, const ImageHeader &header, const std::ve
       outfile.write(&red, 1);
       outfile.write(&green, 1);
       outfile.write(&blue, 1);
-     /* if (contador == header.dimensions.width ) {
+     /*if (contador == header.dimensions.width ) {
         outfile.write(" ", 1);
-        contador = 0;
+        contador = 1;
       }
       contador++;*/
     }

@@ -1,7 +1,6 @@
 # Add to this list all files related to imgaos library
 add_library(imgaos
-        imageaos.cpp imageaos.hpp
-        ../imtool-aos/info.cpp
+        info.cpp
         ../common/binaryio.hpp
         ../common/progargs.hpp
         ../common/priority_queue.hpp

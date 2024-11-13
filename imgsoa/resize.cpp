@@ -1,10 +1,11 @@
 
 #include "resize.hpp"
 
+#include "imgaos/info.hpp"
+
 #include <algorithm>  // For std::clamp
 #include <cmath>
 #include <fstream>
-#include <imtool-aos/info.hpp>
 
 void ReSize ( ImageHeader header, SoA & pixel_data , const ImageDimensions new_dimensions, std::ofstream &output) {
 

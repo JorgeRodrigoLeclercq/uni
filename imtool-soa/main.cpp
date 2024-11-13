@@ -1,9 +1,9 @@
 #include "../common/header.hpp"
 #include "../common/progargs.hpp"
-#include "cutfreq.hpp"
-#include "info.hpp"
-#include "maxlevel.hpp"
-#include "resize.hpp"
+#include "imgsoa/cutfreq.hpp"
+#include "imgsoa/info.hpp"
+#include "imgsoa/maxlevel.hpp"
+#include "imgsoa/resize.hpp"
 
 #include <cstdlib>
 #include <fstream>

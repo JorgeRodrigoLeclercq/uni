@@ -1,7 +1,7 @@
 # Add to this list all files related to common library
 add_library(common
         binaryio.cpp
-        ../imtool-aos/info.cpp
+        ../imgaos/info.cpp
         binaryio.hpp
         progargs.hpp
         header.hpp

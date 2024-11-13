@@ -1,8 +1,8 @@
 #ifndef FUNCTIONS_HPP
 #define FUNCTIONS_HPP
 
-#include "../common/header.hpp"
-#include "../common/pixel_structures.hpp"
+#include "common/header.hpp"
+#include "common/pixel_structures.hpp"
 
 #include <gsl/span>
 

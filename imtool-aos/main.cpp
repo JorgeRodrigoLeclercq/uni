@@ -1,10 +1,10 @@
 #include "../common/header.hpp"
 #include "../common/progargs.hpp"
 #include "common/pixel_structures.hpp"
-#include "cutfreq.hpp"
-#include "info.hpp"
-#include "maxlevel.hpp"
-#include "resize.hpp"
+#include "imgaos/cutfreq.hpp"
+#include "imgaos/info.hpp"
+#include "imgaos/maxlevel.hpp"
+#include "imgaos/resize.hpp"
 
 #include <cstdlib>
 #include <fstream>

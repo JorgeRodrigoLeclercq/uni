@@ -9,13 +9,13 @@ void maxlevel(int new_maxlevel, bool& is_16_bit, gsl::span<Pixel> &pixel_data, I
 
   for (auto& pixel : pixel_data) {
     // Escalar cada componente de color
-    uint16_t r_scaled = static_cast<uint16_t>(
+    uint16_t const r_scaled = static_cast<uint16_t>(
         std::clamp(static_cast<int>(static_cast<float>(pixel.channels.red) * static_cast<float>(new_maxlevel) / static_cast<float>(header.max_color)),
                    0, new_maxlevel));
-    uint16_t g_scaled = static_cast<uint16_t>(
+    uint16_t const g_scaled = static_cast<uint16_t>(
         std::clamp(static_cast<int>(static_cast<float>(pixel.channels.green) * static_cast<float>(new_maxlevel) / static_cast<float>(header.max_color)),
                    0, new_maxlevel));
-    uint16_t b_scaled = static_cast<uint16_t>(
+    uint16_t const b_scaled = static_cast<uint16_t>(
         std::clamp(static_cast<int>(static_cast<float>(pixel.channels.blue) * static_cast<float>(new_maxlevel) / static_cast<float>(header.max_color)),
                    0, new_maxlevel));
 

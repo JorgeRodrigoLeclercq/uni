@@ -7,8 +7,6 @@ add_library(common
         header.hpp
         priority_queue.hpp
         pixel_structures.hpp
-        ../utest-imgaos/utest_maxlevel.cpp
-        ../utest-imgaos/utest_maxlevel.cpp
 
 )
 # Use this line only if you have dependencies from this library to GSL

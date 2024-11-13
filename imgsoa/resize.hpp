@@ -3,11 +3,7 @@
 
 #include "info.hpp"
 
-#include <algorithm>
-#include <cmath>
 #include <cstdint>
-#include <string>
-#include <utility>
 #include <vector>
 
 double interpolacion(const std::vector<double> &first_point, const std::vector<double> &second_point, int y_value);
@@ -28,5 +24,5 @@ void PixelCalculator(  const ImageHeader & header,  SoA & pixel_Data,
 std::vector<float> coordinates_calculator(int x_coordinate , const ImageDimensions &new_dimension,
   int y_coordinate,const ImageDimensions &original_dimension) ;
 
-uint16_t interpolacion_correcta_colores(const uint16_t &left_up, const float fraction ,const uint16_t &right_up);
+uint16_t interpolacion_correcta_colores(const uint16_t &left_up, float fraction ,const uint16_t &right_up);
 #endif //RESIZE_HPP

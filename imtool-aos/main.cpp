@@ -19,27 +19,14 @@ int main(int argc, const char *argv[]) {
   checkNumberArgs(argc);
   gsl::span const args{argv, gsl::narrow<std::size_t>(argc)};
 
-  // Abrir archivos de entrada y de salida
   std::ifstream infile(args[1], std::ios::binary);
-  if (!infile) {
-    std::cerr << "Error: Could not open file " << args[1] << "\n";
-    return 1;
-  }
   std::ofstream outfile(args[2], std::ios::binary);
-  if (!outfile) {
-    std::cerr << "Error: Could not open file " << args[2] << "\n";
-    return 1;
-  }
-
-  // Extramos el header del archivo
   ImageHeader header;
   get_header(infile, header);
 
   // Tamaño en pixeles de la imagen
   auto pixel_count = static_cast<unsigned long long int>(header.dimensions.width) *
                    static_cast<unsigned long long int>(header.dimensions.height);
-
-  // Array of Structures
   std::vector<Pixel> pixel_data(static_cast<std::size_t>(pixel_count));
   bool is_16_bit = header.max_color > MAX_COLOR_VALUE8;  // determinar la longitud de cada pixel (2 bytes si max_color > 256; else: 1)
   get_pixels(infile, pixel_data, pixel_count, is_16_bit);  // rellenar el Array of Structures con los píxeles
@@ -57,21 +44,15 @@ int main(int argc, const char *argv[]) {
     ReSize(header, pixel_data, new_dimensions, outfile);
   }
   else if (args[3] == std::string("cutfreq") && argc == EXTRA_ARGS){
-    try{cutfreq(pixel_data, std::stoi(args[4]));}
-    catch (const std::invalid_argument &){
-      std::cerr << "Error: Invalid cutfreq: " << args[4] << "\n";
-      exit(-1);
-    };
+    int const n_colors = checkCutFreq(args, argc);
+    cutfreq(pixel_data, n_colors);
   }
   else if (args[3] == std::string("compress")){
     //write_cppm(outfile, header, pixel_data);
-    return 0;
   }
   else if (args[3] != std::string("info")){
     std::cerr << "Error: Invalid option: " << args[3] << "\n";
     exit(-1);
   }
-
-
   return 0;
 };

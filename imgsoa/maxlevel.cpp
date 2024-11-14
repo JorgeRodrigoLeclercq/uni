@@ -18,9 +18,9 @@ void maxlevel(int new_maxlevel, bool& is_16_bit, SoA& pixel_data, ImageHeader& h
   // Iterar una vez para los tres canales
   for (size_t i = 0; i < pixel_data.r.size(); ++i) {
     // Escalar los valores y asegurarse de que estén dentro del rango utilizando std::clamp
-    float r_scaled = static_cast<float>(pixel_data.r[i]) * scale_factor;
-    float g_scaled = static_cast<float>(pixel_data.g[i]) * scale_factor;
-    float b_scaled = static_cast<float>(pixel_data.b[i]) * scale_factor;
+    const float r_scaled = static_cast<float>(pixel_data.r[i]) * scale_factor;
+    const float g_scaled = static_cast<float>(pixel_data.g[i]) * scale_factor;
+    const float b_scaled = static_cast<float>(pixel_data.b[i]) * scale_factor;
 
     // Convertir a int después de la escala y asegurar que los valores estén dentro del rango de 0 a new_maxlevel
     pixel_data.r[i] = static_cast<uint16_t>(std::clamp<int>(static_cast<int>(r_scaled), 0, new_maxlevel));

@@ -16,22 +16,18 @@ constexpr uint8_t MAX_COLOR_VALUE8 = 255;
 
 int main(int argc, const char *argv[]) {
   auto inicio = std::chrono::high_resolution_clock::now();
-
-  //Checks, abrir archivos y extraer header
   checkNumberArgs(argc);
   gsl::span const args{argv, gsl::narrow<std::size_t>(argc)};
   std::ifstream infile(args[1], std::ios::binary);
   std::ofstream outfile(args[2], std::ios::binary);
   ImageHeader header;
   get_header(infile, header);
-  //Crear strcucture of arrays y llenarla con los pixeles
   auto pixel_count = static_cast<unsigned long long int>(header.dimensions.width) *
                    static_cast<unsigned long long int>(header.dimensions.height);
   SoA pixel_data;
   pixel_data.resize(static_cast<std::size_t>(pixel_count));
   bool is_16_bit = header.max_color > MAX_COLOR_VALUE8;  // determinar la longitud de cada pixel (2 bytes si max_color > 256; else: 1)
   get_pixels(infile, pixel_data, pixel_count, is_16_bit);  // rellenar el Structure of Arrays con los píxeles
-  // Funciones
   if (args[3] == std::string("maxlevel")) {
     int const new_maxlevel = checkMaxLevel(args[4]);
     maxlevel(new_maxlevel, is_16_bit, pixel_data, header);

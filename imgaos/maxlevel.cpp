@@ -9,7 +9,6 @@ void maxlevel(int new_maxlevel, bool& is_16_bit, gsl::span<Pixel>& pixel_data, I
 
   // Obtener el factor de escala una sola vez
   const float scale_factor = static_cast<float>(new_maxlevel) / static_cast<float>(header.max_color);
-
   // Iterar sobre cada píxel en la estructura AoS
   for (auto& pixel : pixel_data) {
     // Escalar cada componente de color

@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG -march=native "CMakeFiles/utest-imgsoa.dir/utest_maxlevel_soa.cpp.o" "CMakeFiles/utest-imgsoa.dir/utest_resize_soa.cpp.o" "CMakeFiles/utest-imgsoa.dir/utest_info_soa.cpp.o" -o utest-imgsoa  ../imgsoa/libimgsoa.a ../lib/libgtest_main.a ../common/libcommon.a ../lib/libgtest.a 

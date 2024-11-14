@@ -1,0 +1,200 @@
+[
+{
+  "directory": "/home/jorge/CLionProjects/imtool/_deps/googletest-build/googlemock",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/_deps/googletest-src/googlemock/include -I/home/jorge/CLionProjects/imtool/_deps/googletest-src/googlemock -isystem /home/jorge/CLionProjects/imtool/_deps/googletest-src/googletest/include -isystem /home/jorge/CLionProjects/imtool/_deps/googletest-src/googletest -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/gmock.dir/src/gmock-all.cc.o -c /home/jorge/CLionProjects/imtool/_deps/googletest-src/googlemock/src/gmock-all.cc",
+  "file": "/home/jorge/CLionProjects/imtool/_deps/googletest-src/googlemock/src/gmock-all.cc",
+  "output": "_deps/googletest-build/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/_deps/googletest-build/googlemock",
+  "command": "/usr/bin/c++  -isystem /home/jorge/CLionProjects/imtool/_deps/googletest-src/googlemock/include -isystem /home/jorge/CLionProjects/imtool/_deps/googletest-src/googlemock -isystem /home/jorge/CLionProjects/imtool/_deps/googletest-src/googletest/include -isystem /home/jorge/CLionProjects/imtool/_deps/googletest-src/googletest -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/gmock_main.dir/src/gmock_main.cc.o -c /home/jorge/CLionProjects/imtool/_deps/googletest-src/googlemock/src/gmock_main.cc",
+  "file": "/home/jorge/CLionProjects/imtool/_deps/googletest-src/googlemock/src/gmock_main.cc",
+  "output": "_deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/_deps/googletest-build/googletest",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/_deps/googletest-src/googletest/include -I/home/jorge/CLionProjects/imtool/_deps/googletest-src/googletest -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/gtest.dir/src/gtest-all.cc.o -c /home/jorge/CLionProjects/imtool/_deps/googletest-src/googletest/src/gtest-all.cc",
+  "file": "/home/jorge/CLionProjects/imtool/_deps/googletest-src/googletest/src/gtest-all.cc",
+  "output": "_deps/googletest-build/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/_deps/googletest-build/googletest",
+  "command": "/usr/bin/c++  -isystem /home/jorge/CLionProjects/imtool/_deps/googletest-src/googletest/include -isystem /home/jorge/CLionProjects/imtool/_deps/googletest-src/googletest -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/gtest_main.dir/src/gtest_main.cc.o -c /home/jorge/CLionProjects/imtool/_deps/googletest-src/googletest/src/gtest_main.cc",
+  "file": "/home/jorge/CLionProjects/imtool/_deps/googletest-src/googletest/src/gtest_main.cc",
+  "output": "_deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/common",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/common.dir/__/imgaos/info.cpp.o -c /home/jorge/CLionProjects/imtool/imgaos/info.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/imgaos/info.cpp",
+  "output": "common/CMakeFiles/common.dir/__/imgaos/info.cpp.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/imgaos",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/imgaos.dir/info.cpp.o -c /home/jorge/CLionProjects/imtool/imgaos/info.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/imgaos/info.cpp",
+  "output": "imgaos/CMakeFiles/imgaos.dir/info.cpp.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/imgaos",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/imgaos.dir/cutfreq.cpp.o -c /home/jorge/CLionProjects/imtool/imgaos/cutfreq.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/imgaos/cutfreq.cpp",
+  "output": "imgaos/CMakeFiles/imgaos.dir/cutfreq.cpp.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/imgaos",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/imgaos.dir/resize.cpp.o -c /home/jorge/CLionProjects/imtool/imgaos/resize.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/imgaos/resize.cpp",
+  "output": "imgaos/CMakeFiles/imgaos.dir/resize.cpp.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/imgaos",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/imgaos.dir/maxlevel.cpp.o -c /home/jorge/CLionProjects/imtool/imgaos/maxlevel.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/imgaos/maxlevel.cpp",
+  "output": "imgaos/CMakeFiles/imgaos.dir/maxlevel.cpp.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/imgaos",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/imgaos.dir/compress.cpp.o -c /home/jorge/CLionProjects/imtool/imgaos/compress.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/imgaos/compress.cpp",
+  "output": "imgaos/CMakeFiles/imgaos.dir/compress.cpp.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/imgsoa",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/imgsoa.dir/info.cpp.o -c /home/jorge/CLionProjects/imtool/imgsoa/info.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/imgsoa/info.cpp",
+  "output": "imgsoa/CMakeFiles/imgsoa.dir/info.cpp.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/imgsoa",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/imgsoa.dir/cutfreq.cpp.o -c /home/jorge/CLionProjects/imtool/imgsoa/cutfreq.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/imgsoa/cutfreq.cpp",
+  "output": "imgsoa/CMakeFiles/imgsoa.dir/cutfreq.cpp.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/imgsoa",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/imgsoa.dir/resize.cpp.o -c /home/jorge/CLionProjects/imtool/imgsoa/resize.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/imgsoa/resize.cpp",
+  "output": "imgsoa/CMakeFiles/imgsoa.dir/resize.cpp.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/imgsoa",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/imgsoa.dir/maxlevel.cpp.o -c /home/jorge/CLionProjects/imtool/imgsoa/maxlevel.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/imgsoa/maxlevel.cpp",
+  "output": "imgsoa/CMakeFiles/imgsoa.dir/maxlevel.cpp.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/imgsoa",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/imgsoa.dir/compress.cpp.o -c /home/jorge/CLionProjects/imtool/imgsoa/compress.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/imgsoa/compress.cpp",
+  "output": "imgsoa/CMakeFiles/imgsoa.dir/compress.cpp.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/imtool-aos",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/imtool-aos.dir/main.cpp.o -c /home/jorge/CLionProjects/imtool/imtool-aos/main.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/imtool-aos/main.cpp",
+  "output": "imtool-aos/CMakeFiles/imtool-aos.dir/main.cpp.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/imtool-aos",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/imtool-aos.dir/__/imgaos/info.cpp.o -c /home/jorge/CLionProjects/imtool/imgaos/info.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/imgaos/info.cpp",
+  "output": "imtool-aos/CMakeFiles/imtool-aos.dir/__/imgaos/info.cpp.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/imtool-aos",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/imtool-aos.dir/__/imgaos/cutfreq.cpp.o -c /home/jorge/CLionProjects/imtool/imgaos/cutfreq.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/imgaos/cutfreq.cpp",
+  "output": "imtool-aos/CMakeFiles/imtool-aos.dir/__/imgaos/cutfreq.cpp.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/imtool-aos",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/imtool-aos.dir/__/imgaos/resize.cpp.o -c /home/jorge/CLionProjects/imtool/imgaos/resize.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/imgaos/resize.cpp",
+  "output": "imtool-aos/CMakeFiles/imtool-aos.dir/__/imgaos/resize.cpp.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/imtool-aos",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/imtool-aos.dir/__/imgaos/maxlevel.cpp.o -c /home/jorge/CLionProjects/imtool/imgaos/maxlevel.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/imgaos/maxlevel.cpp",
+  "output": "imtool-aos/CMakeFiles/imtool-aos.dir/__/imgaos/maxlevel.cpp.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/imtool-aos",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/imtool-aos.dir/__/imgaos/compress.cpp.o -c /home/jorge/CLionProjects/imtool/imgaos/compress.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/imgaos/compress.cpp",
+  "output": "imtool-aos/CMakeFiles/imtool-aos.dir/__/imgaos/compress.cpp.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/imtool-soa",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/imtool-soa.dir/main.cpp.o -c /home/jorge/CLionProjects/imtool/imtool-soa/main.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/imtool-soa/main.cpp",
+  "output": "imtool-soa/CMakeFiles/imtool-soa.dir/main.cpp.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/imtool-soa",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/imtool-soa.dir/__/imgsoa/info.cpp.o -c /home/jorge/CLionProjects/imtool/imgsoa/info.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/imgsoa/info.cpp",
+  "output": "imtool-soa/CMakeFiles/imtool-soa.dir/__/imgsoa/info.cpp.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/imtool-soa",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/imtool-soa.dir/__/imgsoa/cutfreq.cpp.o -c /home/jorge/CLionProjects/imtool/imgsoa/cutfreq.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/imgsoa/cutfreq.cpp",
+  "output": "imtool-soa/CMakeFiles/imtool-soa.dir/__/imgsoa/cutfreq.cpp.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/imtool-soa",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/imtool-soa.dir/__/imgsoa/resize.cpp.o -c /home/jorge/CLionProjects/imtool/imgsoa/resize.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/imgsoa/resize.cpp",
+  "output": "imtool-soa/CMakeFiles/imtool-soa.dir/__/imgsoa/resize.cpp.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/imtool-soa",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/imtool-soa.dir/__/imgsoa/maxlevel.cpp.o -c /home/jorge/CLionProjects/imtool/imgsoa/maxlevel.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/imgsoa/maxlevel.cpp",
+  "output": "imtool-soa/CMakeFiles/imtool-soa.dir/__/imgsoa/maxlevel.cpp.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/imtool-soa",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/imtool-soa.dir/__/imgsoa/compress.cpp.o -c /home/jorge/CLionProjects/imtool/imgsoa/compress.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/imgsoa/compress.cpp",
+  "output": "imtool-soa/CMakeFiles/imtool-soa.dir/__/imgsoa/compress.cpp.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/utest-imgaos",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/googletest-src/googletest/include -isystem /home/jorge/CLionProjects/imtool/_deps/googletest-src/googletest -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/utest-imgaos.dir/utest_maxlevel_aos.cpp.o -c /home/jorge/CLionProjects/imtool/utest-imgaos/utest_maxlevel_aos.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/utest-imgaos/utest_maxlevel_aos.cpp",
+  "output": "utest-imgaos/CMakeFiles/utest-imgaos.dir/utest_maxlevel_aos.cpp.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/utest-imgaos",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/googletest-src/googletest/include -isystem /home/jorge/CLionProjects/imtool/_deps/googletest-src/googletest -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/utest-imgaos.dir/utest_resize_aos.cpp.o -c /home/jorge/CLionProjects/imtool/utest-imgaos/utest_resize_aos.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/utest-imgaos/utest_resize_aos.cpp",
+  "output": "utest-imgaos/CMakeFiles/utest-imgaos.dir/utest_resize_aos.cpp.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/utest-imgaos",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/googletest-src/googletest/include -isystem /home/jorge/CLionProjects/imtool/_deps/googletest-src/googletest -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/utest-imgaos.dir/utest_info_aos.cpp.o -c /home/jorge/CLionProjects/imtool/utest-imgaos/utest_info_aos.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/utest-imgaos/utest_info_aos.cpp",
+  "output": "utest-imgaos/CMakeFiles/utest-imgaos.dir/utest_info_aos.cpp.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/utest-imgsoa",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/googletest-src/googletest/include -isystem /home/jorge/CLionProjects/imtool/_deps/googletest-src/googletest -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/utest-imgsoa.dir/utest_maxlevel_soa.cpp.o -c /home/jorge/CLionProjects/imtool/utest-imgsoa/utest_maxlevel_soa.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/utest-imgsoa/utest_maxlevel_soa.cpp",
+  "output": "utest-imgsoa/CMakeFiles/utest-imgsoa.dir/utest_maxlevel_soa.cpp.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/utest-imgsoa",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/googletest-src/googletest/include -isystem /home/jorge/CLionProjects/imtool/_deps/googletest-src/googletest -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/utest-imgsoa.dir/utest_resize_soa.cpp.o -c /home/jorge/CLionProjects/imtool/utest-imgsoa/utest_resize_soa.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/utest-imgsoa/utest_resize_soa.cpp",
+  "output": "utest-imgsoa/CMakeFiles/utest-imgsoa.dir/utest_resize_soa.cpp.o"
+},
+{
+  "directory": "/home/jorge/CLionProjects/imtool/utest-imgsoa",
+  "command": "/usr/bin/c++  -I/home/jorge/CLionProjects/imtool/PUBLIC -I/home/jorge/CLionProjects/imtool/. -isystem /home/jorge/CLionProjects/imtool/_deps/googletest-src/googletest/include -isystem /home/jorge/CLionProjects/imtool/_deps/googletest-src/googletest -isystem /home/jorge/CLionProjects/imtool/_deps/gsl-src/include -O3 -DNDEBUG -march=native -std=c++20 -Wall -Wextra -Werror -pedantic -pedantic-errors -Wconversion -Wsign-conversion -o CMakeFiles/utest-imgsoa.dir/utest_info_soa.cpp.o -c /home/jorge/CLionProjects/imtool/utest-imgsoa/utest_info_soa.cpp",
+  "file": "/home/jorge/CLionProjects/imtool/utest-imgsoa/utest_info_soa.cpp",
+  "output": "utest-imgsoa/CMakeFiles/utest-imgsoa.dir/utest_info_soa.cpp.o"
+}
+]

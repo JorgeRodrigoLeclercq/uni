@@ -1,0 +1,2 @@
+/usr/bin/ar qc libimgsoa.a CMakeFiles/imgsoa.dir/info.cpp.o CMakeFiles/imgsoa.dir/cutfreq.cpp.o CMakeFiles/imgsoa.dir/resize.cpp.o CMakeFiles/imgsoa.dir/maxlevel.cpp.o CMakeFiles/imgsoa.dir/compress.cpp.o
+/usr/bin/ranlib libimgsoa.a

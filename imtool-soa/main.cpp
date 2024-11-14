@@ -5,6 +5,7 @@
 #include "imgsoa/maxlevel.hpp"
 #include "imgsoa/resize.hpp"
 
+#include <chrono>
 #include <cstdlib>
 #include <fstream>
 #include <gsl/gsl>
@@ -14,6 +15,8 @@
 constexpr uint8_t MAX_COLOR_VALUE8 = 255;
 
 int main(int argc, const char *argv[]) {
+  auto inicio = std::chrono::high_resolution_clock::now();
+
   //Checks, abrir archivos y extraer header
   checkNumberArgs(argc);
   gsl::span const args{argv, gsl::narrow<std::size_t>(argc)};
@@ -52,5 +55,8 @@ int main(int argc, const char *argv[]) {
     exit(-1);
   }
   write_info(outfile, header, pixel_data, is_16_bit);  // escribimos la nueva información en el arhcivo de salida
+  auto fin = std::chrono::high_resolution_clock::now();
+  auto duracion = std::chrono::duration_cast<std::chrono::milliseconds>(fin - inicio).count();
+  std::cout << "Tiempo para calcular los mas cercanos: " << duracion << " microsegundos" << "\n";
   return 0;
 };

@@ -1,6 +1,5 @@
 # Add to this list all files related to common library
 add_library(common
-        binaryio.cpp
         ../imgaos/info.cpp
         binaryio.hpp
         progargs.hpp

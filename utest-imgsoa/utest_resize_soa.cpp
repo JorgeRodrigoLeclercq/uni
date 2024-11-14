@@ -63,10 +63,10 @@ TEST(Resize_interpolation, normal_input) {
   newDimensions.height = 20;
   oldDimensions.width = 10;
   oldDimensions.height = 10;
-  const Pixel color1{50 ,50 ,50 };
-  const Pixel color2{20 ,20 ,20 };
-  Pixel output{};
-  const Pixel expected{20 , 20 ,20 };
+  const uint16_t color1 = 50;
+  const uint16_t color2 = 20;
+  uint16_t output{};
+  const uint16_t expected = 20;
 
   std::vector<float> coordinates_calculated= {0,0,0,0,0,0};
 
@@ -86,10 +86,11 @@ TEST(Resize_interpolation, bigger_input) {
   newDimensions.height = 20;
   oldDimensions.width = 10;
   oldDimensions.height = 10;
-  const Pixel color1{500 ,500 ,500 };
-  const Pixel color2{200 ,200 ,200 };
-  Pixel output{};
-  const Pixel expected{200 , 200 ,200 };
+  const uint16_t color1 = 500;
+  const uint16_t color2 = 200;
+  uint16_t output{};
+  const uint16_t expected = 200;
+
 
   std::vector<float> coordinates_calculated= {0,0,0,0,0,0};
 

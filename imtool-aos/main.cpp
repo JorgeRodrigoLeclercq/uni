@@ -18,10 +18,8 @@ constexpr uint8_t MAX_COLOR_VALUE8 = 255;
 
 int main(int argc, const char *argv[]) {
   auto inicio = std::chrono::high_resolution_clock::now();
-
   checkNumberArgs(argc);
   gsl::span const args{argv, gsl::narrow<std::size_t>(argc)};
-
   std::ifstream infile(args[1], std::ios::binary);
   std::ofstream outfile(args[2], std::ios::binary);
   ImageHeader header;

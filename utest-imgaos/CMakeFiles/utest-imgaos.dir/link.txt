@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG -march=native "CMakeFiles/utest-imgaos.dir/utest_maxlevel_aos.cpp.o" "CMakeFiles/utest-imgaos.dir/utest_resize_aos.cpp.o" "CMakeFiles/utest-imgaos.dir/utest_info_aos.cpp.o" -o utest-imgaos  ../imgaos/libimgaos.a ../lib/libgtest_main.a ../common/libcommon.a ../lib/libgtest.a 

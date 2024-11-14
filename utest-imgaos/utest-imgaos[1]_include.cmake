@@ -1,0 +1,5 @@
+if(EXISTS "/home/jorge/CLionProjects/imtool/utest-imgaos/utest-imgaos[1]_tests.cmake")
+  include("/home/jorge/CLionProjects/imtool/utest-imgaos/utest-imgaos[1]_tests.cmake")
+else()
+  add_test(utest-imgaos_NOT_BUILT utest-imgaos_NOT_BUILT)
+endif()

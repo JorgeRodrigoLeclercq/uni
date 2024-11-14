@@ -1,2 +1,0 @@
-/usr/bin/ar qc libimgaos.a CMakeFiles/imgaos.dir/info.cpp.o CMakeFiles/imgaos.dir/cutfreq.cpp.o CMakeFiles/imgaos.dir/resize.cpp.o CMakeFiles/imgaos.dir/maxlevel.cpp.o CMakeFiles/imgaos.dir/compress.cpp.o
-/usr/bin/ranlib libimgaos.a

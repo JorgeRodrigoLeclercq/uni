@@ -13,8 +13,6 @@ void get_pixels(std::ifstream &infile, std::vector<Pixel> &pixel_data, unsigned 
 
 void write_info(std::ofstream &outfile, const ImageHeader &header, const std::vector<Pixel> &pixel_data, bool is_16_bit);
 
-void info(const ImageHeader& header, const std::vector<Pixel>& pixel_data);
-
 #endif // FUNCTIONS_HPP
 
 

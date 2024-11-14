@@ -65,7 +65,6 @@ Pixel interpolacion_correcta_colores(const Pixel &left_up, const float fraction 
               pixel_right_up = pixel_Data[static_cast<unsigned long long int>((coordinates[4+1] * static_cast<float>(original_dimension.width)) + coordinates[2])];
 
               color1 = interpolacion_correcta_colores(pixel_right_down, fraction, pixel_left_down);
-              color2 = interpolacion_correcta_colores(pixel_right_up, fraction, pixel_left_up);
 
               //fraction= coordinates [2] - coordinates[0];
               color2 = interpolacion_correcta_colores(pixel_left_up, fraction, pixel_right_up);

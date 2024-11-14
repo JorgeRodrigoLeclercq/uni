@@ -6,3 +6,10 @@ notas.md
 pruebas.cpp
 imgaos/image.hpp
 imgsoa/image.hpp
+.vscode
+debug-build
+release-build
+GSL
+outputs
+pruebas
+runall-cutfreq.sh

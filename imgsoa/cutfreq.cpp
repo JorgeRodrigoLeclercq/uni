@@ -6,14 +6,17 @@
 
 #include "common/priority_queue.hpp"
 
+#include <chrono>
 #include <cmath>
 #include <gsl/narrow>
+#include <iostream>
 #include <unordered_map>
+#include <vector>
 
 std::unordered_map<Pixel, int> contarFrecuencias(const SoA& pixel_data) {
   std::unordered_map<Pixel, int> frecuencias;
-
-  for (unsigned short const index : pixel_data.r) {
+  size_t const maxsize = pixel_data.r.size();
+  for (size_t index = 0; index < maxsize; index++) {
     frecuencias[Pixel{pixel_data.r[index],pixel_data.g[index], pixel_data.b[index]}]++;
   }
   return frecuencias;
@@ -39,12 +42,17 @@ double calcularDistancia(const Pixel &pixel1, const Pixel &pixel2) {
 
 void cutfreq(SoA &pixel_data, int n_colors) {
   std::unordered_map<Pixel, int> const frecuencias = contarFrecuencias(pixel_data);
+  for (auto const & [pixel, frecuencia] : frecuencias) {
+    std::cout << "Frecuencia: " << frecuencia << "\n";
+  }
   Bounded_priority_queue const colores_menos_frecuentes = menosFrecuentes(frecuencias, n_colors);
 
   std::unordered_map<Pixel, std::pair<Pixel, double>> reemplazos;
   for (const auto &pixel : colores_menos_frecuentes.get_all()) {
     reemplazos[pixel] = std::make_pair(pixel, std::numeric_limits<double>::max());
   }
+  auto inicio = std::chrono::high_resolution_clock::now();
+  std::cout << "Calculando los colores mas cercanos..." << "\n";
   for (const auto &color : frecuencias) {
     for (auto & [pixel_a_reemplazar, info_reemplazo] : reemplazos) {
       double const nueva_distancia = calcularDistancia(color.first, pixel_a_reemplazar);
@@ -54,6 +62,9 @@ void cutfreq(SoA &pixel_data, int n_colors) {
       }
     }
   }
+  auto fin = std::chrono::high_resolution_clock::now();
+  auto duracion = std::chrono::duration_cast<std::chrono::microseconds>(fin - inicio).count();
+  std::cout << "Tiempo para calcular los mas cercanos: " << duracion << " microsegundos" << "\n";
 
   for (unsigned short const index : pixel_data.r) {
     Pixel new_pixel = Pixel{pixel_data.r[index],pixel_data.g[index], pixel_data.b[index]};

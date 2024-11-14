@@ -17,6 +17,8 @@
 constexpr uint8_t MAX_COLOR_VALUE8 = 255;
 
 int main(int argc, const char *argv[]) {
+  auto inicio = std::chrono::high_resolution_clock::now();
+
   checkNumberArgs(argc);
   gsl::span const args{argv, gsl::narrow<std::size_t>(argc)};
 
@@ -54,5 +56,8 @@ int main(int argc, const char *argv[]) {
     std::cerr << "Error: Invalid option: " << args[3] << "\n";
     exit(-1);
   }
+  auto fin = std::chrono::high_resolution_clock::now();
+  auto duracion = std::chrono::duration_cast<std::chrono::milliseconds>(fin - inicio).count();
+  std::cout << "Tiempo para calcular los mas cercanos: " << duracion << " microsegundos" << "\n";
   return 0;
 };

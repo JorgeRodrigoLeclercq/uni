@@ -54,7 +54,7 @@ uint16_t interpolacion_colores_red ( const SoA &pixel_Data, const std::vector<fl
   uint16_t pixel_right_up = 0;
   uint16_t color1 = 0;
   uint16_t color2 = 0;
-  float fraction = 0.0;
+  float fraction = coordinates[0] - coordinates[1];
 
   pixel_left_down = pixel_Data.r[static_cast<unsigned long long int>((coordinates[1] * static_cast<float>(original_dimension.width)) + coordinates[4])];
   pixel_right_down = pixel_Data.r[static_cast<unsigned long long int>((coordinates[2] * static_cast<float>(original_dimension.width)) + coordinates[4])];
@@ -64,7 +64,7 @@ uint16_t interpolacion_colores_red ( const SoA &pixel_Data, const std::vector<fl
   color1 = interpolacion_correcta_colores(pixel_right_down, fraction, pixel_left_down);
   color2 = interpolacion_correcta_colores(pixel_left_up, fraction, pixel_right_up);
 
-  fraction= coordinates[3]/ coordinates[4 +1];
+  fraction= coordinates[3]-  coordinates[4 ];
   return interpolacion_correcta_colores(color1, fraction, color2);
 
 }
@@ -77,9 +77,8 @@ uint16_t interpolacion_colores_green ( const SoA &pixel_Data, const std::vector<
   uint16_t pixel_right_up = 0;
   uint16_t color1 = 0;
   uint16_t color2 = 0;
-  float fraction = 0.0;
+  float fraction = coordinates[0] - coordinates[1];
 
-  fraction= coordinates[0] / coordinates[2];
   pixel_left_down = pixel_Data.g[static_cast<unsigned long long int>((coordinates[1] * static_cast<float>(original_dimension.width)) + coordinates[4])];
   pixel_right_down = pixel_Data.g[static_cast<unsigned long long int>((coordinates[2] * static_cast<float>(original_dimension.width)) + coordinates[4])];
   pixel_left_up = pixel_Data.g[static_cast<unsigned long long int>((coordinates[1]  * static_cast<float>(original_dimension.width)) + coordinates[4 +1])];
@@ -88,7 +87,7 @@ uint16_t interpolacion_colores_green ( const SoA &pixel_Data, const std::vector<
   color1 = interpolacion_correcta_colores(pixel_left_down, fraction , pixel_right_down);
   color2 = interpolacion_correcta_colores(pixel_left_up, fraction, pixel_right_up);
 
-  fraction= coordinates[3]/ coordinates[4 +1];
+  fraction= coordinates[3] -  coordinates[4 ];
   return interpolacion_correcta_colores(color1, fraction, color2);
 
 }
@@ -101,9 +100,9 @@ uint16_t interpolacion_colores_blue( const SoA &pixel_Data, const std::vector<fl
   uint16_t pixel_right_up = 0;
   uint16_t color1 = 0;
   uint16_t color2 = 0;
-  float fraction = 0.0;
+  float fraction = coordinates[0] - coordinates[1];
 
-  fraction= coordinates[0] / coordinates[2];
+
   pixel_left_down = pixel_Data.b[static_cast<unsigned long long int>((coordinates[1] * static_cast<float>(original_dimension.width)) + coordinates[4])];
   pixel_right_down = pixel_Data.b[static_cast<unsigned long long int>((coordinates[2] * static_cast<float>(original_dimension.width)) + coordinates[4])];
   pixel_left_up = pixel_Data.b[static_cast<unsigned long long int>((coordinates[1]  * static_cast<float>(original_dimension.width)) + coordinates[4 +1])];
@@ -112,6 +111,7 @@ uint16_t interpolacion_colores_blue( const SoA &pixel_Data, const std::vector<fl
   color1 = interpolacion_correcta_colores(pixel_left_down, fraction, pixel_right_down);
   color2 = interpolacion_correcta_colores(pixel_left_up, fraction, pixel_right_up);
 
+  fraction = coordinates[3] - coordinates[4];
   return interpolacion_correcta_colores(color1, fraction, color2);
 
 }

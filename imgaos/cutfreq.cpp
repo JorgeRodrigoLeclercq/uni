@@ -41,28 +41,30 @@ double calcularDistancia(const Pixel &pixel1, const Pixel &pixel2) {
 
 void cutfreq(std::vector<Pixel> &pixel_data, int n_colors) {
   std::unordered_map<Pixel, int> const frecuencias = contarFrecuencias(pixel_data);
-  for (auto const & [pixel, frecuencia] : frecuencias) {
-    std::cout << "Frecuencia: " << frecuencia << "\n";
-  }
   Bounded_priority_queue const colores_menos_frecuentes = menosFrecuentes(frecuencias, n_colors);
 
   std::unordered_map<Pixel, std::pair<Pixel, double>> reemplazos;
-  for (const auto &pixel : colores_menos_frecuentes .get_all()) {
+  for (const auto &pixel : colores_menos_frecuentes.get_all()) {
     reemplazos[pixel] = std::make_pair(pixel, std::numeric_limits<double>::max());
+  }
+  std::vector<Pixel> colores_no_reemplazables;
+  for (const auto &pixel : frecuencias) {
+    if (!(reemplazos.contains(pixel.first))) {
+      colores_no_reemplazables.push_back(pixel.first);
+    }
   }
   auto inicio = std::chrono::high_resolution_clock::now();
   std::cout << "Calculando los colores mas cercanos..." << "\n";
-  for (const auto &color : frecuencias) {
-    for (auto & [pixel_a_reemplazar, info_reemplazo] : reemplazos) {
-      double const nueva_distancia = calcularDistancia(color.first, pixel_a_reemplazar);
-      // Verificar que el color no sea uno a reemplazar
-      if (!(reemplazos.contains(color.first)) && nueva_distancia < info_reemplazo.second) {
-        info_reemplazo = std::make_pair(color.first, nueva_distancia);
+  for (auto & [pixel_a_reemplazar, info_reemplazo] : reemplazos) {
+    for (const auto &color : colores_no_reemplazables) {
+      double const nueva_distancia = calcularDistancia(color, pixel_a_reemplazar);
+      if (nueva_distancia < info_reemplazo.second) {
+        info_reemplazo = std::make_pair(color, nueva_distancia);
       }
     }
   }
   auto fin = std::chrono::high_resolution_clock::now();
-  auto duracion = std::chrono::duration_cast<std::chrono::microseconds>(fin - inicio).count();
+  auto duracion = std::chrono::duration_cast<std::chrono::milliseconds>(fin - inicio).count();
   std::cout << "Tiempo para calcular los mas cercanos: " << duracion << " microsegundos" << "\n";
   for (auto &mypixel : pixel_data) {
     auto replace_pixel = reemplazos.find(mypixel); // comprobar si el pixel es uno a reemplazar

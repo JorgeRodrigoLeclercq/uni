@@ -20,7 +20,7 @@ class Bounded_priority_queue {
     void enqueue (Pixel element, int priority) {
       if (size_ == std::size(elements_)) {
           // Si el elemento tiene mayor prioridad que el último elemento de la cola de prioridad, lo eliminamos.
-          if (priority < priorities_[0]) {
+          if (is_before(element, priority, elements_[0], priorities_[0])) {
             dequeue_last();
             heap_append(element, priority);
           }
@@ -43,8 +43,15 @@ class Bounded_priority_queue {
     }
 
   private:
+    static bool is_before (Pixel left_pixel, int left_priority, Pixel right_pixel, int right_priority) {
+      return (left_priority < right_priority) or (left_priority == right_priority and left_pixel < right_pixel);
+    }
 
-     static auto parent (std::size_t index) {
+    [[nodiscard]] bool is_before (std::size_t self, std::size_t other) const {
+       return Bounded_priority_queue::is_before(elements_[self], priorities_[self], elements_[other], priorities_[other]);
+    }
+
+    static auto parent (std::size_t index) {
       return (index - 1) / 2;
     }
 
@@ -66,7 +73,7 @@ class Bounded_priority_queue {
 
      void propagate_up (std::size_t index)
     {
-      while (index > 0 and priorities_[parent(index)] < priorities_[index]) {
+      while (index > 0 and is_before(parent(index), index)) {
         std::swap(elements_[index], elements_[parent(index)]);
         std::swap(priorities_[index], priorities_[parent(index)]);
         index = parent(index);
@@ -81,10 +88,10 @@ class Bounded_priority_queue {
         std::size_t const right = right_child (index);
         std::size_t largest = index;
         // Buscar mayor prioridad
-        if (left < size_ and priorities_[largest] < priorities_[left]) {
+        if (left < size_ and is_before(largest, left)) {
           largest = left;
         }
-        if (right < size_ and priorities_[largest] < priorities_[right]) {
+        if (right < size_ and is_before(largest, right)) {
           largest = right;
         }
         // If the element is already heapified, we are done.

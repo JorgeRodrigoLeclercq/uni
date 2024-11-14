@@ -11,7 +11,7 @@
 #include <tuple>
 
 // Estructura para representar los canales de color de un píxel
-struct ColorChannels {
+struct alignas(uint64_t) ColorChannels {
   uint16_t red;
   uint16_t green;
   uint16_t blue;

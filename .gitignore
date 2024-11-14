@@ -4,3 +4,5 @@
 .vscode/**
 notas.md
 pruebas.cpp
+imgaos/image.hpp
+imgsoa/image.hpp

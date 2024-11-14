@@ -56,19 +56,22 @@ Pixel interpolacion_correcta_colores(const Pixel &left_up, const float fraction 
             for ( int i = 0; i < new_dimension.width; i++ ) {
               coordinates = coordinates_calculator(i, new_dimension , j , original_dimension );
 
-              fraction= coordinates[0] / coordinates[2];
+              fraction= coordinates [0] - coordinates[1] ;
               //fraction = 0.5;
 
-              pixel_left_down = pixel_Data[static_cast<unsigned long long int>((coordinates[1] * static_cast<float>(original_dimension.width)) + coordinates[4])];
-              pixel_right_down = pixel_Data[static_cast<unsigned long long int>((coordinates[2] * static_cast<float>(original_dimension.width)) + coordinates[4])];
-              pixel_left_up = pixel_Data[static_cast<unsigned long long int>((coordinates[1]  * static_cast<float>(original_dimension.width)) + coordinates[4 +1])];
-              pixel_right_up = pixel_Data[static_cast<unsigned long long int>((coordinates[2] * static_cast<float>(original_dimension.width)) + coordinates[4 + 1])];
+              pixel_left_down = pixel_Data[static_cast<unsigned long long int>((coordinates[4] * static_cast<float>(original_dimension.width)) + coordinates[1])];
+              pixel_right_down = pixel_Data[static_cast<unsigned long long int>((coordinates[4] * static_cast<float>(original_dimension.width)) + coordinates[2])];
+              pixel_left_up = pixel_Data[static_cast<unsigned long long int>((coordinates[4+1]  * static_cast<float>(original_dimension.width)) + coordinates[1])];
+              pixel_right_up = pixel_Data[static_cast<unsigned long long int>((coordinates[4+1] * static_cast<float>(original_dimension.width)) + coordinates[2])];
 
-              color1 = interpolacion_correcta_colores( pixel_left_down, fraction, pixel_right_down);
+              color1 = interpolacion_correcta_colores(pixel_right_down, fraction, pixel_left_down);
+              color2 = interpolacion_correcta_colores(pixel_right_up, fraction, pixel_left_up);
+
+              //fraction= coordinates [2] - coordinates[0];
               color2 = interpolacion_correcta_colores(pixel_left_up, fraction, pixel_right_up);
 
-              fraction= coordinates[3]/ coordinates[4 +1];
-              new_pixel_data[static_cast<unsigned long int>(std::abs((i * new_dimension.width) + j))] = interpolacion_correcta_colores(color1, fraction, color2);
+              fraction= coordinates [3] - coordinates[4] ;
+              new_pixel_data[static_cast<unsigned long int>(std::abs((j * new_dimension.width) + i))] = interpolacion_correcta_colores(color1, fraction, color2);
 
 
 

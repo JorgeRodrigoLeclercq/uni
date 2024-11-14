@@ -73,7 +73,7 @@ void write_info(std::ofstream &outfile, const ImageHeader &header, const std::ve
     //int contador = 1;
     for (auto const &pixel : pixel_data) {
       char const red   = static_cast<char>(pixel.channels.red );
-      char const green = static_cast<char>(pixel.channels.green );
+      char const green = static_cast<char>(pixel.channels.green  );
       char const blue  = static_cast<char>(pixel.channels.blue );
 
       outfile.write(&red, 1);

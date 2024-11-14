@@ -2,6 +2,7 @@
 # For example, you may have one ∗_test.cpp for each ∗.cpp in img-soa
 add_executable(utest-imgsoa
         utest_maxlevel_soa.cpp
+        utest_resize_soa.cpp
 )
 # Library dependencies
 target_link_libraries (utest-imgsoa

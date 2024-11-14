@@ -38,9 +38,7 @@ int main(int argc, const char *argv[]) {
     maxlevel(new_maxlevel, is_16_bit, pixel_span, header);
   }
   else if (args[3] == std::string("resize")){
-    ImageDimensions new_dimensions{};
-    new_dimensions.width= std::stoi(args[4]);
-    new_dimensions.height= std::stoi(args[EXTRA_ARGS]);
+    const ImageDimensions new_dimensions{.width=std::stoi(args[4]),.height=std::stoi(args[EXTRA_ARGS])};
     checkDimensions(new_dimensions);
     ReSize(header, pixel_data, new_dimensions, outfile);
   }

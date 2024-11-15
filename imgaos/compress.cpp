@@ -38,7 +38,6 @@ void write_color_table(std::ofstream &outfile, const std::vector<Pixel> &pixel_d
 void compress(std::ofstream &cppm_outfile, ImageHeader &header, const std::vector<Pixel> &pixel_data) {
   constexpr uint8_t MAX_COLOR_VALUE8 = 255;
 
-  // Mapear cada color a un índice
   std::map<Pixel, int> color_table;
   std::vector<Pixel> color_list;
   int color_index = 0;
@@ -54,6 +53,5 @@ void compress(std::ofstream &cppm_outfile, ImageHeader &header, const std::vecto
 
   write_info(cppm_outfile, header, color_list, is_16_bit);
 
-  // Añadir la tabla de colores
   write_color_table(cppm_outfile, pixel_data, color_table);
 }

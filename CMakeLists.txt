@@ -41,7 +41,7 @@ add_subdirectory(imtool-aos)
 add_subdirectory(imtool-soa)
 # Unit tests and functional tests
 enable_testing()
-#add_subdirectory(utest-common)
+add_subdirectory(utest-common)
 add_subdirectory(utest-imgaos)
 add_subdirectory(utest-imgsoa)
 add_subdirectory(ftest-aos)

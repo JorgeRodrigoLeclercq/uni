@@ -16,6 +16,15 @@ inline int checkNumberArgs(int const argc) {
   }
   return 0;
 }
+
+inline int checkInfoAndCompress(int const argc) {
+  if (argc > 4) {
+    std::cerr << "Error: Invalid number of arguments: " << argc - 1 << "\n";
+    exit(-1); // Código de error si hay menos de 3 argumentos
+  }
+  return 0;
+}
+
 constexpr int MAX_COLOR_VALUE16 = 65535;
 inline int checkMaxLevel(const std::string& arg) {
   int new_maxlevel = 0;

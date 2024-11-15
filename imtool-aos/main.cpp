@@ -5,6 +5,7 @@
 #include "imgaos/info.hpp"
 #include "imgaos/maxlevel.hpp"
 #include "imgaos/resize.hpp"
+#include "imgaos/compress.hpp"
 
 #include <chrono>
 #include <cstdlib>
@@ -46,12 +47,13 @@ int main(int argc, const char *argv[]) {
     write_info(outfile, header, pixel_data, is_16_bit);
   }
   else if (args[3] == std::string("compress")){
-    //write_cppm(outfile, header, pixel_data);
+    compress(outfile, header, pixel_data);
   }
   else if (args[3] != std::string("info")){
     std::cerr << "Error: Invalid option: " << args[3] << "\n";
     exit(-1);
   }
+
   auto fin = std::chrono::high_resolution_clock::now();
   auto duracion = std::chrono::duration_cast<std::chrono::milliseconds>(fin - inicio).count();
   std::cout << "Tiempo para calcular los mas cercanos: " << duracion << " microsegundos" << "\n";

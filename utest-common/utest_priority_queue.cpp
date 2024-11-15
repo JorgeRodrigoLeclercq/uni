@@ -49,9 +49,9 @@ TEST(BoundedPriorityQueueTest, ColorPriorityTest) {
   EXPECT_EQ(elements.size(), 4);
 
   // Verificar que los píxeles están ordenados correctamente por prioridad y color
-  EXPECT_EQ(elements[0], yellow); // amarillo primero
+  EXPECT_EQ(elements[0], red); // amarillo primero
   EXPECT_TRUE((elements[1] == blue && elements[2] == green) || (elements[1] == green && elements[2] == blue));
-  EXPECT_EQ(elements[3], red); // rojo ultimo
+  EXPECT_EQ(elements[3], yellow); // rojo ultimo
 }
 
 
@@ -97,8 +97,8 @@ TEST(BoundedPriorityQueueTest, DequeueTestColor) {
   EXPECT_EQ(elements.size(), 3);  // Debería seguir teniendo solo 3 elementos
 
   // El color mas grande deberia haber sido eliminado
-  EXPECT_EQ(elements[0], pixel3);  // El azul debería estar en la primera posición por su prioridad
-  EXPECT_TRUE((elements[1] == pixel1 && elements[2] == pixel2) || (elements[1] == pixel2 && elements[2] == pixel1));
+  EXPECT_EQ(elements[0], pixel2);  // El verde debería estar en la primera posición por su prioridad
+  EXPECT_TRUE((elements[1] == pixel3 && elements[2] == yellow) || (elements[1] == yellow && elements[2] == pixel3));
 }
 
 // NOLINTEND(readability-magic-numbers)

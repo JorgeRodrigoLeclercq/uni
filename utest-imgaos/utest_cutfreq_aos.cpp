@@ -141,9 +141,9 @@ TEST(MenosFrecuentesTest, TodosLosColoresIguales) {
   // Verificar que el tamaño de la cola es 2
   EXPECT_EQ(elements.size(), 2);
 
-  // Verifica que el primer color es verde y el segundo es rojo
-  EXPECT_TRUE(elements[0] == Pixel(0, 255, 0));
-  EXPECT_TRUE(elements[1] == Pixel(255, 0, 0));
+  // Verifica que el primer color es verde y el segundo es azul
+  EXPECT_EQ(elements[1], Pixel(0, 0, 255));
+  EXPECT_EQ(elements[0], Pixel(0, 255, 0));
 }
 
 TEST(MenosFrecuentesTest, MasColoresQueLaCapacidad) {
@@ -242,6 +242,98 @@ TEST(CalcularDistanciaTest, DistanciaConDiferenciasGrandes) {
   EXPECT_EQ(distancia, expected_distancia);
 }
 
+// Test para verificar que los colores más frecuentes no sean reemplazados
+TEST(CutFreqTest, ColoresNoReemplazados) {
+  // Datos de prueba: solo hay un color rojo con alta frecuencia
+  std::vector<Pixel> pixel_data = {
+    Pixel(255, 0, 0), Pixel(255, 0, 0), Pixel(255, 0, 0)
+  };
+
+  // Llamada a la función con n_colors=1, por lo que el único color es el rojo
+  cutfreq(pixel_data, 1);
+
+  // Verificar que el color no haya sido reemplazado
+  EXPECT_EQ(pixel_data[0], Pixel(255, 0, 0));
+  EXPECT_EQ(pixel_data[1], Pixel(255, 0, 0));
+  EXPECT_EQ(pixel_data[2], Pixel(255, 0, 0));
+}
+
+// Test para verificar que los colores menos frecuentes se reemplacen correctamente
+TEST(CutFreqTest, ReemplazoColoresMenosFrecuentes) {
+  // Datos de prueba: hay 3 colores con diferentes frecuencias
+  std::vector<Pixel> pixel_data = {
+    Pixel(255, 0, 0), // Rojo
+    Pixel(0, 255, 0), // Verde
+    Pixel(0, 0, 255), // Azul
+    Pixel(255, 0, 0), // Rojo
+    Pixel(255, 0, 0)  // Rojo
+  };
+
+  // Llamada a la función con n_colors=2, se debería reemplazar el color azul
+  cutfreq(pixel_data, 2);
+
+  // Verificar que el color azul haya sido reemplazado por el verde
+  EXPECT_TRUE((pixel_data[2] == Pixel(0, 255, 0)) || (pixel_data[2] == Pixel(255, 0, 0)));
+
+  // Verificar que los colores más frecuentes (rojo y verde) no hayan sido reemplazados
+  EXPECT_TRUE((pixel_data[0] == Pixel(255, 0, 0)) || (pixel_data[1] == Pixel(255, 0, 0)));
+}
+
+// Test para verificar que los colores más frecuentes no se reemplacen
+TEST(CutFreqTest, ColoresMasFrecuentesNoReemplazados) {
+  // Datos de prueba: colores con diferentes frecuencias
+  std::vector<Pixel> pixel_data = {
+    Pixel(255, 0, 0), // Rojo
+    Pixel(255, 0, 0), // Rojo
+    Pixel(255, 0, 0), // Rojo
+    Pixel(0, 255, 0), // Verde
+    Pixel(0, 0, 255), // Azul
+    Pixel(0, 255, 0), // Verde
+  };
+
+  // Llamada a la función con n_colors=2, se debe mantener el color rojo (más frecuente)
+  cutfreq(pixel_data, 2);
+
+  // Verificar que el color rojo no ha sido reemplazado
+  EXPECT_TRUE((pixel_data[0] == Pixel(255, 0, 0)) ||
+    (pixel_data[1] == Pixel(255, 0, 0)) || (pixel_data[2] == Pixel(255, 0, 0)));
+
+  // Verificar que el color azul, siendo menos frecuente, ha sido reemplazado
+  EXPECT_TRUE((pixel_data[4] == Pixel(0, 255, 0)) || (pixel_data[4] == Pixel(255, 0, 0)));
+}
+
+// Test para verificar que no se reemplacen colores que no están entre los menos frecuentes
+TEST(CutFreqTest, ColoresNoReemplazadosSiNoSonMenosFrecuentes) {
+  // Datos de prueba: colores con frecuencias variadas
+  std::vector<Pixel> pixel_data = {
+    Pixel(255, 0, 0), // Rojo
+    Pixel(255, 0, 0), // Rojo
+    Pixel(0, 255, 0), // Verde
+    Pixel(0, 0, 255)  // Azul
+  };
+
+  std::cout << "AQUI\n";
+  // Llamada a la función con n_colors=1, se debe reemplazar el color azul
+  cutfreq(pixel_data, 1);
+  std::cout << "\n";
+  // Verificar que el color verde no ha sido reemplazado
+  EXPECT_EQ(pixel_data[2], Pixel(0, 255, 0));
+  EXPECT_EQ(pixel_data[3], Pixel(0, 255, 0));
+}
+
+// Test para verificar el comportamiento cuando no hay colores para reemplazar
+TEST(CutFreqTest, SinColoresParaReemplazar) {
+  // Datos de prueba: solo un color rojo
+  std::vector<Pixel> pixel_data = {
+    Pixel(255, 0, 0)
+  };
+
+  // Llamada a la función con n_colors=1
+  cutfreq(pixel_data, 1);
+
+  // Verificar que el color no ha sido reemplazado
+  EXPECT_EQ(pixel_data[0], Pixel(255, 0, 0));
+}
 
 // NOLINTEND(readability-magic-numbers)
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)

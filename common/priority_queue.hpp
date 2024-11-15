@@ -8,6 +8,7 @@
 #include "pixel_structures.hpp"
 #include <vector>
 #include <utility>
+#include <iostream>
 
 
 // Este algoritmo se ha extraido del libro The Art of Computer Programming vol.3, capitulo 5.2.3
@@ -45,7 +46,7 @@ class BoundedPriorityQueue {
 
   private:
     static bool is_before (Pixel left_pixel, int left_priority, Pixel right_pixel, int right_priority) {
-      return (left_priority < right_priority) or (left_priority == right_priority and !(left_pixel < right_pixel));
+      return (left_priority < right_priority) or (left_priority == right_priority and left_pixel > right_pixel);
     }
 
     [[nodiscard]] bool is_before (std::size_t self, std::size_t other) const {
@@ -85,8 +86,8 @@ class BoundedPriorityQueue {
     {
       std::size_t index = 0;
       for (;;) {
-        std::size_t const left = left_child (index);
-        std::size_t const right = right_child (index);
+        std::size_t const left = left_child(index);
+        std::size_t const right = right_child(index);
         std::size_t largest = index;
         // Buscar mayor prioridad
         if (left < size_ and is_before(largest, left)) {

@@ -40,7 +40,7 @@ namespace {
 std::uint64_t calcularDistancia(const Pixel &pixel1, const Pixel &pixel2) {
   std::uint64_t suma = 0;
   suma += squared(pixel1.channels.red - pixel2.channels.red);
-  suma += squared(pixel1.channels.green - pixel2.channels.blue);
+  suma += squared(pixel1.channels.green - pixel2.channels.green);
   suma += squared(pixel1.channels.blue - pixel2.channels.blue);
 
   return suma;

@@ -6,9 +6,7 @@
 #include "imgaos/maxlevel.hpp"
 #include "imgaos/resize.hpp"
 #include "imgaos/compress.hpp"
-#include "../common/cmp.hpp"
 
-#include <chrono>
 #include <cstdlib>
 #include <fstream>
 #include <gsl/gsl>
@@ -19,7 +17,6 @@
 constexpr uint8_t MAX_COLOR_VALUE8 = 255;
 
 int main(int argc, const char *argv[]) {
-  auto inicio = std::chrono::high_resolution_clock::now();
   checkNumberArgs(argc);
   gsl::span const args{argv, gsl::narrow<std::size_t>(argc)};
   std::ifstream infile(args[1], std::ios::binary);
@@ -54,8 +51,5 @@ int main(int argc, const char *argv[]) {
     std::cerr << "Error: Invalid option: " << args[3] << "\n";
     exit(-1);
   }
-  auto fin = std::chrono::high_resolution_clock::now();
-  auto duracion = std::chrono::duration_cast<std::chrono::milliseconds>(fin - inicio).count();
-  std::cout << "Tiempo para calcular los mas cercanos: " << duracion << " microsegundos" << "\n";
   return 0;
 };

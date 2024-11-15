@@ -10,6 +10,5 @@ imgsoa/image.hpp
 debug-build
 release-build
 GSL
-outputs
 pruebas
 runall-cutfreq.sh

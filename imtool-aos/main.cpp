@@ -1,11 +1,12 @@
 #include "../common/header.hpp"
 #include "../common/progargs.hpp"
-#include "common/pixel_structures.hpp"
+#include "../common/pixel_structures.hpp"
 #include "imgaos/cutfreq.hpp"
 #include "imgaos/info.hpp"
 #include "imgaos/maxlevel.hpp"
 #include "imgaos/resize.hpp"
 #include "imgaos/compress.hpp"
+#include "../common/cmp.hpp"
 
 #include <chrono>
 #include <cstdlib>
@@ -30,11 +31,11 @@ int main(int argc, const char *argv[]) {
   std::vector<Pixel> pixel_data(static_cast<std::size_t>(pixel_count));
   bool is_16_bit = header.max_color > MAX_COLOR_VALUE8;  // determinar la longitud de cada pixel (2 bytes si max_color > 256; else: 1)
   get_pixels(infile, pixel_data, pixel_count, is_16_bit);  // rellenar el Array of Structures con los píxeles
-
   if (args[3] == std::string("maxlevel")) {
     int const new_maxlevel = checkMaxLevel(args[4]);
     gsl::span<Pixel> pixel_span{pixel_data};
     maxlevel(new_maxlevel, is_16_bit, pixel_span, header);
+    write_info(outfile, header, pixel_data, is_16_bit);
   }
   else if (args[3] == std::string("resize")){
     const ImageDimensions new_dimensions{.width=std::stoi(args[4]),.height=std::stoi(args[EXTRA_ARGS])};
@@ -53,7 +54,6 @@ int main(int argc, const char *argv[]) {
     std::cerr << "Error: Invalid option: " << args[3] << "\n";
     exit(-1);
   }
-
   auto fin = std::chrono::high_resolution_clock::now();
   auto duracion = std::chrono::duration_cast<std::chrono::milliseconds>(fin - inicio).count();
   std::cout << "Tiempo para calcular los mas cercanos: " << duracion << " microsegundos" << "\n";

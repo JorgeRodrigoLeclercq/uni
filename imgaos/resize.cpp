@@ -29,11 +29,11 @@ void ReSize ( ImageHeader header,  const std::vector<Pixel> &pixel_Data, const I
 }
 
 
-Pixel interpolacion_correcta_colores(const Pixel &left_up, const float fraction ,const Pixel &right_up) {
+Pixel interpolacion_correcta_colores(const Pixel &left, const float fraction ,const Pixel &right) {
   Pixel pixel;
-  pixel.channels.red =static_cast<uint16_t>( (static_cast<float>(right_up.channels.red - left_up.channels.red ) * fraction ) + static_cast<float>(left_up.channels.red));
-  pixel.channels.blue =static_cast<uint16_t>( (static_cast<float>(right_up.channels.blue - left_up.channels.blue ) * fraction ) + static_cast<float>(left_up.channels.blue));
-  pixel.channels.green =static_cast<uint16_t>( (static_cast<float>(right_up.channels.green- left_up.channels.green ) * fraction ) + static_cast<float>(left_up.channels.green));
+  pixel.channels.red =static_cast<uint16_t>( static_cast<float>(left.channels.red) + (static_cast<float>(right.channels.red - left.channels.red ) * fraction ) );
+  pixel.channels.blue =static_cast<uint16_t>( static_cast<float>(left.channels.blue) + (static_cast<float>(right.channels.blue - left.channels.blue ) * fraction ) );
+  pixel.channels.green =static_cast<uint16_t>( static_cast<float>(left.channels.green) + (static_cast<float>(right.channels.green- left.channels.green ) * fraction ) );
 
   return pixel;
 
@@ -64,15 +64,12 @@ Pixel interpolacion_correcta_colores(const Pixel &left_up, const float fraction 
               pixel_left_up = pixel_Data[static_cast<unsigned long long int>((coordinates[4+1]  * static_cast<float>(original_dimension.width)) + coordinates[1])];
               pixel_right_up = pixel_Data[static_cast<unsigned long long int>((coordinates[4+1] * static_cast<float>(original_dimension.width)) + coordinates[2])];
 
-              color1 = interpolacion_correcta_colores(pixel_right_down, fraction, pixel_left_down);
+              color1 = interpolacion_correcta_colores(pixel_left_down, fraction, pixel_right_down);
 
-              //fraction= coordinates [2] - coordinates[0];
               color2 = interpolacion_correcta_colores(pixel_left_up, fraction, pixel_right_up);
 
               fraction= coordinates [3] - coordinates[4] ;
-              new_pixel_data[static_cast<unsigned long int>(std::abs((j * new_dimension.width) + i))] = interpolacion_correcta_colores(color1, fraction, color2);
-
-
+              new_pixel_data[static_cast<unsigned long int>(std::abs((j * new_dimension.width ) + i))] = interpolacion_correcta_colores(color1, fraction, color2);
 
             }
       }
@@ -82,10 +79,10 @@ std::vector<float> coordinates_calculator(int const x_coordinate , const ImageDi
 
   std::vector<float> coordinates{0,0,0,0,0,0};
 
-  coordinates[0]= static_cast<float>( x_coordinate * original_dimension.width) / static_cast<float>(new_dimension.width);
+  coordinates[0]= static_cast<float>( x_coordinate)  * static_cast<float>(original_dimension.width -1) / static_cast<float>(new_dimension.width -1);
   coordinates[1] = std::floor(coordinates[0]);
   coordinates[2]= std::ceil(coordinates[0]);
-  coordinates[3] =  static_cast<float>( y_coordinate * original_dimension.height) / static_cast<float>(new_dimension.height);
+  coordinates[3] =  static_cast<float>( y_coordinate)  * static_cast<float>(original_dimension.height -1) / static_cast<float>(new_dimension.height -1 );
   coordinates[4] = std::floor(coordinates[3]);
   coordinates[4 +1] = std::ceil(coordinates[3]);
 

@@ -37,10 +37,10 @@ void PixelCalculator(  const ImageHeader & header,  SoA & pixel_Data,
 //hacer prueba de separar los for
   for ( int i = 0; i < new_dimension.height; i++ ) {
     for ( int j = 0; j < new_dimension.width; j++ ) {
-      coordinates = coordinates_calculator(i, new_dimension , j , original_dimension );
-      new_pixel_data.r[static_cast<unsigned long int>(std::abs((i * new_dimension.width) + j))] = interpolacion_colores_red(pixel_Data,coordinates,original_dimension);
-      new_pixel_data.g[static_cast<unsigned long int>(std::abs((i * new_dimension.width) + j))] = interpolacion_colores_blue(pixel_Data,coordinates,original_dimension);
-      new_pixel_data.b[static_cast<unsigned long int>(std::abs((i * new_dimension.width) + j))] = interpolacion_colores_green(pixel_Data,coordinates,original_dimension);
+      coordinates = coordinates_calculator(j, new_dimension , i, original_dimension );
+      new_pixel_data.r[static_cast<unsigned long int>(std::abs((j * new_dimension.width) + i))] = interpolacion_colores_red(pixel_Data,coordinates,original_dimension);
+      new_pixel_data.b[static_cast<unsigned long int>(std::abs((j * new_dimension.width) + i))] = interpolacion_colores_blue(pixel_Data,coordinates,original_dimension);
+      new_pixel_data.g[static_cast<unsigned long int>(std::abs((j * new_dimension.width) + i))] = interpolacion_colores_green(pixel_Data,coordinates,original_dimension);
 
     }
   }
@@ -61,7 +61,7 @@ uint16_t interpolacion_colores_red ( const SoA &pixel_Data, const std::vector<fl
   pixel_left_up = pixel_Data.r[static_cast<unsigned long long int>((coordinates[1]  * static_cast<float>(original_dimension.width)) + coordinates[4 +1])];
   pixel_right_up = pixel_Data.r[static_cast<unsigned long long int>((coordinates[2] * static_cast<float>(original_dimension.width)) + coordinates[4 + 1])];
 
-  color1 = interpolacion_correcta_colores(pixel_right_down, fraction, pixel_left_down);
+  color1 = interpolacion_correcta_colores(pixel_left_down, fraction, pixel_right_down);
   color2 = interpolacion_correcta_colores(pixel_left_up, fraction, pixel_right_up);
 
   fraction= coordinates[3]-  coordinates[4 ];
@@ -129,10 +129,10 @@ std::vector<float> coordinates_calculator(int const x_coordinate , const ImageDi
 
   std::vector<float> coordinates{0,0,0,0,0,0};
 
-  coordinates[0]= static_cast<float>( x_coordinate * original_dimension.width) / static_cast<float>(new_dimension.width);
+  coordinates[0]= static_cast<float>( x_coordinate * (original_dimension.width -1)) / static_cast<float>(new_dimension.width -1);
   coordinates[1] = std::floor(coordinates[0]);
   coordinates[2]= std::ceil(coordinates[0]);
-  coordinates[3] =  static_cast<float>( y_coordinate * original_dimension.height) / static_cast<float>(new_dimension.height);
+  coordinates[3] =  static_cast<float>( y_coordinate * (original_dimension.height-1)) / static_cast<float>(new_dimension.height-1);
   coordinates[4] = std::floor(coordinates[3]);
   coordinates[4 +1] = std::ceil(coordinates[3]);
 

@@ -12,9 +12,9 @@ void get_pixels(std::ifstream &infile, SoA &pixel_data, unsigned long long pixel
     }
   } else {
     for (unsigned long long i = 0; i < pixel_count; ++i) {
-      pixel_data.r[i] = read_binary<uint8_t>(infile);
-      pixel_data.g[i] = read_binary<uint8_t>(infile);
-      pixel_data.b[i] = read_binary<uint8_t>(infile);
+        pixel_data.r[i] = read_binary<uint8_t>(infile);
+        pixel_data.g[i] = read_binary<uint8_t>(infile);
+        pixel_data.b[i] = read_binary<uint8_t>(infile);
     }
   }
 }
@@ -32,6 +32,7 @@ void write_info(std::ofstream& outfile, const ImageHeader& header, const SoA& pi
     }
   } else {
     for (std::size_t i = 0; i < pixel_data.r.size(); ++i) {
+
       write_binary(outfile, static_cast<uint8_t>(pixel_data.r[i]));
       write_binary(outfile, static_cast<uint8_t>(pixel_data.g[i]));
       write_binary(outfile, static_cast<uint8_t>(pixel_data.b[i]));

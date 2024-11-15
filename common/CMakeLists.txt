@@ -6,9 +6,6 @@ add_library(common
         header.hpp
         priority_queue.hpp
         pixel_structures.hpp
-        cmp.cpp
-        cmp.cpp
-        cmp.hpp
 
 )
 # Use this line only if you have dependencies from this library to GSL

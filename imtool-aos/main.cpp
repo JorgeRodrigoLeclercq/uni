@@ -6,7 +6,6 @@
 #include "imgaos/maxlevel.hpp"
 #include "imgaos/resize.hpp"
 #include "imgaos/compress.hpp"
-#include "../common/cmp.hpp"
 
 #include <chrono>
 #include <cstdlib>

@@ -109,6 +109,7 @@ TEST(MaxLevelTest, TestScale16Bit) {
 }
 
 
+
 // NOLINTEND(readability-magic-numbers)
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 

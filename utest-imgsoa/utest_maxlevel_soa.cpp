@@ -13,9 +13,9 @@ TEST(MaxLevelTest, TestLevelUpdateSoA) {
 
   // Crear SoA con algunos píxeles para probar
   SoA pixel_data = {
-    std::vector<uint16_t>{100, 50},  // Componente rojo
-    std::vector<uint16_t>{150, 75},  // Componente verde
-    std::vector<uint16_t>{200, 100}  // Componente azul
+    .r = {100, 50},  // Componente rojo
+    .g = {150, 75},  // Componente verde
+    .b = {200, 100}  // Componente azul
   };
 
   // Llamar a la función maxlevel
@@ -42,9 +42,9 @@ TEST(MaxLevelTest, TestIs16BitSoA) {
 
   // Crear SoA con algunos píxeles para probar
   SoA pixel_data = {
-    std::vector<uint16_t>{100},  // Componente rojo
-    std::vector<uint16_t>{150},  // Componente verde
-    std::vector<uint16_t>{200}   // Componente azul
+    .r = {100},  // Componente rojo
+    .g = {150},  // Componente verde
+    .b = {200}   // Componente azul
   };
 
   // Probar con un nuevo nivel mayor a 255, lo que debería establecer is_16_bit en true
@@ -63,9 +63,9 @@ TEST(MaxLevelTest, TestScale8BitSoA) {
 
   // Crear SoA con algunos píxeles para probar
   SoA pixel_data = {
-    std::vector<uint16_t>{255, 0},  // Componente rojo
-    std::vector<uint16_t>{255, 0},  // Componente verde
-    std::vector<uint16_t>{255, 0}   // Componente azul
+    .r = {255, 0},  // Componente rojo
+    .g = {255, 0},  // Componente verde
+    .b = {255, 0}   // Componente azul
   };
 
   maxlevel(255, is_16_bit, pixel_data, header);
@@ -87,9 +87,9 @@ TEST(MaxLevelTest, TestScale16BitSoA) {
 
   // Crear SoA con algunos píxeles para probar
   SoA pixel_data = {
-    std::vector<uint16_t>{255, 0},  // Componente rojo
-    std::vector<uint16_t>{255, 0},  // Componente verde
-    std::vector<uint16_t>{255, 0}   // Componente azul
+    .r = {255, 0},  // Componente rojo
+    .g = {255, 0},  // Componente verde
+    .b = {255, 0}   // Componente azul
   };
 
   maxlevel(1000, is_16_bit, pixel_data, header);  // Actualizar a 16 bits
@@ -112,9 +112,9 @@ TEST(MaxLevelTest, TestChangeRepresentationSoA) {
 
   // Crear SoA con algunos píxeles para probar
   SoA pixel_data = {
-    std::vector<uint16_t>{255, 0},  // Componente rojo
-    std::vector<uint16_t>{255, 0},  // Componente verde
-    std::vector<uint16_t>{255, 0}   // Componente azul
+    .r = {255, 0},  // Componente rojo
+    .g = {255, 0},  // Componente verde
+    .b = {255, 0}   // Componente azul
   };
 
   // Escalar a 16 bits (max_color > 255)
@@ -152,9 +152,9 @@ TEST(MaxLevelTest, TestExtremeColorValuesSoA) {
 
   // Crear SoA con algunos píxeles para probar
   SoA pixel_data = {
-    std::vector<uint16_t>{255, 0},  // Componente rojo
-    std::vector<uint16_t>{255, 0},  // Componente verde
-    std::vector<uint16_t>{255, 0}   // Componente azul
+    .r = {255, 0},  // Componente rojo
+    .g = {255, 0},  // Componente verde
+    .b = {255, 0}   // Componente azul
   };
 
   // Escalar a un max_color mayor que 255
@@ -178,6 +178,7 @@ TEST(MaxLevelTest, TestExtremeColorValuesSoA) {
   EXPECT_EQ(pixel_data.g[1], 0);
   EXPECT_EQ(pixel_data.b[1], 0);
 }
+
 // NOLINTEND(readability-magic-numbers)
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
 

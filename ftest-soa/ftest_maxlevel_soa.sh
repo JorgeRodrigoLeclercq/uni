@@ -3,11 +3,25 @@
 # Definir rutas
 INPUT_DIR="../inputs"
 OUTPUT_DIR="../outputs"
-EXPECTED_DIR="../expected_outputs"
 SOURCE_DIR="../imtool-soa"
 IMSOA_DIR="../imgsoa"
 IMTOOL_SOA="./imtool-soa"
 COMMON_DIR="../common"
+
+# Eliminar el ejecutable imtool-soa si ya existe
+if [ -f "$IMTOOL_SOA" ]; then
+  echo "Removing existing imtool-soa executable..."
+  rm "$IMTOOL_SOA"
+fi
+
+# Borrar todo el contenido de la carpeta de salida (outputs) si existe
+if [ -d "$OUTPUT_DIR" ]; then
+  echo "Removing all files in the $OUTPUT_DIR folder..."
+  rm -rf "${OUTPUT_DIR:?}/"*
+else
+  echo "Creating output directory..."
+  mkdir -p "$OUTPUT_DIR"
+fi
 
 # Crear carpeta de salida si no existe
 mkdir -p "$OUTPUT_DIR"
@@ -41,27 +55,25 @@ run_test() {
   # Ejecutar el programa con los parámetros necesarios
   $IMTOOL_SOA "$infile" "$outfile" maxlevel "$maxlevel"
 
-  # Verificar si la ejecución fue exitosa
-  if [ $? -ne 0 ]; then
+  if ! "$IMTOOL_SOA" "$infile" "$outfile" maxlevel "$maxlevel"; then
     echo "FAIL: Error generating $output_file."
   else
     echo "PASS: $output_file generated successfully."
   fi
 }
 
-# Test cases para deer-small sin comparación de imágenes
+# Test cases para deer-small
 run_test "deer-small.ppm" 100 "deer-small_100.ppm"
 run_test "deer-small.ppm" 1000 "deer-small_1000.ppm"
 run_test "deer-small.ppm" 65535 "deer-small_65535.ppm"
 
-# Test case para lake-large (sin comparación)
+# Test case para lake-large
 echo "Running maxlevel test for lake-large.ppm with maxlevel 65535"
-$IMTOOL_SOA "$INPUT_DIR/lake-large.ppm" "$OUTPUT_DIR/lake-large_65535.ppm" maxlevel 65535
-
-if [ $? -eq 0 ]; then
-  echo "PASS: lake-large_65535.ppm generated successfully"
-else
+if ! "$IMTOOL_SOA" "$INPUT_DIR/lake-large.ppm" "$OUTPUT_DIR/lake-large_65535.ppm" maxlevel 65535; then
   echo "FAIL: Error generating lake-large_65535.ppm."
+else
+  echo "PASS: lake-large_65535.ppm generated successfully"
 fi
 
 echo "All tests completed."
+

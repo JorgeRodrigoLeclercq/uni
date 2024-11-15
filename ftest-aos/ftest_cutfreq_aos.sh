@@ -3,7 +3,7 @@
 INPUT_DIR="inputs"
 OUTPUT_DIR="outputs"
 EXPOUT_DIR="expected_outputs/cutfreq"
-IMTOOL_SOA="./release-build/imtool-aos/imtool-aos"
+IMTOOL_AOS="./release-build/imtool-aos/imtool-aos"
 
 cd ..
 if [ ! -d "release-build" ]; then
@@ -13,14 +13,14 @@ fi
 
 # Test case para lake-large 100k
 echo "Running cutfreq test for lake-large.ppm with cutfreq 100000"
-if ! "$IMTOOL_SOA" "$INPUT_DIR/lake-large.ppm" "$OUTPUT_DIR/lake-large100k-AOS.ppm" cutfreq 100000; then
+if ! "$IMTOOL_AOS" "$INPUT_DIR/lake-large.ppm" "$OUTPUT_DIR/lake-large100k-AOS.ppm" cutfreq 100000; then
   echo "FAIL: Error generating lake-large100k-AOS.ppm."
 else
   echo "PASS: lake-large100k-AOS.ppm generated successfully"
 fi
 # Test case para lake-large 162k
 echo "Running cutfreq test for lake-large.ppm with cutfreq 162000"
-if ! "$IMTOOL_SOA" "$INPUT_DIR/lake-large.ppm" "$OUTPUT_DIR/lake-large162k-AOS.ppm" cutfreq 162000; then
+if ! "$IMTOOL_AOS" "$INPUT_DIR/lake-large.ppm" "$OUTPUT_DIR/lake-large162k-AOS.ppm" cutfreq 162000; then
   echo "FAIL: Error generating lake-large162k-AOS.ppm."
 else
   echo "PASS: lake-large162k-AOS.ppm generated successfully"

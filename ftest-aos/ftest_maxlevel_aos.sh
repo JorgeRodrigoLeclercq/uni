@@ -1,79 +1,78 @@
 #!/bin/bash
 
-# Definir rutas
-INPUT_DIR="../inputs"
-OUTPUT_DIR="../outputs"
-SOURCE_DIR="../imtool-aos"
-IMGAOS_DIR="../imgaos"
-IMTOOL_AOS="./imtool-aos"
-COMMON_DIR="../common"
+INPUT_DIR="inputs"
+OUTPUT_DIR="outputs"
+EXPOUT_DIR="expected_outputs"
+IMTOOL_AOS="./release-build/imtool-aos/imtool-aos"
 
-# Eliminar el ejecutable imtool-aos si ya existe
-if [ -f "$IMTOOL_AOS" ]; then
-  echo "Removing existing imtool-aos executable..."
-  rm "$IMTOOL_AOS"
+# Crear carpeta outputs si no existe
+cd ..
+if [ ! -d "$OUTPUT_DIR" ]; then
+    mkdir "$OUTPUT_DIR"
+    echo "Directorio '$OUTPUT_DIR' creado."
+fi
+if [ ! -d "release-build" ]; then
+    mkdir release-build
+    cmake . -DCMAKE_BUILD_TYPE=Release -B release-build
 fi
 
-# Borrar todo el contenido de la carpeta de salida (outputs) si existe
-if [ -d "$OUTPUT_DIR" ]; then
-  echo "Removing all files in the $OUTPUT_DIR folder..."
-  rm -rf "${OUTPUT_DIR:?}/"*
+# Test case para deer-small con maxlevel 100
+echo "Running maxlevel test for deer-small.ppm with maxlevel 100"
+if ! "$IMTOOL_AOS" "$INPUT_DIR/deer-small.ppm" "$OUTPUT_DIR/deer-small_100-AOS.ppm" maxlevel 100; then
+  echo "FAIL: Error generating deer-small_100-AOS.ppm."
 else
-  echo "Creating output directory..."
-  mkdir -p "$OUTPUT_DIR"
+  echo "PASS: deer-small_100-AOS.ppm generated successfully"
 fi
 
-# Crear carpeta de salida si no existe
-mkdir -p "$OUTPUT_DIR"
-
-# Compilar el ejecutable
-echo "Compiling imtool-aos..."
-g++ -std=c++20 -o "$IMTOOL_AOS" -I"$COMMON_DIR" -I".." "$SOURCE_DIR/main.cpp" \
-    "$IMGAOS_DIR/maxlevel.cpp" "$IMGAOS_DIR/info.cpp" \
-    "$IMGAOS_DIR/compress.cpp" "$IMGAOS_DIR/cutfreq.cpp" "$IMGAOS_DIR/resize.cpp" \
-    "$COMMON_DIR/binaryio.hpp" "$COMMON_DIR/pixel_structures.hpp" "$COMMON_DIR/cmp.cpp"
-
-# Comprobar si la compilación fue exitosa
-if ! [ -f "$IMTOOL_AOS" ]; then
-  echo "Error: Compilation failed. Exiting."
-  exit 1
+# Test case para deer-small con maxlevel 1000
+echo "Running maxlevel test for deer-small.ppm with maxlevel 1000"
+if ! "$IMTOOL_AOS" "$INPUT_DIR/deer-small.ppm" "$OUTPUT_DIR/deer-small_1000-AOS.ppm" maxlevel 1000; then
+  echo "FAIL: Error generating deer-small_1000-AOS.ppm."
+else
+  echo "PASS: deer-small_1000-AOS.ppm generated successfully"
 fi
 
-# Función para ejecutar pruebas
-run_test() {
-  local input_file=$1
-  local maxlevel=$2
-  local output_file=$3
+# Test case para deer-small con maxlevel 65535
+echo "Running maxlevel test for deer-small.ppm with maxlevel 65535"
+if ! "$IMTOOL_AOS" "$INPUT_DIR/deer-small.ppm" "$OUTPUT_DIR/deer-small_65535-AOS.ppm" maxlevel 65535; then
+  echo "FAIL: Error generating deer-small_65535-AOS.ppm."
+else
+  echo "PASS: deer-small_65535-AOS.ppm generated successfully"
+fi
 
-  echo "Running maxlevel test for $input_file with maxlevel $maxlevel"
-
-  # Leer el header de la imagen
-  echo "Reading header for $input_file..."
-  infile="$INPUT_DIR/$input_file"
-  outfile="$OUTPUT_DIR/$output_file"
-
-  # Ejecutar el programa con los parámetros necesarios
-  if ! "$IMTOOL_AOS" "$infile" "$outfile" maxlevel "$maxlevel"; then
-    echo "FAIL: Error generating $output_file."
-  else
-    echo "PASS: $output_file generated successfully."
-  fi
-}
-
-# Test cases para deer-small
-run_test "deer-small.ppm" 100 "deer-small_100.ppm"
-run_test "deer-small.ppm" 1000 "deer-small_1000.ppm"
-run_test "deer-small.ppm" 65535 "deer-small_65535.ppm"
-
-# Test case para lake-large
+# Test case para lake-large con maxlevel 65535
 echo "Running maxlevel test for lake-large.ppm with maxlevel 65535"
-if ! "$IMTOOL_AOS" "$INPUT_DIR/lake-large.ppm" "$OUTPUT_DIR/lake-large_65535.ppm" maxlevel 65535; then
-  echo "FAIL: Error generating lake-large_65535.ppm."
+if ! "$IMTOOL_AOS" "$INPUT_DIR/lake-large.ppm" "$OUTPUT_DIR/lake-large_65535-AOS.ppm" maxlevel 65535; then
+  echo "FAIL: Error generating lake-large_65535-AOS.ppm."
 else
-  echo "PASS: lake-large_65535.ppm generated successfully"
+  echo "PASS: lake-large_65535-AOS.ppm generated successfully"
 fi
 
-echo "All tests completed."
+echo "Imagenes generadas."
+echo ""
+echo "Comparando imágenes generadas con las esperadas..."
+
+# Comparar las imágenes generadas
+if ! diff "$OUTPUT_DIR/deer-small_100-AOS.ppm" "$EXPOUT_DIR/deer-small-100.ppm"; then
+  echo "FAIL: deer-small_100-AOS.ppm is different from expected output."
+else
+  echo "PASS: deer-small_100"
+fi
+if ! diff "$OUTPUT_DIR/deer-small_1000-AOS.ppm" "$EXPOUT_DIR/deer-small-1000.ppm"; then
+  echo "FAIL: deer-small_1000-AOS.ppm is different from expected output."
+else
+  echo "PASS: deer-small_1000"
+fi
+if ! diff "$OUTPUT_DIR/deer-small_65535-AOS.ppm" "$EXPOUT_DIR/deer-small-65535.ppm"; then
+  echo "FAIL: deer-small_65535-AOS.ppm is different from expected output."
+else
+  echo "PASS: deer-small_65535"
+fi
+
+echo "Tests finalizados."
+
+
+
 
 
 

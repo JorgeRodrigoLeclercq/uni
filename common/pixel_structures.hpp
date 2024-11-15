@@ -25,8 +25,8 @@ struct Pixel {
     : channels{.red=red, .green=green, .blue=blue} {}
 
   bool operator<(const Pixel &other) const {
-    return std::tie(channels.red, channels.green, channels.blue) <
-           std::tie(other.channels.red, other.channels.green, other.channels.blue);
+    return std::tie(channels.blue, channels.green, channels.red) <
+           std::tie(other.channels.blue, other.channels.green, other.channels.red);
   }
 
   bool operator==(const Pixel &other) const {

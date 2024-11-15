@@ -8,7 +8,7 @@
 // Caso base de prueba: Verifica que el valor de max_color se actualiza y los píxeles se escalan correctamente en SoA
 TEST(MaxLevelTest, TestLevelUpdateSoA) {
   // Inicializar ImageHeader con max_color a 255
-  ImageHeader header{"P6", {100, 100}, 255};  // Imagen de 100x100 con max_color 255
+  ImageHeader header{"P6", {.width= 100, .height= 100}, 255};  // Imagen de 100x100 con max_color 255
   bool is_16_bit = false;
 
   // Crear SoA con algunos píxeles para probar
@@ -37,7 +37,7 @@ TEST(MaxLevelTest, TestLevelUpdateSoA) {
 
 // Test para verificar si el valor de is_16_bit se ajusta correctamente en SoA
 TEST(MaxLevelTest, TestIs16BitSoA) {
-  ImageHeader header{"P6", {100, 100}, 255};  // Inicializar con max_color 255
+  ImageHeader header{"P6", {.width=100, .height= 100}, 255};  // Inicializar con max_color 255
   bool is_16_bit = false;
 
   // Crear SoA con algunos píxeles para probar
@@ -58,7 +58,7 @@ TEST(MaxLevelTest, TestIs16BitSoA) {
 
 // Test para verificar la escala de píxeles con 8 bits en SoA
 TEST(MaxLevelTest, TestScale8BitSoA) {
-  ImageHeader header{"P6", {2, 2}, 255};  // Imagen de 2x2 con max_color 255
+  ImageHeader header{"P6", {.width=2,.height= 2}, 255};  // Imagen de 2x2 con max_color 255
   bool is_16_bit = false;
 
   // Crear SoA con algunos píxeles para probar
@@ -82,7 +82,7 @@ TEST(MaxLevelTest, TestScale8BitSoA) {
 
 // Test para verificar la escala de píxeles con 16 bits en SoA
 TEST(MaxLevelTest, TestScale16BitSoA) {
-  ImageHeader header{"P6", {2, 2}, 255};  // Imagen de 2x2 con max_color 255
+  ImageHeader header{"P6", {.width=2, .height= 2}, 255};  // Imagen de 2x2 con max_color 255
   bool is_16_bit = false;
 
   // Crear SoA con algunos píxeles para probar
@@ -107,7 +107,7 @@ TEST(MaxLevelTest, TestScale16BitSoA) {
 // Test para verificar el cambio de representación de píxeles (3 bytes a 6 bytes y viceversa) en SoA
 TEST(MaxLevelTest, TestChangeRepresentationSoA) {
   // Imagen con max_color 255 (representación 3 bytes por píxel)
-  ImageHeader header{"P6", {2, 2}, 255};  // Imagen 2x2 con 255 como valor máximo
+  ImageHeader header{"P6", {.width=2, .height= 2}, 255};  // Imagen 2x2 con 255 como valor máximo
   bool is_16_bit = false;  // Inicialmente no es de 16 bits
 
   // Crear SoA con algunos píxeles para probar
@@ -147,7 +147,7 @@ TEST(MaxLevelTest, TestChangeRepresentationSoA) {
 }
 
 TEST(MaxLevelTest, TestExtremeColorValuesSoA) {
-  ImageHeader header{"P6", {2, 2}, 255};  // Imagen 2x2 con max_color 255
+  ImageHeader header{"P6", {.width=2, .height= 2}, 255};  // Imagen 2x2 con max_color 255
   bool is_16_bit = false;
 
   // Crear SoA con algunos píxeles para probar

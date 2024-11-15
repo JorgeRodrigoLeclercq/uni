@@ -74,6 +74,7 @@ TEST(Resize_interpolation, normal_input) {
   const float fraction = coordinates_calculated[0] - coordinates_calculated[1];
   const uint16_t output = interpolacion_correcta_colores(color1, fraction, color2);
 
+
   EXPECT_EQ(expected, output );
 
 }

@@ -8,7 +8,7 @@
 
 #include <chrono>
 #include <cmath>
-#include <gsl/narrow>
+#include <gsl/gsl>
 #include <iostream>
 #include <sys/stat.h>
 #include <unordered_map>

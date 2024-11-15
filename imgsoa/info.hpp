@@ -4,8 +4,6 @@
 #include "../common/header.hpp"
 #include "../common/pixel_structures.hpp"
 
-#include <gsl/span>
-
 // Funciones para manipular imágenes
 
 void get_pixels(std::ifstream &infile, SoA &pixel_data, unsigned long long pixel_count, bool is_16_bit);

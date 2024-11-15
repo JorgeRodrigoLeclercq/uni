@@ -6,7 +6,7 @@
 
 #include <cstdint>
 #include <fstream>
-#include <gsl/span>
+#include <gsl/gsl>
 #include <iostream>
 
 constexpr uint8_t EXTRA_ARGS = 5;

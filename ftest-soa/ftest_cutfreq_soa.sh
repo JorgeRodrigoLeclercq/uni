@@ -2,6 +2,7 @@
 
 INPUT_DIR="inputs"
 OUTPUT_DIR="outputs"
+EXPOUT_DIR="expected_outputs/cutfreq"
 IMTOOL_SOA="./release-build/imtool-soa/imtool-soa"
 
 cd ..
@@ -46,3 +47,22 @@ else
   echo "PASS: lake-large162k-SOA.ppm generated successfully"
 fi
 echo "All tests completed."
+
+echo "Imagenes generadas."
+echo ""
+echo "Comparando imagenes generadas con las esperadas..."
+
+# Comparar las imágenes generadas
+if ! diff "$OUTPUT_DIR/lake-large100k-SOA.ppm" "$EXPOUT_DIR/lake-large-100K.ppm"; then
+  echo "FAIL: lake-large100k-SOA.ppm is different from lake-large-100K.ppm."
+else
+  echo "PASS: lake-large100k"
+fi
+# Comparar las imágenes generadas
+if ! diff "$OUTPUT_DIR/lake-large162k-SOA.ppm" "$EXPOUT_DIR/lake-large162K.ppm"; then
+  echo "FAIL: lake-large162k-SOA.ppm is different from lake-large-162K.ppm."
+else
+  echo "PASS: lake-large162k"
+fi
+
+echo "Tests finalizados."

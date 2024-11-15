@@ -63,5 +63,4 @@ if [ $? -eq 0 ]; then
 else
   echo "FAIL: Error generating lake-large_65535.ppm."
 fi
-
 echo "All tests completed."

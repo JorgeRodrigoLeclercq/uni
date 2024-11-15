@@ -20,6 +20,7 @@ class Bounded_priority_queue {
     void enqueue (Pixel element, int priority) {
       if (size_ == std::size(elements_)) {
           // Si el elemento tiene mayor prioridad que el último elemento de la cola de prioridad, lo eliminamos.
+          // Esto incluye el caso de empate de colores, siguiendo la prioridad b->g->r.
           if (is_before(element, priority, elements_[0], priorities_[0])) {
             dequeue_last();
             heap_append(element, priority);

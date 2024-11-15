@@ -6,7 +6,6 @@ EXPOUT_DIR="expected_outputs"
 IMTOOL_AOS="./release-build/imtool-aos/imtool-aos"
 
 # Crear carpeta outputs si no existe
-
 cd ..
 if [ ! -d "$OUTPUT_DIR" ]; then
     mkdir "$OUTPUT_DIR"

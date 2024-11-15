@@ -2,6 +2,8 @@
 #ifndef PROGARGS_HPP
 #define PROGARGS_HPP
 
+#include "header.hpp"
+
 #include <cstdint>
 #include <fstream>
 #include <gsl/span>
@@ -55,14 +57,19 @@ inline void checkDimensions(ImageDimensions const& dimensions) {
 inline int checkCutFreq(gsl::span<char const *> args, int argc) {
   if (argc != EXTRA_ARGS) {
     std::cerr << "Error: Invalid number of arguments for cutfreq: " << argc - 1 << "\n";
-    exit(-1);
+    exit(1);
   }
   int n_colors = 0;
   try {
     n_colors = std::stoi(args[4]);
   } catch (const std::invalid_argument&) {
     std::cerr << "Error: Invalid cutfreq: " << args[4] << "\n";
-    exit(-1);
+    exit(1);
+  }
+  // Verificar si el número es positivo
+  if (n_colors < 0) {
+    std::cerr << "Error: cutfreq must be a positive number, but got: " << n_colors << "\n";
+    exit(1); // Salir con un código de error
   }
   return n_colors;
 }

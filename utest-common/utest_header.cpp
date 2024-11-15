@@ -33,4 +33,5 @@ TEST(GetHeaderTest, ReadsHeaderCorrectly) {
 
   infile.close();
   const int result = std::remove(filename.c_str());
+  if (result == 0){};
 }

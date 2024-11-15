@@ -5,6 +5,7 @@ add_executable(utest-imgaos
         utest_resize_aos.cpp
         utest_info_aos.cpp
         utest_compress_aos.cpp
+        utest_cutfreq_aos.cpp
 )
 # Library dependencies
 target_link_libraries (utest-imgaos

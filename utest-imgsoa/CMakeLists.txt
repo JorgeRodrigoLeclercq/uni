@@ -5,6 +5,7 @@ add_executable(utest-imgsoa
         utest_resize_soa.cpp
         utest_info_soa.cpp
         utest_compress_soa.cpp
+        utest_cutfreq_soa.cpp
 )
 # Library dependencies
 target_link_libraries (utest-imgsoa

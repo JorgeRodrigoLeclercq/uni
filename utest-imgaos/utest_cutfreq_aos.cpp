@@ -242,8 +242,9 @@ TEST(CalcularDistanciaTest, DistanciaConDiferenciasGrandes) {
   EXPECT_EQ(distancia, expected_distancia);
 }
 
+/* CutFreq unittests */
 // Test para verificar que los colores más frecuentes no sean reemplazados
-TEST(CutFreqTest, ColoresNoReemplazados) {
+TEST(CutFreqTest, ReemplazoMayorQueFrecuencias) {
   // Datos de prueba: solo hay un color rojo con alta frecuencia
   std::vector<Pixel> pixel_data = {
     Pixel(255, 0, 0), Pixel(255, 0, 0), Pixel(255, 0, 0)
@@ -252,10 +253,10 @@ TEST(CutFreqTest, ColoresNoReemplazados) {
   // Llamada a la función con n_colors=1, por lo que el único color es el rojo
   cutfreq(pixel_data, 1);
 
-  // Verificar que el color no haya sido reemplazado
-  EXPECT_EQ(pixel_data[0], Pixel(255, 0, 0));
-  EXPECT_EQ(pixel_data[1], Pixel(255, 0, 0));
-  EXPECT_EQ(pixel_data[2], Pixel(255, 0, 0));
+  // Verificar que el color ha sido reemplazado por negro
+  EXPECT_EQ(pixel_data[0], Pixel(0, 0, 0));
+  EXPECT_EQ(pixel_data[1], Pixel(0, 0, 0));
+  EXPECT_EQ(pixel_data[2], Pixel(0, 0, 0));
 }
 
 // Test para verificar que los colores menos frecuentes se reemplacen correctamente
@@ -269,14 +270,13 @@ TEST(CutFreqTest, ReemplazoColoresMenosFrecuentes) {
     Pixel(255, 0, 0)  // Rojo
   };
 
-  // Llamada a la función con n_colors=2, se debería reemplazar el color azul
+  // Llamada a la función con n_colors=2, se debería reemplazar el color zul y el verde
   cutfreq(pixel_data, 2);
 
-  // Verificar que el color azul haya sido reemplazado por el verde
-  EXPECT_TRUE((pixel_data[2] == Pixel(0, 255, 0)) || (pixel_data[2] == Pixel(255, 0, 0)));
-
-  // Verificar que los colores más frecuentes (rojo y verde) no hayan sido reemplazados
-  EXPECT_TRUE((pixel_data[0] == Pixel(255, 0, 0)) || (pixel_data[1] == Pixel(255, 0, 0)));
+  // Verificar que todos es rojo
+  for (const auto& pixel : pixel_data) {
+    EXPECT_EQ(pixel, Pixel(255, 0, 0));  // Verificar que todos los píxeles sean rojos
+  }
 }
 
 // Test para verificar que los colores más frecuentes no se reemplacen
@@ -295,11 +295,11 @@ TEST(CutFreqTest, ColoresMasFrecuentesNoReemplazados) {
   cutfreq(pixel_data, 2);
 
   // Verificar que el color rojo no ha sido reemplazado
-  EXPECT_TRUE((pixel_data[0] == Pixel(255, 0, 0)) ||
-    (pixel_data[1] == Pixel(255, 0, 0)) || (pixel_data[2] == Pixel(255, 0, 0)));
+  EXPECT_TRUE((pixel_data[0] == Pixel(255, 0, 0)) &&
+    (pixel_data[1] == Pixel(255, 0, 0)) && (pixel_data[2] == Pixel(255, 0, 0)));
 
   // Verificar que el color azul, siendo menos frecuente, ha sido reemplazado
-  EXPECT_TRUE((pixel_data[4] == Pixel(0, 255, 0)) || (pixel_data[4] == Pixel(255, 0, 0)));
+  EXPECT_TRUE((pixel_data[4] == Pixel(255, 0, 0)) && (pixel_data[4] == Pixel(255, 0, 0)));
 }
 
 // Test para verificar que no se reemplacen colores que no están entre los menos frecuentes
@@ -312,27 +312,11 @@ TEST(CutFreqTest, ColoresNoReemplazadosSiNoSonMenosFrecuentes) {
     Pixel(0, 0, 255)  // Azul
   };
 
-  std::cout << "AQUI\n";
   // Llamada a la función con n_colors=1, se debe reemplazar el color azul
   cutfreq(pixel_data, 1);
-  std::cout << "\n";
   // Verificar que el color verde no ha sido reemplazado
   EXPECT_EQ(pixel_data[2], Pixel(0, 255, 0));
   EXPECT_EQ(pixel_data[3], Pixel(0, 255, 0));
-}
-
-// Test para verificar el comportamiento cuando no hay colores para reemplazar
-TEST(CutFreqTest, SinColoresParaReemplazar) {
-  // Datos de prueba: solo un color rojo
-  std::vector<Pixel> pixel_data = {
-    Pixel(255, 0, 0)
-  };
-
-  // Llamada a la función con n_colors=1
-  cutfreq(pixel_data, 1);
-
-  // Verificar que el color no ha sido reemplazado
-  EXPECT_EQ(pixel_data[0], Pixel(255, 0, 0));
 }
 
 // NOLINTEND(readability-magic-numbers)

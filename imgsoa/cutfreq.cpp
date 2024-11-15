@@ -10,6 +10,7 @@
 #include <cmath>
 #include <gsl/narrow>
 #include <iostream>
+#include <sys/stat.h>
 #include <unordered_map>
 #include <vector>
 
@@ -24,7 +25,6 @@ std::unordered_map<Pixel, int> contarFrecuencias(const SoA& pixel_data) {
 
 BoundedPriorityQueue menosFrecuentes(const std::unordered_map<Pixel,int>& colores, int size) {
   BoundedPriorityQueue colores_menos_frecuentes(gsl::narrow<size_t>(size), Pixel{0,0,0});
-
   for (const auto &color : colores) {
     colores_menos_frecuentes.enqueue(color.first, color.second);
   }
@@ -51,25 +51,30 @@ void cutfreq(SoA &pixel_data, int n_colors) {
   BoundedPriorityQueue const colores_menos_frecuentes = menosFrecuentes(frecuencias, n_colors);
 
   std::unordered_map<Pixel, std::pair<Pixel, std::uint64_t>> reemplazos;
-  for (const auto &pixel : colores_menos_frecuentes.get_all()) {
-    reemplazos[pixel] = std::make_pair(pixel, std::numeric_limits<std::uint64_t>::max());
-  }
-  std::vector<Pixel> colores_no_reemplazables;
-  for (const auto &pixel : frecuencias) {
-    if (!(reemplazos.contains(pixel.first))) {
-      colores_no_reemplazables.push_back(pixel.first);
+  if (frecuencias.size() == static_cast<size_t>(n_colors)) {
+    for (const auto &pixel : colores_menos_frecuentes.get_all()) {
+      reemplazos[pixel] = std::make_pair(Pixel{0,0,0}, std::numeric_limits<std::uint64_t>::max());
     }
-  }
-  for (auto & [pixel_a_reemplazar, info_reemplazo] : reemplazos) {
-    for (const auto &color : colores_no_reemplazables) {
-      std::uint64_t const nueva_distancia = calcularDistancia(color, pixel_a_reemplazar);
-      // Verificar que el color no sea uno a reemplazar
-      if (nueva_distancia < info_reemplazo.second) {
-        info_reemplazo = std::make_pair(color, nueva_distancia);
+  } else {
+    for (const auto &pixel : colores_menos_frecuentes.get_all()) {
+      reemplazos[pixel] = std::make_pair(pixel, std::numeric_limits<std::uint64_t>::max());
+    }
+    std::vector<Pixel> colores_no_reemplazables;
+    for (const auto &pixel : frecuencias) {
+      if (!(reemplazos.contains(pixel.first))) {
+        colores_no_reemplazables.push_back(pixel.first);
+      }
+    }
+    for (auto & [pixel_a_reemplazar, info_reemplazo] : reemplazos) {
+      for (const auto &color : colores_no_reemplazables) {
+        std::uint64_t const nueva_distancia = calcularDistancia(color, pixel_a_reemplazar);
+        // Verificar que el color no sea uno a reemplazar
+        if (nueva_distancia < info_reemplazo.second) {
+          info_reemplazo = std::make_pair(color, nueva_distancia);
+        }
       }
     }
   }
-
   for (std::size_t index = 0; index < pixel_data.r.size(); index++) {
     Pixel new_pixel = Pixel{pixel_data.r[index],pixel_data.g[index], pixel_data.b[index]};
     auto replace_pixel = reemplazos.find(new_pixel); // comprobar si el pixel es uno a reemplazar

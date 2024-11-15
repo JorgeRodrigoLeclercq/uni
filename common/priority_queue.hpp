@@ -12,10 +12,10 @@
 
 // Este algoritmo se ha extraido del libro The Art of Computer Programming vol.3, capitulo 5.2.3
 
-class Bounded_priority_queue {
+class BoundedPriorityQueue {
   // Implementado para limitar la estructura de cola de prioridad de std.
   public:
-  Bounded_priority_queue (std::size_t max_capacity, Pixel initialiser) : elements_(max_capacity, initialiser), priorities_(max_capacity, 0) { }
+  BoundedPriorityQueue (std::size_t max_capacity, [[maybe_unused]] Pixel initialiser) : elements_(max_capacity, Pixel{0,0,0}), priorities_(max_capacity, 0) { }
 
     void enqueue (Pixel element, int priority) {
       if (size_ == std::size(elements_)) {
@@ -45,11 +45,11 @@ class Bounded_priority_queue {
 
   private:
     static bool is_before (Pixel left_pixel, int left_priority, Pixel right_pixel, int right_priority) {
-      return (left_priority < right_priority) or (left_priority == right_priority and left_pixel < right_pixel);
+      return (left_priority < right_priority) or (left_priority == right_priority and !(left_pixel < right_pixel));
     }
 
     [[nodiscard]] bool is_before (std::size_t self, std::size_t other) const {
-       return Bounded_priority_queue::is_before(elements_[self], priorities_[self], elements_[other], priorities_[other]);
+       return BoundedPriorityQueue::is_before(elements_[self], priorities_[self], elements_[other], priorities_[other]);
     }
 
     static auto parent (std::size_t index) {

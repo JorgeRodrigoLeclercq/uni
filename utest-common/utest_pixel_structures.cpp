@@ -33,9 +33,9 @@ TEST(PixelTest, ComparisonOperators) {
   EXPECT_FALSE(pixel1 == pixel3); // Los píxeles no son iguales
 
   // Verificar que el operador < funciona
-  EXPECT_TRUE(pixel5 < pixel4);   // Se mira primero el azul
-  EXPECT_TRUE(pixel5 < pixel3);   // Ante empate de azul, se mira el valor verde
-  EXPECT_TRUE(pixel5 < pixel2);  // Ante empate de azul y verde, se mira el valor rojo
+  EXPECT_TRUE(pixel4 < pixel5);   // Se mira primero el azul
+  EXPECT_TRUE(pixel3 < pixel5);   // Ante empate de azul, se mira el valor verde
+  EXPECT_TRUE(pixel2 < pixel5);  // Ante empate de azul y verde, se mira el valor rojo
 }
 
 #include <unordered_set>

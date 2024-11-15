@@ -9,8 +9,8 @@
 // NOLINTBEGIN(readability-magic-numbers)
 
 TEST(Resize_coordinates, same_Dimension) {
-  ImageDimensions newDimensions;
-  ImageDimensions oldDimensions;
+  ImageDimensions newDimensions{};
+  ImageDimensions oldDimensions{};
   newDimensions.width = 10;
   newDimensions.height = 10;
   oldDimensions.width = 10;
@@ -25,8 +25,8 @@ TEST(Resize_coordinates, same_Dimension) {
 }
 //Correct coordinates when dimension is bigger
 TEST(Resize_coordinates, diff_Dimension) {
-  ImageDimensions newDimensions;
-  ImageDimensions oldDimensions;
+  ImageDimensions newDimensions{};
+  ImageDimensions oldDimensions{};
   newDimensions.width = 20;
   newDimensions.height = 20;
   oldDimensions.width = 10;
@@ -41,8 +41,8 @@ TEST(Resize_coordinates, diff_Dimension) {
 }
 //Correct coordinates when dimension is smaller
 TEST(Resize_coordinates, diff_lower_Dimension) {
-  ImageDimensions newDimensions;
-  ImageDimensions oldDimensions;
+  ImageDimensions newDimensions{};
+  ImageDimensions oldDimensions{};
   newDimensions.width = 5;
   newDimensions.height = 5;
   oldDimensions.width = 10;
@@ -57,8 +57,8 @@ TEST(Resize_coordinates, diff_lower_Dimension) {
 }
 
 TEST(Resize_interpolation, normal_input) {
-  ImageDimensions newDimensions;
-  ImageDimensions oldDimensions;
+  ImageDimensions newDimensions{};
+  ImageDimensions oldDimensions{};
   newDimensions.width = 20;
   newDimensions.height = 20;
   oldDimensions.width = 10;
@@ -80,8 +80,8 @@ TEST(Resize_interpolation, normal_input) {
 }
 
 TEST(Resize_interpolation, bigger_input) {
-  ImageDimensions newDimensions;
-  ImageDimensions oldDimensions;
+  ImageDimensions newDimensions{};
+  ImageDimensions oldDimensions{};
   newDimensions.width = 20;
   newDimensions.height = 20;
   oldDimensions.width = 10;
@@ -102,3 +102,7 @@ TEST(Resize_interpolation, bigger_input) {
   EXPECT_EQ(  expected, output );
 
 }
+
+
+// NOLINTEND(readability-magic-numbers)
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers)

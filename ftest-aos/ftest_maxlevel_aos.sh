@@ -54,7 +54,7 @@ run_test "deer-small.ppm" 100 "deer-small_100.ppm"
 run_test "deer-small.ppm" 1000 "deer-small_1000.ppm"
 run_test "deer-small.ppm" 65535 "deer-small_65535.ppm"
 
-# Test case para lake-large (sin comparación)
+# Test case para lake-large
 echo "Running maxlevel test for lake-large.ppm with maxlevel 65535"
 $IMTOOL_AOS "$INPUT_DIR/lake-large.ppm" "$OUTPUT_DIR/lake-large_65535.ppm" maxlevel 65535
 

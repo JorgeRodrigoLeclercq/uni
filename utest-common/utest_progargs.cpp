@@ -8,6 +8,18 @@
 // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
 // NOLINTBEGIN(readability-magic-numbers)
 
+// Test para comprobar que la función maneja correctamente los casos con número válido de argumentos
+TEST(CheckNumberArgsTest, ArgumentCount) {
+  // Caso válido: El número de argumentos es 4 o más
+  EXPECT_EQ(checkNumberArgs(4), 0);
+  EXPECT_EQ(checkNumberArgs(5), 0);
+
+  // Caso inválido: El número de argumentos es menor a 4
+  EXPECT_EXIT(checkNumberArgs(3), ::testing::ExitedWithCode(1), "Error: Invalid number of arguments: 2\n");
+  EXPECT_EXIT(checkNumberArgs(2), ::testing::ExitedWithCode(1), "Error: Invalid number of arguments: 1\n");
+  EXPECT_EXIT(checkNumberArgs(1), ::testing::ExitedWithCode(1), "Error: Invalid number of arguments: 0\n");
+}
+
 // Test para verificar que la función checkInfoAndCompress maneja correctamente el número de argumentos
 TEST(CheckInfoAndCompressTest, HandlesTooManyArguments) {
   // Redirigir std::cerr para capturar el mensaje de error

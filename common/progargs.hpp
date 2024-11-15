@@ -14,7 +14,7 @@ constexpr uint8_t EXTRA_ARGS = 5;
 inline int checkNumberArgs(int const argc) {
   if (argc < 4) {
     std::cerr << "Error: Invalid number of arguments: " << argc - 1 << "\n";
-    exit(-1); // Código de error si hay menos de 3 argumentos
+    exit(1); // Código de error si hay menos de 3 argumentos
   }
   return 0;
 }

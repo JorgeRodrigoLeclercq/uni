@@ -45,6 +45,7 @@ TEST(CompressTests, BasicCompressFunction) {
   // Limpiar
   result_file.close();
   int const result = std::remove(temp_filename.c_str());
+  if (result == 0){}
 }
 
 
@@ -82,6 +83,7 @@ TEST(WriteColorTableTests, SmallColorTable_Uint8) {
   // Limpiar
   result_file.close();
   int const result = std::remove(temp_filename.c_str());
+  if (result == 0){}
 }
 
 // Test para la función write_color_table con tamaño de tabla uint16_t
@@ -101,7 +103,7 @@ TEST(WriteColorTableTests, MediumColorTable_Uint16) {
   std::map<Pixel, int> color_table;
   constexpr int THREE_HUNDRED = 300;
   for (int i = 0; i < THREE_HUNDRED; ++i) {
-    color_table[Pixel(i, i, i)] = i;
+    color_table[Pixel(static_cast<uint16_t>(i), static_cast<uint16_t>(i), static_cast<uint16_t>(i))] = i;
   }
 
   // Llamar a la función con el flujo de archivo
@@ -122,6 +124,7 @@ TEST(WriteColorTableTests, MediumColorTable_Uint16) {
   // Limpiar
   result_file.close();
   const int result = std::remove(temp_filename.c_str());
+  if (result == 0){}
 }
 
 // Test para la función write_color_table con tamaño de tabla uint32_t
@@ -136,12 +139,12 @@ TEST(WriteColorTableTests, LargeColorTable_Uint32) {
     Pixel(255, 255, 0), Pixel(255, 0, 255)
 };
 
-  constexpr int SEVENTY_THOUSAND = 70000;
-  // Crear la tabla de colores con claves de Pixel y valores enteros
   std::map<Pixel, int> color_table;
-  for (int i = 0; i < SEVENTY_THOUSAND; ++i) {
-    constexpr int TWO_FIFTY_SIX = 256;
-    color_table[Pixel(i % TWO_FIFTY_SIX, i % TWO_FIFTY_SIX, i % TWO_FIFTY_SIX)] = i;
+  constexpr uint32_t SEVENTY_THOUSAND = 70000;  // Mantén SEVENTY_THOUSAND como uint32_t
+  for (uint32_t i = 0; i < SEVENTY_THOUSAND; ++i) {
+    constexpr uint16_t TWO_FIFTY_SIX = 256;
+    // Convertir explícitamente 'i' a 'int'
+    color_table[Pixel(i % TWO_FIFTY_SIX, i % TWO_FIFTY_SIX, i % TWO_FIFTY_SIX)] = static_cast<int>(i);
   }
 
   // Llamar a la función con el flujo de archivo
@@ -162,6 +165,7 @@ TEST(WriteColorTableTests, LargeColorTable_Uint32) {
   // Limpiar
   result_file.close();
   const int result = std::remove(temp_filename.c_str());
+  if (result == 0){}
 }
 
 
@@ -181,8 +185,8 @@ TEST(WriteColorTableTests, OversizedColorTable_Error) {
   // Crear una tabla de colores demasiado grande simulada con claves de Pixel y valores enteros
   std::map<Pixel, int> color_table;
   // Cambiar el tipo de i a int
-  for (int i = 0; i <= HUNDRED; ++i) { // Límite simulado para la prueba
-    constexpr int TWO_FIFTY_SIX = 256;
+  for (uint16_t i = 0; i <= HUNDRED; ++i) { // Límite simulado para la prueba
+    constexpr uint16_t TWO_FIFTY_SIX = 256;
     color_table[Pixel(i % TWO_FIFTY_SIX, i % TWO_FIFTY_SIX, i % TWO_FIFTY_SIX)] = i;
   }
 
@@ -193,4 +197,5 @@ TEST(WriteColorTableTests, OversizedColorTable_Error) {
   // Limpiar
   outfile.close();
   const int result = std::remove(temp_filename.c_str());
+  if (result == 0){}
 }

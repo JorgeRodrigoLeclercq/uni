@@ -71,7 +71,7 @@ TEST(GetPixelsTest, Reads8BitPixels) {
   EXPECT_EQ(pixel_data.b[3], 255);
 
   input.close();
-  int const success = std::remove(ppm_file_data.filename.c_str());
+  //int const success = std::remove(ppm_file_data.filename.c_str());
 }
 
 TEST(GetPixelsTest, Reads16BitPixels) {
@@ -110,7 +110,7 @@ TEST(GetPixelsTest, Reads16BitPixels) {
   EXPECT_EQ(pixel_data.b[3], 255);
 
   input.close();
-  int const success = std::remove(ppm_file_data.filename.c_str());
+  //int const success = std::remove(ppm_file_data.filename.c_str());
 }
 
 TEST(WriteInfoTest, Writes8BitPixels) {
@@ -138,7 +138,7 @@ TEST(WriteInfoTest, Writes8BitPixels) {
 
     EXPECT_EQ(file_content, expected_content);
 
-    int const success = std::remove(filename.c_str());
+    //int const success = std::remove(filename.c_str());
 }
 
 TEST(WriteInfoTest, Writes16BitPixels) {
@@ -166,7 +166,7 @@ TEST(WriteInfoTest, Writes16BitPixels) {
 
     EXPECT_EQ(file_content, expected_content);
 
-    int const success = std::remove(filename.c_str());
+    //int const success = std::remove(filename.c_str());
 }
 
 TEST(InfoFunctionTest, Prints8BitImageInfo) {

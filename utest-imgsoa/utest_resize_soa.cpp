@@ -65,7 +65,6 @@ TEST(Resize_interpolation, normal_input) {
   oldDimensions.height = 10;
   const uint16_t color1 = 50;
   const uint16_t color2 = 20;
-  uint16_t output{};
   const uint16_t expected = 20;
 
   std::vector<float> coordinates_calculated= {0,0,0,0,0,0};
@@ -73,9 +72,9 @@ TEST(Resize_interpolation, normal_input) {
   coordinates_calculated = coordinates_calculator( 10 , newDimensions, 15 , oldDimensions );
 
   const float fraction = coordinates_calculated[0] - coordinates_calculated[1];
-  output = interpolacion_correcta_colores(color1, fraction, color2);
+  uint16_t output = interpolacion_correcta_colores(color1, fraction, color2);
 
-  EXPECT_EQ(  expected, output );
+  EXPECT_EQ(expected, output );
 
 }
 
@@ -88,7 +87,6 @@ TEST(Resize_interpolation, bigger_input) {
   oldDimensions.height = 10;
   const uint16_t color1 = 500;
   const uint16_t color2 = 200;
-  uint16_t output{};
   const uint16_t expected = 200;
 
 
@@ -97,7 +95,7 @@ TEST(Resize_interpolation, bigger_input) {
   coordinates_calculated = coordinates_calculator( 10 , newDimensions, 15 , oldDimensions );
 
   const float fraction = coordinates_calculated[0] - coordinates_calculated[1];
-  output = interpolacion_correcta_colores(color1, fraction, color2);
+  uint16_t output = interpolacion_correcta_colores(color1, fraction, color2);
 
   EXPECT_EQ(  expected, output );
 

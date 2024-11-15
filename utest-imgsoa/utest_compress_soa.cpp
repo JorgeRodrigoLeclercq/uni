@@ -46,7 +46,7 @@ TEST(CompressTests, BasicCompressFunction_SoA) {
 
   // Limpiar
   result_file.close();
-  int const result = std::remove(temp_filename.c_str());
+  //int const result = std::remove(temp_filename.c_str());
 }
 
 
@@ -87,7 +87,7 @@ TEST(WriteColorTableTests, SmallColorTable_Uint8_SoA) {
 
   // Limpiar
   result_file.close();
-  int const result = std::remove(temp_filename.c_str());
+  //int const result = std::remove(temp_filename.c_str());
 }
 
 // Test para la función write_color_table con un tamaño de tabla uint16_t
@@ -129,7 +129,7 @@ TEST(WriteColorTableTests, MediumColorTable_Uint16_SoA) {
 
   // Limpiar
   result_file.close();
-  const int result = std::remove(temp_filename.c_str());
+  //const int result = std::remove(temp_filename.c_str());
 }
 
 // Test para la función write_color_table con un tamaño de tabla uint32_t
@@ -172,7 +172,7 @@ TEST(WriteColorTableTests, LargeColorTable_Uint32_SoA) {
 
   // Limpiar
   result_file.close();
-  const int result = std::remove(temp_filename.c_str());
+  //const int result = std::remove(temp_filename.c_str());
 }
 
 
@@ -215,5 +215,5 @@ TEST(WriteColorTableTests, OversizedColorTable_Error_SoA) {
 
   // Limpiar
   result_file.close();
-  const int result = std::remove(temp_filename.c_str());
+  //const int result = std::remove(temp_filename.c_str());
 }

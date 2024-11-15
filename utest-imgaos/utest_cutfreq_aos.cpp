@@ -12,7 +12,7 @@
 // NOLINTBEGIN(readability-magic-numbers)
 
 /* contarFrecuencias unittests */
-TEST(ContarFrecuenciasTest, PíxelesConFrecuenciasCorrectas) {
+TEST(ContarFrecuenciasTest, PixelesConFrecuenciasCorrectas) {
   std::vector<Pixel> const pixel_data = {
     Pixel(255, 0, 0),  // Rojo
     Pixel(0, 255, 0),  // Verde
@@ -189,7 +189,7 @@ TEST(MenosFrecuentesTest, FrecuenciaDecreciente) {
 
 /* calcularDistancia unittests */
 // Test para verificar la distancia entre píxeles idénticos
-TEST(CalcularDistanciaTest, DistanciaCeroParaPíxelesIguales) {
+TEST(CalcularDistanciaTest, DistanciaCeroParaPixelesIguales) {
   // Crear dos píxeles idénticos
   Pixel const pixel1{255, 255, 255};  // Blanco
   Pixel const pixel2{255, 255, 255};  // Blanco
@@ -202,7 +202,7 @@ TEST(CalcularDistanciaTest, DistanciaCeroParaPíxelesIguales) {
 }
 
 // Test para verificar la distancia entre dos píxeles diferentes
-TEST(CalcularDistanciaTest, DistanciaEntrePíxelesDiferentes) {
+TEST(CalcularDistanciaTest, DistanciaEntrePixelesDiferentes) {
   // Crear dos píxeles diferentes
   Pixel const pixel1{255, 0, 0};    // Rojo
   Pixel const pixel2{0, 255, 0};    // Verde

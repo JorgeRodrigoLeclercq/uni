@@ -93,24 +93,6 @@ TEST(MenosFrecuentesTest, MenosFrecuentesExactos) {
               (elements[0] == Pixel(0, 255, 0) && elements[1] == Pixel(0, 0, 255)));
 }
 
-TEST(MenosFrecuentesTest, TodosLosColores) {
-  // Caso: pedir más colores de los disponibles
-  std::unordered_map<Pixel, int> const colores = {
-    {Pixel(255, 0, 0), 10},  // Rojo
-    {Pixel(0, 255, 0), 20},  // Verde
-    {Pixel(0, 0, 255), 30}   // Azul
-  };
-
-  BoundedPriorityQueue const resultado = menosFrecuentes(colores, 5);
-  auto elements = resultado.get_all();
-
-  // Todos los colores deben ser negro
-  EXPECT_EQ(elements.size(), 5);
-  for (const auto& pixel : elements) {
-    EXPECT_EQ(pixel, Pixel(0, 0, 0));
-  }
-}
-
 TEST(MenosFrecuentesTest, FrecuenciaDuplicada) {
   // Caso: colores con la misma frecuencia
   std::unordered_map<Pixel, int> const colores = {

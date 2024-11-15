@@ -27,10 +27,10 @@ TEST(CheckInfoAndCompressTest, HandlesTooManyArguments) {
   std::streambuf* original_cerr_buffer = std::cerr.rdbuf(err_output.rdbuf());
 
   // Test con 5 argumentos (más de los 4 permitidos)
-  EXPECT_EXIT(checkInfoAndCompress(5), testing::ExitedWithCode(-1), "Error: Invalid number of arguments: 4");
+  EXPECT_EXIT(checkInfoAndCompress(5), testing::ExitedWithCode(255), "Error: Invalid number of arguments: 4");
 
   // Test con 6 argumentos (más de los 4 permitidos)
-  EXPECT_EXIT(checkInfoAndCompress(6), testing::ExitedWithCode(-1), "Error: Invalid number of arguments: 5");
+  EXPECT_EXIT(checkInfoAndCompress(6), testing::ExitedWithCode(255), "Error: Invalid number of arguments: 5");
 
   // Restaurar el buffer original de std::cerr
   std::cerr.rdbuf(original_cerr_buffer);

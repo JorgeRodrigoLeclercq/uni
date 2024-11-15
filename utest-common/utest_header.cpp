@@ -32,6 +32,6 @@ TEST(GetHeaderTest, ReadsHeaderCorrectly) {
   EXPECT_EQ(header.max_color, 255);
 
   infile.close();
-  const int result = std::remove(filename.c_str());
-  if (result == 0){};
+  const int success = std::remove(filename.c_str());
+  EXPECT_EQ(success, 0);
 }

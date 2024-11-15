@@ -4,6 +4,7 @@
 #include "imgsoa/info.hpp"
 #include "imgsoa/maxlevel.hpp"
 #include "imgsoa/resize.hpp"
+#include "imgsoa/compress.hpp"
 
 #include <cstdlib>
 #include <fstream>
@@ -26,23 +27,24 @@ int main(int argc, const char *argv[]) {
   pixel_data.resize(static_cast<std::size_t>(pixel_count));
   bool is_16_bit = header.max_color > MAX_COLOR_VALUE8;  // determinar la longitud de cada pixel (2 bytes si max_color > 256; else: 1)
   get_pixels(infile, pixel_data, pixel_count, is_16_bit);  // rellenar el Structure of Arrays con los píxeles
-  if (args[3] == std::string("maxlevel")) {
+  if (args[3] == std::string("info")) {
+    checkInfoAndCompress(argc);
+    info(header, pixel_data);
+    write_info(outfile, header, pixel_data, is_16_bit);
+  } else if (args[3] == std::string("maxlevel")) {
     int const new_maxlevel = checkMaxLevel(args[4]);
     maxlevel(new_maxlevel, is_16_bit, pixel_data, header);
-  }
-  else if (args[3] == std::string("resize")) {
+  } else if (args[3] == std::string("resize")) {
     const ImageDimensions new_dimensions{.width=std::stoi(args[4]),.height=std::stoi(args[EXTRA_ARGS])};
     checkDimensions(new_dimensions);
     ReSize(header, pixel_data,new_dimensions , outfile);
-  }
-  else if (args[3] == std::string("cutfreq") && argc == EXTRA_ARGS){
+  } else if (args[3] == std::string("cutfreq") && argc == EXTRA_ARGS){
     int const n_colors = checkCutFreq(args, argc);
     cutfreq(pixel_data, n_colors);
-  }
-  else if (args[3] == std::string("compress")){
-    //write_cppm(outfile, header, pixel_data);
-  }
-  else {
+  } else if (args[3] == std::string("compress")){
+    compress(outfile, header, pixel_data);
+    checkInfoAndCompress(argc);
+  } else {
     std::cerr << "Error: Invalid command: " << args[3] << "\n";
     exit(-1);
   }

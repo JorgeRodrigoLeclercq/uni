@@ -1,201 +1,120 @@
 #include <gtest/gtest.h>
 #include <fstream>
-#include <sstream>
-#include <vector>
-#include <map>
-#include "imgaos/compress.hpp"
-#include "../common/pixel_structures.hpp"
+#include <cstdio>
+#include "../imgaos/compress.hpp"
+#include "../imgaos/info.hpp"
 
-// Test para la función de compresión con verificación de encabezado
-TEST(CompressTests, BasicCompressFunction) {
-  constexpr int MAX_8_BIT = 255;
-  ImageHeader header;
-  header.dimensions.width = 2;
-  header.dimensions.height = 2;
-  header.max_color = MAX_8_BIT;
-
-  std::vector<Pixel> const pixel_data = {
-    Pixel(255, 0, 0), Pixel(0, 255, 0),
-    Pixel(0, 0, 255), Pixel(255, 255, 255)
-  };
-
-  std::string const temp_filename = "temp_cppm_output.cppm";
-  std::ofstream cppm_outfile(temp_filename, std::ios::binary);
-  ASSERT_TRUE(cppm_outfile.is_open());
-
-  // Actuar: Comprimir y escribir en un archivo temporal
-  compress(cppm_outfile, header, pixel_data);
-  cppm_outfile.close();
-
-  // Assert: Verificar que el archivo comienza con "C6"
-  std::ifstream result_file(temp_filename, std::ios::binary);
-  ASSERT_TRUE(result_file.is_open());
-
-  // Leer los dos primeros bytes y verificar que coincidan con "C6"
-  std::array<char, 2> magic_number{};
-  result_file.read(magic_number.data(), 2);
-  ASSERT_EQ(magic_number[0], 'C');
-  ASSERT_EQ(magic_number[1], '6');
-
-  // Verificar que el archivo tenga contenido más allá del encabezado
-  result_file.seekg(0, std::ios::end);
-  auto file_size = result_file.tellg();
-  ASSERT_GT(file_size, 2); // Asegurarse de que el archivo tiene más que solo el encabezado
-
-  // Limpiar
-  result_file.close();
-  int const result = std::remove(temp_filename.c_str());
-  if (result == 0){}
-}
-
-
-// Test para la función write_color_table con tamaño de tabla uint8_t
-TEST(WriteColorTableTests, SmallColorTable_Uint8) {
-  // Usar un archivo temporal para probar la salida
-  std::string const temp_filename = "temp_output.cppm";
-  std::ofstream outfile(temp_filename, std::ios::binary);
-  ASSERT_TRUE(outfile.is_open());
-
-  // Inicializar los datos de píxeles y la tabla de colores con constructores explícitos de Pixel
-  std::vector<Pixel> const pixel_data = {
-    Pixel(255, 0, 0), Pixel(0, 255, 0)
-  };
-
-  std::map<Pixel, int> const color_table = {
-    {Pixel(255, 0, 0), 0},
-    {Pixel(0, 255, 0), 1}
-  };
-
-  // Llamar a la función con el flujo de archivo
-  write_color_table(outfile, pixel_data, color_table);
-
-  // Cerrar el archivo para completar el proceso de escritura
-  outfile.close();
-
-  // Leer el archivo para verificar su contenido
-  std::ifstream result_file(temp_filename, std::ios::binary);
-  ASSERT_TRUE(result_file.is_open());
-
-  // Verificar que el tamaño de la salida coincida con el tamaño esperado (1 byte por píxel para uint8_t)
-  std::string const output((std::istreambuf_iterator<char>(result_file)), std::istreambuf_iterator<char>());
-  ASSERT_EQ(output.size(), 2); // Se espera 1 byte por píxel
-
-  // Limpiar
-  result_file.close();
-  int const result = std::remove(temp_filename.c_str());
-  if (result == 0){}
-}
-
-// Test para la función write_color_table con tamaño de tabla uint16_t
-TEST(WriteColorTableTests, MediumColorTable_Uint16) {
-  // Usar un archivo temporal para la salida
-  std::string const temp_filename = "temp_output_medium.cppm";
-  std::ofstream outfile(temp_filename, std::ios::binary);
-  ASSERT_TRUE(outfile.is_open());
-
-  // Inicializar los datos de píxeles con constructores explícitos de Pixel
-  std::vector<Pixel> const pixel_data = {
-    Pixel(65535, 0, 0), Pixel(0, 65535, 0),
-    Pixel(0, 0, 65535), Pixel(65535, 65535, 65535)
-};
-
-  // Crear la tabla de colores con claves de Pixel y valores enteros
-  std::map<Pixel, int> color_table;
-  constexpr int THREE_HUNDRED = 300;
-  for (int i = 0; i < THREE_HUNDRED; ++i) {
-    color_table[Pixel(static_cast<uint16_t>(i), static_cast<uint16_t>(i), static_cast<uint16_t>(i))] = i;
+// Helper para leer contenido de un archivo
+namespace {
+  auto read_file(const char *path) -> std::string {
+    std::ifstream infile(path, std::ios::binary);
+    return {std::istreambuf_iterator<char>(infile), std::istreambuf_iterator<char>()};
   }
-
-  // Llamar a la función con el flujo de archivo
-  write_color_table(outfile, pixel_data, color_table);
-
-  // Cerrar el archivo para completar el proceso de escritura
-  outfile.close();
-
-  // Leer el archivo para verificar su contenido
-  std::ifstream result_file(temp_filename, std::ios::binary);
-  ASSERT_TRUE(result_file.is_open());
-
-  std::string const output((std::istreambuf_iterator<char>(result_file)), std::istreambuf_iterator<char>());
-
-  // Dado que estamos usando uint16_t (2 bytes por píxel), esperamos 8 bytes (4 píxeles * 2 bytes)
-  ASSERT_EQ(output.size(), 8);
-
-  // Limpiar
-  result_file.close();
-  const int result = std::remove(temp_filename.c_str());
-  if (result == 0){}
 }
 
-// Test para la función write_color_table con tamaño de tabla uint32_t
-TEST(WriteColorTableTests, LargeColorTable_Uint32) {
-  // Usar un archivo temporal para la salida
-  std::string const temp_filename = "temp_output_large.cppm";
-  std::ofstream outfile(temp_filename, std::ios::binary);
-  ASSERT_TRUE(outfile.is_open());
+// Prueba para write_cppm_header
+TEST(CompressTests, WriteCppmHeaderToFile) {
+    const auto *temp_file = "test_header.cppm";
+    std::ofstream outfile(temp_file, std::ios::binary);
 
-  // Inicializar los datos de píxeles con constructores explícitos de Pixel
-  std::vector<Pixel> const pixel_data = {
-    Pixel(255, 255, 0), Pixel(255, 0, 255)
-};
+    ImageHeader const header{
+      "P6", {.width = 640, .height = 480},
+       255
+    };
+    constexpr size_t color_table_size = 128;
 
-  std::map<Pixel, int> color_table;
-  constexpr uint32_t SEVENTY_THOUSAND = 70000;  // Mantén SEVENTY_THOUSAND como uint32_t
-  for (uint32_t i = 0; i < SEVENTY_THOUSAND; ++i) {
-    constexpr uint16_t TWO_FIFTY_SIX = 256;
-    // Convertir explícitamente 'i' a 'int'
-    color_table[Pixel(i % TWO_FIFTY_SIX, i % TWO_FIFTY_SIX, i % TWO_FIFTY_SIX)] = static_cast<int>(i);
-  }
+    write_cppm_header(outfile, header, color_table_size);
+    outfile.close();
 
-  // Llamar a la función con el flujo de archivo
-  write_color_table(outfile, pixel_data, color_table);
+    // Leer contenido del archivo y verificar
+    std::string const content = read_file(temp_file);
+    std::string const expected = "C6 640 480 255 128\n";
+    EXPECT_EQ(content, expected);
 
-  // Cerrar el archivo para completar el proceso de escritura
-  outfile.close();
-
-  // Leer el archivo para verificar su contenido
-  std::ifstream result_file(temp_filename, std::ios::binary);
-  ASSERT_TRUE(result_file.is_open());
-
-  std::string const output((std::istreambuf_iterator<char>(result_file)), std::istreambuf_iterator<char>());
-
-  // Dado que estamos usando uint32_t (4 bytes por píxel), esperamos 8 bytes (2 píxeles * 4 bytes)
-  ASSERT_EQ(output.size(), 8);
-
-  // Limpiar
-  result_file.close();
-  const int result = std::remove(temp_filename.c_str());
-  if (result == 0){}
+    const int success = std::remove(temp_file); // Eliminar archivo temporal
+    EXPECT_EQ(success, 0);
 }
 
+// Prueba para write_color_table
+TEST(CompressTests, WriteColorTableToFile) {
+    const auto *temp_file = "test_color_table.cppm";
+    std::ofstream outfile(temp_file, std::ios::binary);
 
-// Test para la función write_color_table con una tabla demasiado grande (caso de error)
-TEST(WriteColorTableTests, OversizedColorTable_Error) {
-  // Usar un archivo temporal para la salida
-  std::string const temp_filename = "temp_output_error.cppm";
-  std::ofstream outfile(temp_filename, std::ios::binary);
-  ASSERT_TRUE(outfile.is_open());
+    std::vector<Pixel> const unique_colors = {
+        Pixel(255, 0, 0),   // Rojo
+        Pixel(0, 255, 0),   // Verde
+        Pixel(0, 0, 255)    // Azul
+    };
 
-  // Inicializar los datos de píxeles con constructores explícitos de Pixel
-  std::vector<Pixel> const pixel_data = {
-    Pixel(255, 0, 0)
-};
+    constexpr size_t MAX_8_BIT = 255;
+    write_color_table(outfile, unique_colors, MAX_8_BIT);
+    outfile.close();
 
-  constexpr int HUNDRED = 100;
-  // Crear una tabla de colores demasiado grande simulada con claves de Pixel y valores enteros
-  std::map<Pixel, int> color_table;
-  // Cambiar el tipo de i a int
-  for (uint16_t i = 0; i <= HUNDRED; ++i) { // Límite simulado para la prueba
-    constexpr uint16_t TWO_FIFTY_SIX = 256;
-    color_table[Pixel(i % TWO_FIFTY_SIX, i % TWO_FIFTY_SIX, i % TWO_FIFTY_SIX)] = i;
-  }
+    // Leer contenido del archivo y verificar
+    std::string const content = read_file(temp_file);
+    std::string const expected = std::string("\xFF\x00\x00", 3) +  // Rojo
+                           std::string("\x00\xFF\x00", 3) +  // Verde
+                           std::string("\x00\x00\xFF", 3);   // Azul
+    EXPECT_EQ(content, expected);
 
-  // Esperar que la función write_color_table termine con código 1 debido a la tabla demasiado grande
-  ASSERT_EXIT(write_color_table(outfile, pixel_data, color_table),
-              ::testing::ExitedWithCode(1), "Error: Color table too large.");
+    const int success = std::remove(temp_file); // Eliminar archivo temporal
+    EXPECT_EQ(success, 0);
+}
 
-  // Limpiar
-  outfile.close();
-  const int result = std::remove(temp_filename.c_str());
-  if (result == 0){}
+// Prueba para write_compressed_pixel_data
+TEST(CompressTests, WriteCompressedPixelDataToFile) {
+    const auto *temp_file = "test_pixel_data.cppm";
+    std::ofstream outfile(temp_file, std::ios::binary);
+
+    std::map<Pixel, uint32_t> const color_table = {
+        {Pixel(255, 0, 0), 0},   // Rojo
+        {Pixel(0, 255, 0), 1},   // Verde
+        {Pixel(0, 0, 255), 2}    // Azul
+    };
+    std::vector<Pixel> const pixel_data = {
+        Pixel(255, 0, 0),   // Rojo
+        Pixel(0, 255, 0),   // Verde
+        Pixel(0, 0, 255),   // Azul
+        Pixel(255, 0, 0)    // Rojo
+    };
+
+    write_compressed_pixel_data(outfile, pixel_data, color_table, 1);
+    outfile.close();
+
+    // Leer contenido del archivo y verificar
+    std::string const content = read_file(temp_file);
+    std::string const expected = std::string("\x00\x01\x02\x00", 4); // Índices
+    EXPECT_EQ(content, expected);
+
+    const int success = std::remove(temp_file); // Eliminar archivo temporal
+    EXPECT_EQ(success, 0);
+}
+
+// Prueba para compress
+TEST(CompressTests, CompressToFile) {
+    const auto *temp_file = "test_compress.cppm";
+    std::ofstream outfile(temp_file, std::ios::binary);
+
+    ImageHeader const header{"P6", {.width=2, .height=2}, 255};
+    std::vector<Pixel> const pixel_data = {
+        Pixel(255, 0, 0),   // Rojo
+        Pixel(0, 255, 0),   // Verde
+        Pixel(0, 0, 255),   // Azul
+        Pixel(255, 0, 0)    // Rojo
+    };
+
+    compress(outfile, header, pixel_data);
+    outfile.close();
+
+    // Leer contenido del archivo y verificar
+    std::string const content = read_file(temp_file);
+    std::string const expected_header = "C6 2 2 255 3\n";
+    std::string const expected_colors = std::string("\xFF\x00\x00", 3) +  // Rojo
+                                   std::string("\x00\xFF\x00", 3) +  // Verde
+                                   std::string("\x00\x00\xFF", 3);   // Azul
+    auto const expected_data = std::string("\x00\x01\x02\x00", 4); // Índices
+    EXPECT_EQ(content, expected_header + expected_colors + expected_data);
+
+    const int success = std::remove(temp_file); // Eliminar archivo temporal
+    EXPECT_EQ(success, 0);
 }

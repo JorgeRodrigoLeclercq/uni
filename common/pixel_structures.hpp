@@ -57,6 +57,10 @@ struct SoA {
     g.resize(size);
     b.resize(size);
   }
+  // Comparar píxeles en una posición específica
+    bool is_equal(std::size_t i, std::size_t j) const {
+    return r[i] == r[j] && g[i] == g[j] && b[i] == b[j];
+  }
 };
 
 #endif //PIXEL_STRUCTURES_HPP

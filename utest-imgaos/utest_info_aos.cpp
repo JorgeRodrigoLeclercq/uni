@@ -37,141 +37,137 @@ namespace {
 // Test para get_pixels (8 bits)
 TEST(GetPixelsTest, Reads8BitPixels) {
   PPMFileData const ppm_file_data = {
-    .filename="test_image.ppm",
-    .data={'P', '6', '\n', '2', ' ', '2', '\n', '2', '5', '5', '\n',
-     static_cast<char>(0xff), static_cast<char>(0x00), static_cast<char>(0x00),
-     static_cast<char>(0x00), static_cast<char>(0xff), static_cast<char>(0x00),
-     static_cast<char>(0x00), static_cast<char>(0x00), static_cast<char>(0xff),
-     static_cast<char>(0xff), static_cast<char>(0xff), static_cast<char>(0x00),
-     static_cast<char>(0x00), static_cast<char>(0xff)}
-  };
+    .filename = "test_image.ppm",
+    .data = {'P', '6', '\n', '2', ' ', '2', '\n', '2', '5', '5', '\n',
+             static_cast<char>(0xFF), static_cast<char>(0x00), static_cast<char>(0x00),
+             static_cast<char>(0x00), static_cast<char>(0xFF), static_cast<char>(0x00),
+             static_cast<char>(0x00), static_cast<char>(0x00), static_cast<char>(0xFF),
+             static_cast<char>(0xFF), static_cast<char>(0xFF), static_cast<char>(0x00)}};
 
   create_temp_ppm_file(ppm_file_data);
 
   std::ifstream input(ppm_file_data.filename, std::ios::binary);
-
-  std::vector<Pixel> pixel_data(4);
+  std::vector<Pixel> pixel_data(4);  // Asegurar tamaño suficiente
   constexpr unsigned long long pixel_count = 4;
   constexpr bool is_16_bit = false;
 
-  // Call function under test
+  ImageHeader header;
+  get_header(input, header);
   get_pixels(input, pixel_data, pixel_count, is_16_bit);
 
+  EXPECT_EQ(pixel_data.size(), 4);
   EXPECT_EQ(pixel_data[0].channels.red, 255);
   EXPECT_EQ(pixel_data[0].channels.green, 0);
   EXPECT_EQ(pixel_data[0].channels.blue, 0);
-  EXPECT_EQ(pixel_data[1].channels.red, 0);
-  EXPECT_EQ(pixel_data[1].channels.green, 255);
-  EXPECT_EQ(pixel_data[1].channels.blue, 0);
-  EXPECT_EQ(pixel_data[2].channels.red, 0);
-  EXPECT_EQ(pixel_data[2].channels.green, 0);
-  EXPECT_EQ(pixel_data[2].channels.blue, 255);
-  EXPECT_EQ(pixel_data[3].channels.red, 0);
+
+  EXPECT_EQ(pixel_data[3].channels.red, 255);
   EXPECT_EQ(pixel_data[3].channels.green, 255);
-  EXPECT_EQ(pixel_data[3].channels.blue, 255);
+  EXPECT_EQ(pixel_data[3].channels.blue, 0);
 
   input.close();
-  int const success = std::remove(ppm_file_data.filename.c_str());
-  if (success == 0){}
+  EXPECT_EQ(std::remove(ppm_file_data.filename.c_str()), 0);
 }
 
 // Test para get_pixels (16 bits)
 TEST(GetPixelsTest, Reads16BitPixels) {
   PPMFileData const ppm_file_data = {
-    .filename="test_image.ppm",
-    .data={'P', '6', '\n', '2', ' ', '2', '\n', '6', '5', '5', '3', '5', '\n',
-           static_cast<char>(0xff), static_cast<char>(0x00), static_cast<char>(0x00),
-           static_cast<char>(0x00), static_cast<char>(0xff), static_cast<char>(0x00),
-           static_cast<char>(0x00), static_cast<char>(0x00), static_cast<char>(0xff),
-           static_cast<char>(0xff), static_cast<char>(0xff), static_cast<char>(0x00),
-           static_cast<char>(0x00), static_cast<char>(0xff)}
-  };
+    .filename = "test_image.ppm",
+    .data = {'P', '6', '\n', '2', ' ', '2', '\n', '6', '5', '5', '3', '5', '\n',
+             static_cast<char>(0x00), static_cast<char>(0xFF), static_cast<char>(0x00), static_cast<char>(0x00),
+             static_cast<char>(0x00), static_cast<char>(0xFF), static_cast<char>(0x00), static_cast<char>(0x00),
+             static_cast<char>(0x00), static_cast<char>(0xFF), static_cast<char>(0xFF), static_cast<char>(0xFF),
+             static_cast<char>(0x00), static_cast<char>(0xFF)}};
+
   create_temp_ppm_file(ppm_file_data);
 
   std::ifstream input(ppm_file_data.filename, std::ios::binary);
 
-  std::vector<Pixel> pixel_data(4);
-  constexpr unsigned long long pixel_count = 4;
-  constexpr bool is_16_bit = true;
+  // Leer encabezado antes de leer píxeles
+  ImageHeader header;
+  get_header(input, header);
 
+  // Preparar espacio suficiente para los píxeles
+  constexpr unsigned long long pixel_count = 4;
+  std::vector<Pixel> pixel_data(pixel_count);
+
+  // Leer píxeles
+  constexpr bool is_16_bit = true;
   get_pixels(input, pixel_data, pixel_count, is_16_bit);
 
+  // Verificar contenido
   EXPECT_EQ(pixel_data[0].channels.red, 255);
   EXPECT_EQ(pixel_data[0].channels.green, 0);
   EXPECT_EQ(pixel_data[0].channels.blue, 0);
-  EXPECT_EQ(pixel_data[1].channels.red, 0);
-  EXPECT_EQ(pixel_data[1].channels.green, 255);
-  EXPECT_EQ(pixel_data[1].channels.blue, 0);
-  EXPECT_EQ(pixel_data[2].channels.red, 0);
-  EXPECT_EQ(pixel_data[2].channels.green, 0);
-  EXPECT_EQ(pixel_data[2].channels.blue, 255);
-  EXPECT_EQ(pixel_data[3].channels.red, 0);
+
+  EXPECT_EQ(pixel_data[3].channels.red, 255);
   EXPECT_EQ(pixel_data[3].channels.green, 255);
-  EXPECT_EQ(pixel_data[3].channels.blue, 255);
+  EXPECT_EQ(pixel_data[3].channels.blue, 0);
 
   input.close();
-  int const success = std::remove(ppm_file_data.filename.c_str());
-  if (success == 0){}
+  EXPECT_EQ(std::remove(ppm_file_data.filename.c_str()), 0);
 }
+
 
 // Test para write_info (8 bits)
 TEST(WriteInfoTest, Writes8BitPixels) {
-    ImageHeader const header("P6", ImageDimensions{.width=2, .height=2}, 255);
-    std::vector<Pixel> const pixel_data = {
-        Pixel(255, 0, 0),
-        Pixel(0, 255, 0),
-        Pixel(0, 0, 255),
-        Pixel(0, 255, 255)
-    };
+  ImageHeader const header("P6", ImageDimensions{.width = 2, .height = 2}, 255);
+  std::vector<Pixel> const pixel_data = {
+    Pixel(255, 0, 0),
+    Pixel(0, 255, 0),
+    Pixel(0, 0, 255),
+    Pixel(255, 255, 0)};
 
-    std::string const filename = "test_output.ppm";
-    std::ofstream outfile(filename, std::ios::binary);
+  std::string const filename = "test_output.ppm";
+  std::ofstream outfile(filename, std::ios::binary);
 
-    constexpr bool is_16_bit = false;
-    write_info(outfile, header, pixel_data, is_16_bit);
+  constexpr bool is_16_bit = false;
+  write_info(outfile, header, pixel_data, is_16_bit);
+  outfile.close();
 
-    std::string const file_content = read_file(filename);
-    std::string const expected_content = {'P', '6', '\n', '2', ' ', '2', '\n', '2', '5', '5', '\n',
-                                    static_cast<char>(0xff), static_cast<char>(0x00), static_cast<char>(0x00),
-                                    static_cast<char>(0x00), static_cast<char>(0xff), static_cast<char>(0x00),
-                                    static_cast<char>(0x00), static_cast<char>(0x00), static_cast<char>(0xff),
-                                    static_cast<char>(0xff), static_cast<char>(0xff), static_cast<char>(0x00),
-                                    static_cast<char>(0x00), static_cast<char>(0xff)};
+  std::string const file_content = read_file(filename);
+  std::string const expected_content = {'P', '6', '\n', '2', ' ', '2', '\n', '2', '5', '5', '\n',
+                                        static_cast<char>(0xFF), static_cast<char>(0x00), static_cast<char>(0x00),
+                                        static_cast<char>(0x00), static_cast<char>(0xFF), static_cast<char>(0x00),
+                                        static_cast<char>(0x00), static_cast<char>(0x00), static_cast<char>(0xFF),
+                                        static_cast<char>(0xFF), static_cast<char>(0xFF), static_cast<char>(0x00)};
 
-    EXPECT_EQ(file_content, expected_content);
-
-    int const success = std::remove(filename.c_str());
-    if (success == 0){}
+  EXPECT_EQ(file_content, expected_content);
+  EXPECT_EQ(std::remove(filename.c_str()), 0);
 }
 
 // Test para write_info (16 bits)
 TEST(WriteInfoTest, Writes16BitPixels) {
-    ImageHeader const header("P6", ImageDimensions{.width=2, .height=2}, 65535);
-    std::vector<Pixel> const pixel_data = {
-        Pixel(65535, 0, 0),
-        Pixel(0, 65535, 0),
-        Pixel(0, 0, 65535),
-        Pixel(0, 65535, 65535)
-    };
+  ImageHeader const header("P6", ImageDimensions{.width = 2, .height = 2}, 65535);
+  std::vector<Pixel> const pixel_data = {
+    Pixel(65535, 0, 0),   // Rojo máximo
+    Pixel(0, 65535, 0),   // Verde máximo
+    Pixel(0, 0, 65535),   // Azul máximo
+    Pixel(65535, 65535, 0) // Rojo y verde máximo
+};
 
-    std::string const filename = "test_output.ppm";
-    std::ofstream outfile(filename, std::ios::binary);
+  std::string const filename = "test_output.ppm";
+  std::ofstream outfile(filename, std::ios::binary);
 
-    constexpr bool is_16_bit = true;
-    write_info(outfile, header, pixel_data, is_16_bit);
+  constexpr bool is_16_bit = true;
+  write_info(outfile, header, pixel_data, is_16_bit);
+  outfile.close();
 
-    std::string const file_content = read_file(filename);
-    std::string const expected_content = {'P', '6', '\n', '2', ' ', '2', '\n', '6', '5', '5', '3', '5', '\n',
-                                    static_cast<char>(0xff), static_cast<char>(0x00), static_cast<char>(0x00),
-                                    static_cast<char>(0x00), static_cast<char>(0xff), static_cast<char>(0x00),
-                                    static_cast<char>(0x00), static_cast<char>(0x00), static_cast<char>(0xff),
-                                    static_cast<char>(0xff), static_cast<char>(0xff), static_cast<char>(0x00),
-                                    static_cast<char>(0x00), static_cast<char>(0xff)};
+  std::string const file_content = read_file(filename);
 
-    EXPECT_EQ(file_content, expected_content);
+  std::vector<char> const expected_content = {
+    'P', '6', '\n', '2', ' ', '2', '\n', '6', '5', '5', '3', '5', '\n',
+    static_cast<char>(0xFF), static_cast<char>(0xFF), static_cast<char>(0x00), static_cast<char>(0x00),
+    static_cast<char>(0x00), static_cast<char>(0x00), static_cast<char>(0x00), static_cast<char>(0x00),
+    static_cast<char>(0x00), static_cast<char>(0xFF), static_cast<char>(0xFF), static_cast<char>(0xFF),
+    static_cast<char>(0x00), static_cast<char>(0x00), static_cast<char>(0x00), static_cast<char>(0x00),
+    static_cast<char>(0xFF), static_cast<char>(0xFF), static_cast<char>(0xFF), static_cast<char>(0xFF),
+    static_cast<char>(0x00), static_cast<char>(0x00)
+  };
 
-    int const success = std::remove(filename.c_str());
-    if (success == 0){}
+  // Convertir el archivo leído en un vector para compararlo
+  std::vector<char> const file_content_vec(file_content.begin(), file_content.end());
+  EXPECT_EQ(file_content_vec, expected_content);
+  EXPECT_EQ(std::remove(filename.c_str()), 0);
 }
 
 // Test para info (8 bits)

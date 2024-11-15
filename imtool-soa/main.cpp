@@ -34,7 +34,6 @@ int main(int argc, const char *argv[]) {
   } else if (args[3] == std::string("maxlevel")) {
     int const new_maxlevel = checkMaxLevel(args[4]);
     maxlevel(new_maxlevel, is_16_bit, pixel_data, header);
-    write_info(outfile, header, pixel_data, is_16_bit);  // escribimos la nueva información en el arhcivo de salida
   } else if (args[3] == std::string("resize")) {
     const ImageDimensions new_dimensions{.width=std::stoi(args[4]),.height=std::stoi(args[EXTRA_ARGS])};
     checkDimensions(new_dimensions);
@@ -42,13 +41,13 @@ int main(int argc, const char *argv[]) {
   } else if (args[3] == std::string("cutfreq") && argc == EXTRA_ARGS){
     int const n_colors = checkCutFreq(args, argc);
     cutfreq(pixel_data, n_colors);
-    write_info(outfile, header, pixel_data, is_16_bit);  // escribimos la nueva información en el arhcivo de salida
   } else if (args[3] == std::string("compress")){
-    checkInfoAndCompress(argc);
     compress(outfile, header, pixel_data);
+    checkInfoAndCompress(argc);
   } else {
     std::cerr << "Error: Invalid command: " << args[3] << "\n";
     exit(-1);
   }
+  write_info(outfile, header, pixel_data, is_16_bit);  // escribimos la nueva información en el arhcivo de salida
   return 0;
 };

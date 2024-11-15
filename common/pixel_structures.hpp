@@ -58,8 +58,8 @@ struct SoA {
     b.resize(size);
   }
   // Comparar píxeles en una posición específica
-    bool is_equal(std::size_t i, std::size_t j) const {
-    return r[i] == r[j] && g[i] == g[j] && b[i] == b[j];
+    [[nodiscard]]bool is_equal(std::size_t index, std::size_t jindex) const {
+    return r[index] == r[jindex] && g[index] == g[jindex] && b[index] == b[jindex];
   }
 };
 

@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "pthread.h": "c",
+        "auxiliar.h": "c",
+        "claves.h": "c",
+        "fcntl.h": "c",
+        "proxy_server.h": "c",
+        "stdio.h": "c",
+        "error.h": "c"
+    }
+}

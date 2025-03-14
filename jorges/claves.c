@@ -5,7 +5,7 @@
 #include "include/error.h"
 #include "include/mensaje.h"
 
-int destroy(){
+int destroy(void){
     struct peticion pc;     // Creamos mensaje petición
 
     // Inicializamos la estructura del mensaje
@@ -22,27 +22,26 @@ int set_value(int key, char *value1, int N_value2, double *V_value2, struct Coor
     struct peticion pc;     // Creamos mensaje petición
 
     // Inicializamos la estructura del mensaje
-    bzero(&pc, sizeof(struct peticion)) ;
+    bzero(&pc, sizeof(struct peticion));
 
     // Rellenamos campos
-    pc.operacion = 2 ;
+    pc.operacion = 2;
     pc.n = N_value2;
     pc.clave = key;
 
     // Comprobamos que la longitud de los arrays es la correcta
-    if(strlen(value1) > 256 || sizeof(V_value2) / sizeof(V_value2[0]) > 32) 
-    {   
+    if (strlen(value1) > 256 || sizeof(V_value2) / sizeof(V_value2[0]) > 32) {   
         return -1;
     }
 
     strncpy(pc.valor1, value1, sizeof(pc.valor1));
-    
-    if (N_value2 > 32){
+    if (N_value2 > 32) {
         memcpy(pc.valor2, V_value2, 32 * sizeof(double)); 
     } else {
         memcpy(pc.valor2, V_value2, N_value2 * sizeof(double)); 
     }
-
+    
+    // NUEVO: Asignamos el valor de value3
     pc.valor3 = value3;
 
     // Enviamos y recibimos respuesta
@@ -55,27 +54,27 @@ int get_value(int key, char *value1, int *N_value2, double *V_value2, struct Coo
     // Inicializamos la estructura del mensaje
     bzero(&pc, sizeof(struct peticion));
 
-    //Rellenamos campos
+    // Rellenamos campos
     pc.operacion = 3;
     pc.clave = key;
-    *N_value2 = pc.n;
-
-    // Comprobamos que la longitud de los arrays es la correcta
-    strncpy(value1, pc.valor1, sizeof(pc.valor1));
-    memcpy(V_value2, pc.valor2, *N_value2 * sizeof(double));
-
-    *value3 = pc.valor3;
 
     // Enviamos y recibimos respuesta
-    return envio_respuesta(&pc);
+    int ret = envio_respuesta(&pc);
+
+    // Copiamos los datos obtenidos de la respuesta
+    strncpy(value1, pc.valor1, sizeof(pc.valor1));
+    memcpy(V_value2, pc.valor2, pc.n * sizeof(double));
+    *N_value2 = pc.n;
+    *value3 = pc.valor3; // NUEVO: Copiamos la estructura Coord
+
+    return ret;
 }
 
-int modify_value(int key, char *value1, int N_value2, double *V_value2, struct Coord value3)
-{
+int modify_value(int key, char *value1, int N_value2, double *V_value2, struct Coord value3){
     struct peticion pc;     // Creamos mensaje petición
 
     // Inicializamos la estructura del mensaje
-    bzero(&pc, sizeof(struct peticion)) ;
+    bzero(&pc, sizeof(struct peticion));
 
     // Rellenamos campos
     pc.operacion = 4;
@@ -83,46 +82,46 @@ int modify_value(int key, char *value1, int N_value2, double *V_value2, struct C
     pc.clave = key;
 
     // Comprobamos que la longitud de los arrays es la correcta
-    if(strlen(value1) > 256 || sizeof(V_value2) / sizeof(V_value2[0]) > 32) return -1;
+    if (strlen(value1) > 256 || sizeof(V_value2) / sizeof(V_value2[0]) > 32)
+        return -1;
     
     strncpy(pc.valor1, value1, sizeof(pc.valor1));
-    if (N_value2 > 32){
+    if (N_value2 > 32) {
         memcpy(pc.valor2, V_value2, 32 * sizeof(double)); 
     } else {
         memcpy(pc.valor2, V_value2, N_value2 * sizeof(double)); 
     }
-
+    
+    // NUEVO: Asignamos el valor de value3
     pc.valor3 = value3;
 
     // Enviamos y recibimos respuesta
     return envio_respuesta(&pc);
 }
 
-int delete_key(int key)
-{
+int delete_key(int key){
     struct peticion pc;     // Creamos mensaje petición
 
     // Inicializamos la estructura del mensaje
-    bzero(&pc, sizeof(struct peticion)) ;
+    bzero(&pc, sizeof(struct peticion));
 
     // Rellenamos campos
-    pc.operacion = 5 ;
+    pc.operacion = 5;
     pc.clave = key;
 
     // Enviamos y recibimos respuesta
     return envio_respuesta(&pc);
 }
 
-int exist(int key)
-{
+int exist(int key){
     struct peticion pc;     // Creamos mensaje petición
 
     // Inicializamos la estructura del mensaje
-    bzero(&pc, sizeof(struct peticion)) ;
+    bzero(&pc, sizeof(struct peticion));
 
     // Rellenamos campos
     pc.clave = key;
-    pc.operacion = 6 ;
+    pc.operacion = 6;
 
     // Enviamos y recibimos respuesta
     return envio_respuesta(&pc);

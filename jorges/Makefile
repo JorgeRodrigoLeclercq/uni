@@ -1,22 +1,21 @@
-BIN_FILES  = servidor cliente
+BIN_FILES  = servidor-mq app-cliente
 
 CC = gcc
 
-CPPFLAGS = -I$(INSTALL_PATH)/include
+CPPFLAGS = -Iinclude
 
 # Warning flags -----------------------------------------------------------------
 PEDANTIC_PARANOID_FREAK =       -O0 -g -Wshadow -Wcast-align \
-				-Waggregate-return -Wmissing-prototypes -Wmissing-declarations \
-				-Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations \
-				-Wmissing-noreturn -Wredundant-decls -Wnested-externs \
-				-Wpointer-arith -Wwrite-strings -finline-functions
+                -Waggregate-return -Wmissing-prototypes -Wmissing-declarations \
+                -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations \
+                -Wmissing-noreturn -Wredundant-decls -Wnested-externs \
+                -Wpointer-arith -Wwrite-strings -finline-functions
 
-REASONABLY_CAREFUL_DUDE =	-Wall -Wextra -O0 -g3 -ggdb3
-NO_PRAYER_FOR_THE_WICKED =	-w -O3
+REASONABLY_CAREFUL_DUDE =    -Wall -Wextra -O0 -g3 -ggdb3
+NO_PRAYER_FOR_THE_WICKED =    -w -O3
 
-LDFLAGS = -L$(INSTALL_PATH)/lib/
+LDFLAGS = -Llib
 LDLIBS = -lpthread
-
 
 # Diff compilation options -----------------------------------------------------
 all: clean clean-queues
@@ -51,10 +50,10 @@ lib/libclaves.so: claves.o proxy.o error.o
 	mkdir -p lib/
 	$(CC) -shared -o $@ $^
 
-cliente: cliente.o lib/libclaves.so
-	$(CC) $(CPPFLAGS) $(LDFLAGS) -L./lib/ $^ $(LDLIBS) -lclaves -o $@
+app-cliente: app-cliente.o lib/libclaves.so
+	$(CC) $(CPPFLAGS) $(LDFLAGS) -Llib $^ $(LDLIBS) -lclaves -o $@
 
-servidor: servidor.o servicios_server.o error.o
+servidor-mq: servidor-mq.o servicios_server.o error.o
 	$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
 %.o: %.c
@@ -75,10 +74,10 @@ clean-queues:
 .PHONY : clean-queues
 
 # Run options ------------------------------------------------------------------
-run-servidor: all servidor 
-	./servidor&
+run-servidor: all servidor-mq 
+	./servidor-mq &
 .PHONY : run-servidor
 
-run-cliente: cliente
-	./cliente
+run-cliente: app-cliente
+	./app-cliente
 .PHONY : run-cliente

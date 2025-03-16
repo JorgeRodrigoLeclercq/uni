@@ -6,6 +6,10 @@
         "fcntl.h": "c",
         "proxy_server.h": "c",
         "stdio.h": "c",
-        "error.h": "c"
+        "error.h": "c",
+        "mensaje.h": "c",
+        "claves_servidor.h": "c",
+        "strings.h": "c",
+        "claves-proxy-mq.h": "c"
     }
 }

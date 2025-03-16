@@ -1,7 +1,7 @@
-#ifndef MENSAJE_H
-#define MENSAJE_H
+#ifndef MENSAJE_PROXY_MQ_H
+#define MENSAJE_PROXY_MQ_H
 
-#include "claves.h"
+#include "claves-proxy-mq.h"
 
 struct request {
     int key;
@@ -12,7 +12,7 @@ struct request {
     int operation;
     char client_queue[1024];    
 };
-
+ 
 struct response {
     char value1[256];
     int N_value2;

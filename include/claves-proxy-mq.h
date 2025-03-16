@@ -1,22 +1,11 @@
-#ifndef CLAVES_H
-#define CLAVES_H
+#ifndef CLAVES_PROXY_MQ_H
+#define CLAVES_PROXY_MQ_H
 
 
 struct Coord {
    int x ;
    int y ;
 } ;
-
-struct Node { 
-   int key;
-   char value1[256];
-   int N_value2;
-   double value2[32];
-   struct Coord value3;
-   struct Node *next;
-};
-
-typedef struct Node *List;
 
 
 /**
@@ -113,12 +102,5 @@ int delete_key(int key);
  * @retval -1 en caso de error.
  */
 int exist(int key);
-
-struct Node* search_node(int key);
-int add_node(struct Node *new_node);
-
-// Debugg
-int printList(List l); 
-void printNode(struct Node *node); 
 
 #endif

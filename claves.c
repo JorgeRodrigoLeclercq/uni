@@ -1,100 +1,151 @@
 #include "include/claves.h"
-#include "include/mensaje.h"
 
-#include <stdio.h>
+#include <stdio.h> 
+#include <stdlib.h>
 #include <string.h>
 
+List tuples = NULL;
+
 int destroy() {
-    struct request req;     
+    if (tuples == NULL) return 0;      
+    
+    struct Node *next;
+    
+    while (tuples != NULL) {
+        next = tuples->next;
+        free(tuples);
+        tuples = next;
+    }
+    
+    tuples = NULL;
 
-    bzero(&req, sizeof(struct request));
-
-    req.operation = 1;
-
-    return send_request(&req);
+    return 0;
 }
 
 int set_value(int key, char *value1, int N_value2, double *V_value2, struct Coord value3) {
-    if (strlen(value1) > 255 || N_value2 > 32) return -1;
+    if (exist(key) == 1) return -1;
 
-    struct request req;     
+    if (N_value2 < 1 || N_value2 > 32) return -1;
 
-    bzero(&req, sizeof(struct request));
+    struct Node *new_node = (struct Node *)malloc(sizeof(struct Node));
+    if (new_node == NULL) return -1;
 
-    req.key = key;
+    new_node->key = key;
+    strncpy(new_node->value1, value1, sizeof(new_node->value1));
 
-    strncpy(req.value1, value1, sizeof(req.value1));
-    
-    req.N_value2 = N_value2;
-    memcpy(req.value2, V_value2, N_value2 * sizeof(double)); 
+    new_node->N_value2 = N_value2;
+    memcpy(new_node->value2, V_value2, N_value2 * sizeof(double));
 
-    req.value3 = value3;
+    new_node->value3 = value3;
+    new_node->next = NULL;
 
-    req.operation = 2;
-
-    return send_request(&req);
+    return add_node(new_node);
 }
 
 int get_value(int key, char *value1, int *N_value2, double *V_value2, struct Coord *value3) {
-    struct request req;     
+    if (tuples == NULL) return -1;     
 
-    bzero(&req, sizeof(struct request));
+    struct Node *node = search_node(key);
+    if (node != NULL) { 
+        strncpy(value1, node->value1, sizeof(node->value1));
 
-    req.key = key;
+        *N_value2 = node->N_value2;
+        memcpy(V_value2, node->value2, node->N_value2 * sizeof(double));
 
-    strncpy(value1, req.value1, sizeof(req.value1));
+        *value3 = node->value3;
+        return 0;
+    }
 
-    *N_value2 = req.N_value2;
-    memcpy(V_value2, req.value2, *N_value2 * sizeof(double));
-
-    *value3 = req.value3;
-
-    req.operation = 3;
-
-    return send_request(&req);
+    return -1;      
 }
 
 int modify_value(int key, char *value1, int N_value2, double *V_value2, struct Coord value3) {
-    if (strlen(value1) > 255 || N_value2 > 32) return -1;
+    if (N_value2 < 1 || N_value2 > 32) return -1;
 
-    struct request req;     
+    struct Node *node = search_node(key);
+    if (node != NULL) {
+        memset(node->value1, 0, sizeof(node->value1));
+        memset(node->value2, 0, N_value2 * sizeof(double));
+        
+        strncpy(node->value1, value1, sizeof(node->value1));
 
-    bzero(&req, sizeof(struct request));
+        node->N_value2 = N_value2;
+        memcpy(node->value2, V_value2, N_value2 * sizeof(double));   
 
-    req.key = key;
+        node->value3 = value3;
 
-    strncpy(req.value1, value1, sizeof(req.value1));
-    
-    req.N_value2 = N_value2;
-    memcpy(req.value2, V_value2, N_value2 * sizeof(double)); 
+        return 0; 
+    }
 
-    req.value3 = value3;
-
-    req.operation = 4;
-
-    return send_request(&req);
-}
+    return -1;
+} 
 
 int delete_key(int key) {
-    struct request req;     
+    if (tuples == NULL) return -1;
 
-    bzero(&req, sizeof(struct request));
+    struct Node *node = search_node(key);
+    if (node == NULL) return -1;
 
-    req.key = key;
+    if (tuples == node) {
+        tuples = tuples->next;
+        free(node);
+        return 0;
+    }
+    
+    struct Node *prev = tuples;
+    while (prev->next != NULL && prev->next != node)
+        prev = prev->next;
 
-    req.operation = 5;
+    if (prev->next == NULL) return -1; 
 
-    return send_request(&req);
+    prev->next = node->next;
+    free(node);
+    return 0;
 }
 
 int exist(int key) {
-    struct request req;     
+    return (search_node(key) != NULL) ? 1 : 0;
+}
 
-    bzero(&req, sizeof(struct request));
+struct Node* search_node(int key) {
+    struct Node *aux = tuples; 
+    while (aux != NULL) {
+        if (aux->key == key) {  
+            return aux;
+        }
+        aux = aux->next;
+    }
+    return NULL;  
+}
 
-    req.key = key;
+int add_node(struct Node *new_node) {
+    if (tuples == NULL) {  
+        tuples = new_node;  
+    } else {
+        new_node->next = tuples;    
+        tuples = new_node;  
+    }
+    return 0;
+}
 
-    req.operation = 6;
+int printList(List l){
+    struct Node *aux = l;
 
-    return send_request(&req);
+    while(aux != NULL)
+    {
+        printNode(aux);	
+        aux = aux->next;
+    }
+    return 0;
+}
+
+void printNode(struct Node *node) {
+    printf("nodeKey: %d \n", node->key);
+    printf("v1: %s\n", node->value1);
+    printf("N_value2: %d\n", node->N_value2);
+    printf("v2-lista:\n");
+    for (int i = 0; i < node->N_value2; i++)
+    {
+        printf("\t· %lf\n", node->value2[i]);
+    }
 }

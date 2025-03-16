@@ -1,5 +1,4 @@
 #include "include/mensaje.h"
-#include "include/claves_servidor.h"
 
 #include <stdio.h>
 #include <mqueue.h>
@@ -9,8 +8,6 @@
 pthread_mutex_t m_req, m_tuples;
 pthread_cond_t cond_req;
 int req_flag = 0;      
-
-List tuples;
 
 int handle_request(struct request *r) {
     struct request req;
@@ -36,14 +33,14 @@ int handle_request(struct request *r) {
     switch (req.operation) {
         case 1: 
             pthread_mutex_lock(&m_tuples);
-            res.status = init_server(&tuples);  
+            res.status = destroy();  
             pthread_mutex_unlock(&m_tuples);
 
             break;     
 
         case 2: 
             pthread_mutex_lock(&m_tuples);
-            res.status = set_value_server(&tuples, req.key, req.value1, req.N_value2, req.value2, req.value3);
+            res.status = set_value(req.key, req.value1, req.N_value2, req.value2, req.value3);
             pthread_mutex_unlock(&m_tuples);
             fflush(stdout);
 
@@ -51,7 +48,7 @@ int handle_request(struct request *r) {
 
         case 3: 
             pthread_mutex_lock(&m_tuples);
-            res.status = get_value_server(&tuples, req.key, req.value1, &req.N_value2, req.value2, req.value3); 
+            res.status = get_value(req.key, req.value1, &req.N_value2, req.value2, &req.value3); 
             pthread_mutex_unlock(&m_tuples);
 
             strcpy(res.value1, req.value1);
@@ -65,20 +62,20 @@ int handle_request(struct request *r) {
 
         case 4: 
             pthread_mutex_lock(&m_tuples);
-            res.status = modify_value_server(&tuples, req.key, req.value1, req.N_value2, req.value2, req.value3);
+            res.status = modify_value(req.key, req.value1, req.N_value2, req.value2, req.value3);
             pthread_mutex_unlock(&m_tuples);
             
             break;
         
         case 5: 
             pthread_mutex_lock(&m_tuples);
-            res.status = delete_key_server(&tuples, req.key);
+            res.status = delete_key(req.key);
             pthread_mutex_unlock(&m_tuples);
             
             break;
         case 6: 
             pthread_mutex_lock(&m_tuples);
-            res.status = exist_server(&tuples, req.key);
+            res.status = exist(req.key);
             pthread_mutex_unlock(&m_tuples);
 
             break;

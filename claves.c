@@ -3,6 +3,7 @@
 #include <stdio.h> 
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 List tuples = NULL;
 
@@ -126,26 +127,4 @@ int add_node(struct Node *new_node) {
         tuples = new_node;  
     }
     return 0;
-}
-
-int printList(List l){
-    struct Node *aux = l;
-
-    while(aux != NULL)
-    {
-        printNode(aux);	
-        aux = aux->next;
-    }
-    return 0;
-}
-
-void printNode(struct Node *node) {
-    printf("nodeKey: %d \n", node->key);
-    printf("v1: %s\n", node->value1);
-    printf("N_value2: %d\n", node->N_value2);
-    printf("v2-lista:\n");
-    for (int i = 0; i < node->N_value2; i++)
-    {
-        printf("\t· %lf\n", node->value2[i]);
-    }
 }

@@ -117,8 +117,4 @@ int exist(int key);
 struct Node* search_node(int key);
 int add_node(struct Node *new_node);
 
-// Debugg
-int printList(List l); 
-void printNode(struct Node *node); 
-
 #endif

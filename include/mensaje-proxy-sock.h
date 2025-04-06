@@ -1,7 +1,7 @@
 #ifndef MENSAJE_PROXY_MQ_H
 #define MENSAJE_PROXY_MQ_H
 
-#include "claves-proxy-mq.h"
+#include "claves-proxy-sock.h"
 
 struct request {
     int key;
@@ -21,6 +21,12 @@ struct response {
     int status;
 };
 
-int send_request(struct request* req);
+int send_request(struct request *req);
+
+int send_message(int socket, char *buffer, int len);
+
+int receive_message(int socket, char *buffer, int len);
+
+ssize_t read_line(int fd, void *buffer, size_t n);
 
 #endif // MENSAJE_H

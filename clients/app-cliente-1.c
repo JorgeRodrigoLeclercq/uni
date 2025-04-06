@@ -1,6 +1,5 @@
-#include "../include/mensaje-proxy-sock.h"
+#include "../include/claves-proxy-sock.h"
 #include "../include/error.h"
-#include <stdio.h>
 
 int test_complete_1() {
     if (destroy()) {    
@@ -8,8 +7,6 @@ int test_complete_1() {
         return -1;
     }
     
-    printf("set\n");
-    fflush(stdout);
     char value1_test1[256] = "Hello, World! 1";
     double value2_test1[32] = {0, 1, 2, 3, 4};
     struct Coord value3_test1 = {0, 0};
@@ -18,8 +15,6 @@ int test_complete_1() {
         return -1;
     }
     
-    printf("finish set\n");
-    fflush(stdout);
     char value1_test2[256] = "Hello, World! 2";
     double value2_test2[32] = {0, 1, 2};
     struct Coord value3_test2 = {1, 1};
@@ -78,8 +73,8 @@ int test_complete_1() {
 }
 
 int main() {
-    printf("main\n");
-    fflush(stdout);
+    
+    
     if(test_complete_1()) return -1;
     return 0;
 }

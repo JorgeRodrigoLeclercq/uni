@@ -40,9 +40,6 @@ int set_value(int key, char *value1, int N_value2, double *V_value2, struct Coor
 
     req.operation = 2;
 
-    printf("set_value\n");
-    fflush(stdout);
-
     return send_request(&req);
 }
 
@@ -52,6 +49,9 @@ int get_value(int key, char *value1, int *N_value2, double *V_value2, struct Coo
     bzero(&req, sizeof(struct request));
 
     req.key = key;
+    req.operation = 3;
+
+    send_request(&req);
 
     strncpy(value1, req.value1, sizeof(req.value1));
 
@@ -60,9 +60,7 @@ int get_value(int key, char *value1, int *N_value2, double *V_value2, struct Coo
 
     *value3 = req.value3;
 
-    req.operation = 3;
-
-    return send_request(&req);
+    return 0;
 }
 
 int modify_value(int key, char *value1, int N_value2, double *V_value2, struct Coord value3) {
@@ -151,34 +149,22 @@ int send_request(struct request *req) {
     int value3_x = htonl(req->value3.x);
     int value3_y = htonl(req->value3.y);
 
-    printf("switch op\n");
-    fflush(stdout);
-
     switch (req->operation) {
         case 1: 
             break;
 
-        case 2: 
-            printf("1\n");
-            fflush(stdout);
-
+        case 2:
             err = send_message(fd_server, (char *)&key, sizeof(int));
             if (err < 0) {
                 close(fd_server);
                 return -2;
             }
-            
-            printf("2\n");
-            fflush(stdout);
-
+      
             err = send_message(fd_server, req->value1, strlen(req->value1)+1);
             if (err < 0) {
                 close(fd_server);
                 return -2;
             }
-
-            printf("3\n");
-            fflush(stdout);
 
             err = send_message(fd_server, (char *)&N_value2, sizeof(int));
             if (err < 0) {
@@ -189,9 +175,7 @@ int send_request(struct request *req) {
             for (int i = 0; i < req->N_value2; i++) {
                 value2[i] = htobe64(req->value2[i]);
             }
-            
-            printf("4\n");
-            fflush(stdout);
+      
 			for (int i = 0; i < req->N_value2; i++) {
                 err = send_message(fd_server, (char *)&value2[i], sizeof(double));
 				if (err < 0) {
@@ -199,17 +183,13 @@ int send_request(struct request *req) {
 					return -2;
 				}
             }
-
-            printf("5\n");
-            fflush(stdout);
+            
             err = send_message(fd_server, (char *)&value3_x, sizeof(int));
             if (err < 0) {
                 close(fd_server);
                 return -2;
             }
-
-            printf("6\n");
-            fflush(stdout);
+            
             err = send_message(fd_server, (char *)&value3_y, sizeof(int));
             if (err < 0) {
                 close(fd_server);
@@ -225,13 +205,11 @@ int send_request(struct request *req) {
                 return -2;
             }
 
-             
             ssize_t bytes_leidos = read_line(fd_server, req->value1, 256);
             if (bytes_leidos <= 0) {
                 close(fd_server);
                 return -2;
             }
-        
             
             int received_N_value2;
             err = receive_message(fd_server, (char *)&received_N_value2, sizeof(int));
@@ -251,21 +229,21 @@ int send_request(struct request *req) {
                 }
                 req->value2[i] = be64toh(req->value2[i]);
             }
-
+     
             int received_value3_x;
             err = receive_message(fd_server, (char *)&received_value3_x, sizeof(int));
             if (err < 0) {
                 close(fd_server);
                 return -2;
             }
-
+            
             int received_value3_y;
             err = receive_message(fd_server, (char *)&received_value3_y, sizeof(int));
             if (err < 0) {
                 close(fd_server);
                 return -2;
             }
-
+            
             break;
 
         case 4: 
@@ -334,8 +312,6 @@ int send_request(struct request *req) {
 
     int status;
 
-    printf("7\n");
-    fflush(stdout);
     err = receive_message(fd_server, (char *)&status, sizeof(int));
     if (err < 0) {
         close(fd_server);
@@ -345,9 +321,7 @@ int send_request(struct request *req) {
 
     err = close(fd_server);
     if (err < 0) return -2;
-
-    printf("8\n");
-    fflush(stdout);
+    
     return status;
 }
 
@@ -370,14 +344,11 @@ int receive_message(int socket, char *buffer, int len) {
     int r;
     int l = len;
         
-    do {	
-        printf("reading bytes...\n");
+    do {
         r = read(socket, buffer, l);
-        printf("number of bytes read: %d\n", r);
         l = l -r ;
-        printf("number of bytes left: %d\n", l);
-        buffer = buffer + r;
-        printf("buffer = %s\n", buffer);
+                //
+buffer = buffer + r;
     } while ((l>0) && (r>=0));
     
     if (r < 0) return -2;   
@@ -414,7 +385,7 @@ size_t read_line(int fd, void *buffer, size_t N_value2) {
             else break;
 
         } else {			
-            if (ch == '\n' || ch == '0') break;
+            if (ch == '\n' || ch == '\0') break;
     
             if (total_bytes_read < N_value2 - 1) {	
                 ++total_bytes_read;

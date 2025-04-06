@@ -45,23 +45,19 @@ int handle_request(int *socket) {
             break;     
 
         case 2: 
-            printf("1\n");
-            fflush(stdout);
             err = receive_message(fd, (char *)&req.key, sizeof(int));
             if (err < 0) {
                 close(fd);
                 return -2;
             }
             req.key = ntohl(req.key); 
-            printf("2\n");
-            fflush(stdout);
+            
             size_t total_bytes_read = read_line(fd, req.value1, 256);
             if (total_bytes_read <= 0) {
                 close(fd);
                 return -2;
             }
-            printf("3\n");
-            fflush(stdout);
+            
             err = receive_message(fd, (char *)&req.N_value2, sizeof(int));
             if (err < 0) {
                 close(fd);
@@ -69,8 +65,6 @@ int handle_request(int *socket) {
             }
             req.N_value2 = ntohl(req.N_value2); 
             
-            printf("4\n");
-            fflush(stdout);
             for (int i = 0; i < req.N_value2; i++) {
                 err = receive_message(fd, (char *)&req.value2[i], sizeof(double));
                 if (err < 0) {
@@ -79,29 +73,25 @@ int handle_request(int *socket) {
                 }
                 req.value2[i] = be64toh(req.value2[i]);
             }
-            printf("5\n");
-            fflush(stdout);
+            
             err = receive_message(fd, (char *)&req.value3.x, sizeof(int));
             if (err < 0) {
                 close(fd);
                 return -2;
             }
             req.value3.x = ntohl(req.value3.x); 
-            printf("6\n");
-            fflush(stdout);
+            
             err = receive_message(fd, (char *)&req.value3.y, sizeof(int));
             if (err < 0) {
                 close(fd);
                 return -2;
             }
             req.value3.y = ntohl(req.value3.y);
-            printf("7\n");
-            fflush(stdout);
+            
             pthread_mutex_lock(&m_tuples);
             res.status = set_value(req.key, req.value1, req.N_value2, req.value2, req.value3);
             pthread_mutex_unlock(&m_tuples);
-            printf("8\n");
-            fflush(stdout);
+            
             break; 
         
         case 3: 
@@ -123,6 +113,7 @@ int handle_request(int *socket) {
 			}
             
             int N_value2 = htonl(req.N_value2); 
+            
             err = send_message(fd, (char *)&N_value2, sizeof(int));
             if (err < 0) {
                 close(fd);
@@ -142,14 +133,14 @@ int handle_request(int *socket) {
             } 
             
             req.value3.x = ntohl(req.value3.x);
-            err = send_message(fd, (char *)req.value3.x, sizeof(int));
+            err = send_message(fd, (char *)&req.value3.x, sizeof(int));
 			if (err < 0) {
                 close(fd);
 				return -2;
 			}
 
             req.value3.y = ntohl(req.value3.y);
-            err = send_message(fd, (char *)req.value3.y, sizeof(int));
+            err = send_message(fd, (char *)&req.value3.y, sizeof(int));
 			if (err < 0) {
                 close(fd);
 				return -2;
@@ -208,7 +199,6 @@ int handle_request(int *socket) {
             break;
         
         case 5: 
-            
             err = receive_message(fd, (char *)&req.key, sizeof(int));
             if (err < 0) {
                 close(fd);
@@ -222,7 +212,6 @@ int handle_request(int *socket) {
             break ;
 
         case 6: 
-            
             err = receive_message(fd, (char *)&req.key, sizeof(int));
             if (err < 0) {
                 close(fd);
@@ -237,15 +226,13 @@ int handle_request(int *socket) {
     }
     
     int status = htonl(res.status);
-    printf("9\n");
-    fflush(stdout);
+    
     err = send_message(fd, (char *)&status, sizeof(int));
     if (err < 0) {
         close(fd);
         return -2;
     }
-    printf("10\n");
-    fflush(stdout);
+    
     err = close(fd);
     if (err < 0) -2;
 
@@ -358,7 +345,7 @@ size_t read_line(int fd, void *buffer, size_t n) {
             else break;
 
         } else {			
-            if (ch == '\n' || ch == '0') break;
+            if (ch == '\n' || ch == '\0') break;
     
             if (total_bytes_read < n - 1) {	
                 ++total_bytes_read;

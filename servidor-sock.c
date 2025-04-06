@@ -42,6 +42,7 @@ int handle_request(int *socket) {
             pthread_mutex_lock(&m_tuples);
             res.status = destroy();  
             pthread_mutex_unlock(&m_tuples);
+            
             break;     
 
         case 2: 
@@ -132,15 +133,15 @@ int handle_request(int *socket) {
                 }
             } 
             
-            req.value3.x = ntohl(req.value3.x);
-            err = send_message(fd, (char *)&req.value3.x, sizeof(int));
+            int value3_x = htonl(req.value3.x);
+            err = send_message(fd, (char *)&value3_x, sizeof(int));
 			if (err < 0) {
                 close(fd);
 				return -2;
 			}
 
-            req.value3.y = ntohl(req.value3.y);
-            err = send_message(fd, (char *)&req.value3.y, sizeof(int));
+            int value3_y = htonl(req.value3.y);
+            err = send_message(fd, (char *)&value3_y, sizeof(int));
 			if (err < 0) {
                 close(fd);
 				return -2;
@@ -209,7 +210,7 @@ int handle_request(int *socket) {
             pthread_mutex_lock(&m_tuples);
             res.status = delete_key(req.key);
             pthread_mutex_unlock(&m_tuples);
-            break ;
+            break;
 
         case 6: 
             err = receive_message(fd, (char *)&req.key, sizeof(int));
@@ -222,7 +223,7 @@ int handle_request(int *socket) {
             pthread_mutex_lock(&m_tuples);
             res.status = exist(req.key);
             pthread_mutex_unlock(&m_tuples);
-            break ;
+            break;
     }
     
     int status = htonl(res.status);
@@ -313,7 +314,7 @@ int receive_message(int socket, char *buffer, int len) {
     
     if (r < 0) return -2;   
     
-    return(0);	
+    return 0;	
 }
 
 size_t read_line(int fd, void *buffer, size_t n) {
@@ -342,7 +343,7 @@ size_t read_line(int fd, void *buffer, size_t n) {
         } else if (bytes_read == 0) {	
             if (total_bytes_read == 0) return 0;
 
-            else break;
+            break;
 
         } else {			
             if (ch == '\n' || ch == '\0') break;

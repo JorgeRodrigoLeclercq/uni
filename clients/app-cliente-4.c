@@ -2,7 +2,7 @@
 #include "../include/error.h"
 
 int test_get() {
-    char value1_set[256] = "H";
+    char value1_set[256] = " ";
     double value2_set[32] = {0, 0};
     struct Coord value3_set = {0, 0};
     if (set_value(10, value1_set, 2, value2_set, value3_set)) {

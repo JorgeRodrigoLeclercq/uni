@@ -90,7 +90,6 @@ int delete_key(int key) {
     bzero(&req, sizeof(struct request));
 
     req.key = key;
-
     req.operation = 5;
 
     return send_request(&req);
@@ -102,7 +101,6 @@ int exist(int key) {
     bzero(&req, sizeof(struct request));
 
     req.key = key;
-
     req.operation = 6;
 
     return send_request(&req);
@@ -236,14 +234,16 @@ int send_request(struct request *req) {
                 close(fd_server);
                 return -2;
             }
-            
+            req->value3.x = ntohl(received_value3_x);
+
             int received_value3_y;
             err = receive_message(fd_server, (char *)&received_value3_y, sizeof(int));
             if (err < 0) {
                 close(fd_server);
                 return -2;
             }
-            
+            req->value3.y = ntohl(received_value3_y);
+
             break;
 
         case 4: 
@@ -347,8 +347,7 @@ int receive_message(int socket, char *buffer, int len) {
     do {
         r = read(socket, buffer, l);
         l = l -r ;
-                //
-buffer = buffer + r;
+        buffer = buffer + r;
     } while ((l>0) && (r>=0));
     
     if (r < 0) return -2;   
@@ -382,7 +381,7 @@ size_t read_line(int fd, void *buffer, size_t N_value2) {
         } else if (bytes_read == 0) {	
             if (total_bytes_read == 0) return 0;
 
-            else break;
+            break;
 
         } else {			
             if (ch == '\n' || ch == '\0') break;

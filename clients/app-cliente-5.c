@@ -13,7 +13,7 @@ int test_modify(){
     char value1_modify[256] = "Hello, World! 12";
     double value2_modify[32] = {5, 5, 5, 5, 5};
     struct Coord value3_modify = {8, 8};
-    if(modify_value(11, value1_modify, 1, value2_modify, value3_modify)) {
+    if(modify_value(11, value1_modify, 5, value2_modify, value3_modify)) {
         print_error("modify_value()");
         return -1;
     }

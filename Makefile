@@ -45,17 +45,17 @@ pedantic : $(BIN_FILES)
 claves.o: claves.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -fPIC -c $<
 
-proxy-mq.o: proxy-mq.c
+proxy-sock.o: proxy-sock.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -fPIC -c $<
 
 error.o: error.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -fPIC -c $<
 
-lib/libclaves.so: proxy-mq.o error.o 
+lib/libclaves.so: proxy-sock.o error.o 
 	mkdir -p lib/
 	$(CC) -shared -o $@ $^
 
-servidor: servidor-mq.o claves.o
+servidor: servidor-sock.o claves.o
 	$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
 clients/app-cliente-%: clients/app-cliente-%.o lib/libclaves.so
@@ -76,10 +76,14 @@ clean:
 .PHONY : clean
 
 # Ejecución ------------------------------------------------------------------
+SERVER_PORT=1917
+CLIENT_IP=127.0.0.1
+CLIENT_PORT=1917
+
 run-server: all servidor 
-	./servidor&
+	./servidor $(SERVER_PORT) &
 .PHONY : run-server
 
 run-client-%: clients/app-cliente-%
-	./$<
+	env IP_TUPLAS=$(CLIENT_IP) PORT_TUPLAS=$(CLIENT_PORT) ./$<
 .PHONY : run-client-%

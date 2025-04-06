@@ -11,6 +11,8 @@
         "claves_servidor.h": "c",
         "strings.h": "c",
         "claves-proxy-mq.h": "c",
-        "mensaje-proxy-sock.h": "c"
+        "mensaje-proxy-sock.h": "c",
+        "claves-proxy-sock.h": "c",
+        "inet.h": "c"
     }
 }

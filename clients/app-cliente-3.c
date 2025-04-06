@@ -1,4 +1,4 @@
-#include "../include/claves-proxy-mq.h"
+#include "../include/claves-proxy-sock.h"
 #include "../include/error.h"
 
 int test_set() {

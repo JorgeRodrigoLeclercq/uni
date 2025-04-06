@@ -40,6 +40,9 @@ int set_value(int key, char *value1, int N_value2, double *V_value2, struct Coor
 
     req.operation = 2;
 
+    printf("set_value\n");
+    fflush(stdout);
+
     return send_request(&req);
 }
 
@@ -148,22 +151,34 @@ int send_request(struct request *req) {
     int value3_x = htonl(req->value3.x);
     int value3_y = htonl(req->value3.y);
 
+    printf("switch op\n");
+    fflush(stdout);
+
     switch (req->operation) {
         case 1: 
             break;
 
         case 2: 
+            printf("1\n");
+            fflush(stdout);
+
             err = send_message(fd_server, (char *)&key, sizeof(int));
             if (err < 0) {
                 close(fd_server);
                 return -2;
             }
             
+            printf("2\n");
+            fflush(stdout);
+
             err = send_message(fd_server, req->value1, strlen(req->value1)+1);
             if (err < 0) {
                 close(fd_server);
                 return -2;
             }
+
+            printf("3\n");
+            fflush(stdout);
 
             err = send_message(fd_server, (char *)&N_value2, sizeof(int));
             if (err < 0) {
@@ -175,6 +190,8 @@ int send_request(struct request *req) {
                 value2[i] = htobe64(req->value2[i]);
             }
             
+            printf("4\n");
+            fflush(stdout);
 			for (int i = 0; i < req->N_value2; i++) {
                 err = send_message(fd_server, (char *)&value2[i], sizeof(double));
 				if (err < 0) {
@@ -183,12 +200,16 @@ int send_request(struct request *req) {
 				}
             }
 
+            printf("5\n");
+            fflush(stdout);
             err = send_message(fd_server, (char *)&value3_x, sizeof(int));
             if (err < 0) {
                 close(fd_server);
                 return -2;
             }
 
+            printf("6\n");
+            fflush(stdout);
             err = send_message(fd_server, (char *)&value3_y, sizeof(int));
             if (err < 0) {
                 close(fd_server);
@@ -313,16 +334,20 @@ int send_request(struct request *req) {
 
     int status;
 
-    err = recvMessage(fd_server, (char *)&status, sizeof(int));
+    printf("7\n");
+    fflush(stdout);
+    err = receive_message(fd_server, (char *)&status, sizeof(int));
     if (err < 0) {
         close(fd_server);
-        return(-1);
+        return -2;
     }
     status = ntohl(status);
 
     err = close(fd_server);
     if (err < 0) return -2;
 
+    printf("8\n");
+    fflush(stdout);
     return status;
 }
 
@@ -346,18 +371,21 @@ int receive_message(int socket, char *buffer, int len) {
     int l = len;
         
     do {	
+        printf("reading bytes...\n");
         r = read(socket, buffer, l);
+        printf("number of bytes read: %d\n", r);
         l = l -r ;
+        printf("number of bytes left: %d\n", l);
         buffer = buffer + r;
+        printf("buffer = %s\n", buffer);
     } while ((l>0) && (r>=0));
     
     if (r < 0) return -2;   
     
-    return(0);	
+    return 0;	
 }
 
-ssize_t read_line(int fd, void *buffer, size_t N_value2)
-{
+size_t read_line(int fd, void *buffer, size_t N_value2) {
     ssize_t bytes_read;  
     size_t total_bytes_read;	
     char *buf;
@@ -386,7 +414,7 @@ ssize_t read_line(int fd, void *buffer, size_t N_value2)
             else break;
 
         } else {			
-            if (ch == '\N_value2' || ch == '0') break;
+            if (ch == '\n' || ch == '0') break;
     
             if (total_bytes_read < N_value2 - 1) {	
                 ++total_bytes_read;

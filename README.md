@@ -1,2 +1,2 @@
 # uni
-Some of my projects from uni
+Some of my projects from uni.

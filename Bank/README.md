@@ -1,0 +1,1 @@
+A solution in C for the producer-consumer problem with multithreading using mutex, where the person introducing commands in the ATM is the producer and the worker processing those commands is the consumer.

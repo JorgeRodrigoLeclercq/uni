@@ -1,0 +1,14 @@
+/cmake-**
+.idea/**
+/build
+.vscode/**
+notas.md
+pruebas.cpp
+imgaos/image.hpp
+imgsoa/image.hpp
+.vscode
+debug-build
+release-build
+GSL
+pruebas
+runall-cutfreq.sh

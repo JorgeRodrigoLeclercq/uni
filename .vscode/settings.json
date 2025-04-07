@@ -1,0 +1,18 @@
+{
+    "files.associations": {
+        "pthread.h": "c",
+        "auxiliar.h": "c",
+        "claves.h": "c",
+        "fcntl.h": "c",
+        "proxy_server.h": "c",
+        "stdio.h": "c",
+        "error.h": "c",
+        "mensaje.h": "c",
+        "claves_servidor.h": "c",
+        "strings.h": "c",
+        "claves-proxy-mq.h": "c",
+        "mensaje-proxy-sock.h": "c",
+        "claves-proxy-sock.h": "c",
+        "inet.h": "c"
+    }
+}
